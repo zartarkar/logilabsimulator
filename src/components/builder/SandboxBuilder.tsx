@@ -82,7 +82,7 @@ function Inner() {
   const [nodes, setNodes] = useState<SBNode[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [counter, setCounter] = useState(0);
-  const { screenToFlowPosition, getViewport } = useReactFlow();
+  const { screenToFlowPosition } = useReactFlow();
 
   const values = useMemo(() => simulate(nodes, edges), [nodes, edges]);
 
@@ -90,19 +90,23 @@ function Inner() {
     (kind: CircuitNodeType) => {
       const id = `sb${counter + 1}`;
       setCounter((c) => c + 1);
-      const vp = getViewport();
       const center = screenToFlowPosition({
-        x: window.innerWidth / 2 + (Math.random() - 0.5) * 120,
-        y: window.innerHeight / 2 + (Math.random() - 0.5) * 120,
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
       });
+      const i = counter;
+      const spot = {
+        x: center.x - 300 + (i % 4) * 200,
+        y: center.y - 180 + Math.floor(i / 4) * 130,
+      };
       const label =
         kind === "INPUT" ? String.fromCharCode(65 + (counter % 26)) : kind === "OUTPUT" ? "OUT" : kind;
       setNodes((ns) => [
         ...ns,
-        { id, kind, label, x: center.x || vp.x, y: center.y || vp.y, inputValue: 0 },
+        { id, kind, label, x: spot.x, y: spot.y, inputValue: 0 },
       ]);
     },
-    [counter, getViewport, screenToFlowPosition],
+    [counter, screenToFlowPosition],
   );
 
   const removeNode = useCallback((id: string) => {
