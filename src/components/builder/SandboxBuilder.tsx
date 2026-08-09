@@ -248,7 +248,7 @@ function Inner() {
         >
           <Background gap={18} size={1} color="var(--grid-dot)" />
           <Controls className="!bg-card !text-foreground" />
-          <MiniMap pannable className="!bg-card" />
+          <MiniMap pannable className="!bg-card" nodeColor={(n) => (((n.data as GateNodeData)?.value === 1 ? "#16a34a" : "#94a3b8"))} maskColor="rgba(100,116,139,0.15)" />
         </ReactFlow>
       </div>
     </div>

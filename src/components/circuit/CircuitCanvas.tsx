@@ -122,7 +122,8 @@ function Inner({
           pannable
           zoomable
           className="!bg-card"
-          nodeColor={(n) => ((n.data as GateNodeData)?.value === 1 ? "var(--signal-on)" : "var(--signal-off)")}
+          nodeColor={(n) => ((n.data as GateNodeData)?.value === 1 ? "#16a34a" : "#94a3b8")}
+          maskColor="rgba(100,116,139,0.15)"
         />
       )}
     </ReactFlow>
