@@ -11,7 +11,6 @@ import {
   type Edge,
   type Node,
   type NodeChange,
-  applyNodeChanges,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { nodeTypes, type GateNodeData } from "@/components/circuit/nodes";
@@ -162,18 +161,23 @@ function Inner() {
   }, []);
 
   const onNodesChange = useCallback((changes: NodeChange[]) => {
-    const applied = applyNodeChanges(changes, rfNodes);
-    setNodes((ns) =>
-      ns
-        .filter((n) => applied.some((a) => a.id === n.id))
-        .map((n) => {
-          const a = applied.find((x) => x.id === n.id);
-          return a ? { ...n, x: a.position.x, y: a.position.y } : n;
-        }),
-    );
-    const removed = changes.filter((c) => c.type === "remove").map((c) => c.id);
-    if (removed.length) setEdges((es) => es.filter((e) => !removed.includes(e.source) && !removed.includes(e.target)));
-  }, [rfNodes]);
+    const removed: string[] = [];
+    setNodes((ns) => {
+      let next = ns;
+      for (const c of changes) {
+        if (c.type === "position" && c.position) {
+          const pos = c.position;
+          next = next.map((n) => (n.id === c.id ? { ...n, x: pos.x, y: pos.y } : n));
+        } else if (c.type === "remove") {
+          removed.push(c.id);
+          next = next.filter((n) => n.id !== c.id);
+        }
+      }
+      return next;
+    });
+    if (removed.length)
+      setEdges((es) => es.filter((e) => !removed.includes(e.source) && !removed.includes(e.target)));
+  }, []);
 
   return (
     <div className="flex h-full min-h-0 flex-col md:flex-row">
