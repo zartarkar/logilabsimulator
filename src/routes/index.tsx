@@ -106,69 +106,99 @@ function App() {
   return (
     <div className="flex h-screen flex-col bg-background text-foreground">
       <Toaster />
-      <header className="flex shrink-0 flex-wrap items-center gap-2 border-b border-border bg-card px-3 py-2">
-        <CircuitBoard className="h-5 w-5 text-primary" />
-        <h1 className="mr-2 text-base font-semibold tracking-tight">LogicLab</h1>
-        <Button size="sm" variant="ghost" onClick={() => setSidebar((v) => !v)} aria-label="Toggle sidebar">
-          {sidebar ? <PanelLeftClose className="h-4 w-4" /> : <PanelLeftOpen className="h-4 w-4" />}
-        </Button>
-        <div className="flex rounded-lg border border-border p-0.5">
-          <button
-            onClick={() => setTab("circuit")}
-            className={`rounded px-3 py-1 text-sm ${tab === "circuit" ? "bg-primary text-primary-foreground" : ""}`}
-          >
-            Expression circuit
-          </button>
-          <button
-            onClick={() => setTab("build")}
-            className={`rounded px-3 py-1 text-sm ${tab === "build" ? "bg-primary text-primary-foreground" : ""}`}
-          >
-            Build your own
-          </button>
+      <header className="shrink-0 border-b border-border bg-card">
+        <div className="flex flex-wrap items-center gap-3 px-4 pt-4">
+          <div className="flex items-center gap-2">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <CircuitBoard className="h-5 w-5" />
+            </span>
+            <div>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-primary">
+                ICT Learning Tool
+              </div>
+              <h1 className="font-display text-xl font-extrabold leading-tight tracking-tight">
+                Boolean Logic Simulator
+              </h1>
+            </div>
+          </div>
+          <p className="hidden max-w-md text-sm text-muted-foreground md:block">
+            Type an expression, watch the gates light up, build your own circuits and master Boolean laws.
+          </p>
+          <div className="ml-auto flex items-center gap-1">
+            {tab === "circuit" && (
+              <Button size="sm" variant="ghost" onClick={() => setSidebar((v) => !v)} aria-label="Toggle sidebar">
+                {sidebar ? <PanelLeftClose className="h-4 w-4" /> : <PanelLeftOpen className="h-4 w-4" />}
+              </Button>
+            )}
+            {s.graph && tab === "circuit" && (
+              <>
+                <Button size="sm" variant="outline" onClick={() => exportSvg(s.graph!, s.parsed?.name ?? "circuit")}>
+                  <FileCode2 className="mr-1 h-3.5 w-3.5" /> SVG
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => void exportPng(s.graph!, s.parsed?.name ?? "circuit")}>
+                  <ImageIcon className="mr-1 h-3.5 w-3.5" /> PNG
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    exportJson(
+                      {
+                        expression: s.expression,
+                        normalized: s.parsed?.normalized,
+                        mode: s.mode,
+                        values: s.values,
+                        twoInputMode: s.twoInputMode,
+                        shareSubexpressions: s.shareSubexpressions,
+                        nodes: s.graph!.nodes,
+                        edges: s.graph!.edges,
+                      },
+                      s.parsed?.name ?? "circuit",
+                    )
+                  }
+                >
+                  <FileJson className="mr-1 h-3.5 w-3.5" /> JSON
+                </Button>
+              </>
+            )}
+            <Button size="sm" variant="ghost" onClick={toggle} aria-label="Toggle theme">
+              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+          </div>
         </div>
-        <div className="ml-auto flex items-center gap-1">
-          {s.graph && (
-            <>
-              <Button size="sm" variant="outline" onClick={() => exportSvg(s.graph!, s.parsed?.name ?? "circuit")}>
-                <FileCode2 className="mr-1 h-3.5 w-3.5" /> SVG
-              </Button>
-              <Button size="sm" variant="outline" onClick={() => void exportPng(s.graph!, s.parsed?.name ?? "circuit")}>
-                <ImageIcon className="mr-1 h-3.5 w-3.5" /> PNG
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() =>
-                  exportJson(
-                    {
-                      expression: s.expression,
-                      normalized: s.parsed?.normalized,
-                      mode: s.mode,
-                      values: s.values,
-                      twoInputMode: s.twoInputMode,
-                      shareSubexpressions: s.shareSubexpressions,
-                      nodes: s.graph!.nodes,
-                      edges: s.graph!.edges,
-                    },
-                    s.parsed?.name ?? "circuit",
-                  )
-                }
-              >
-                <FileJson className="mr-1 h-3.5 w-3.5" /> JSON
-              </Button>
-            </>
-          )}
-          <Button size="sm" variant="ghost" onClick={toggle} aria-label="Toggle theme">
-            {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
-        </div>
+        <nav className="flex flex-wrap gap-1 px-4 py-3">
+          {(
+            [
+              { id: "circuit", label: "Expression Simulator" },
+              { id: "build", label: "Build Your Own Circuit" },
+              { id: "learn", label: "Learn" },
+            ] as const
+          ).map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+                tab === t.id
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </nav>
       </header>
 
-      {tab === "build" ? (
+      {tab === "learn" ? (
+        <main className="min-h-0 flex-1 overflow-y-auto">
+          <LearnPanel />
+        </main>
+      ) : tab === "build" ? (
         <main className="min-h-0 flex-1">
           <SandboxBuilder />
         </main>
       ) : (
+
         <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
           {sidebar && (
             <aside className="w-full shrink-0 overflow-y-auto border-b border-border bg-card p-3 lg:w-72 lg:border-b-0 lg:border-r">
