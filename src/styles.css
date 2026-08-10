@@ -148,12 +148,15 @@
   --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
-  --signal-on: oklch(0.75 0.2 145);
-  --signal-on-fg: oklch(0.16 0.03 145);
+  --signal-on: oklch(0.78 0.18 60);
+  --signal-on-fg: oklch(0.2 0.05 60);
   --signal-off: oklch(0.45 0.02 257);
+  --gate-line: oklch(0.8 0.03 250);
+  --canvas: oklch(0.17 0.03 260);
   --grid-dot: oklch(0.3 0.02 257);
   --gate-fill: oklch(0.24 0.03 260);
-  --signal-fill: oklch(0.34 0.09 145);
+  --signal-fill: oklch(0.36 0.09 60);
+
 }
 
 @layer base {
