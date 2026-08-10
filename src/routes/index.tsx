@@ -29,6 +29,8 @@ import { TruthTablePanel } from "@/components/panels/TruthTablePanel";
 import { SimplifyPanel } from "@/components/panels/SimplifyPanel";
 import { AstPanel } from "@/components/panels/AstPanel";
 import { SandboxBuilder } from "@/components/builder/SandboxBuilder";
+import { LearnPanel } from "@/components/panels/LearnPanel";
+
 import { EXAMPLES } from "@/logic/examples";
 import { analyze } from "@/logic/analysis";
 import { exportJson, exportPng, exportSvg } from "@/lib/export";
