@@ -78,7 +78,7 @@ function App() {
   const s = useCircuitStore();
   const { dark, toggle } = useTheme();
   const [sidebar, setSidebar] = useState(true);
-  const [tab, setTab] = useState<"circuit" | "build">("circuit");
+  const [tab, setTab] = useState<"circuit" | "build" | "learn">("circuit");
 
   useEffect(() => {
     const saved = localStorage.getItem("logiclab-project");
