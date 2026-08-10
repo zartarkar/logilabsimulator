@@ -61,26 +61,31 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-signal-on: var(--signal-on);
   --color-signal-off: var(--signal-off);
-  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Baloo 2", "Nunito", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
+@utility font-display {
+  font-family: var(--font-display);
+}
+
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.52 0.13 195);
-  --primary-foreground: oklch(0.99 0.01 195);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --radius: 0.9rem;
+  --background: oklch(98.5% 0.008 240);
+  --foreground: oklch(24% 0.04 250);
+  --card: oklch(100% 0 0);
+  --card-foreground: oklch(24% 0.04 250);
+  --popover: oklch(100% 0 0);
+  --popover-foreground: oklch(24% 0.04 250);
+  --primary: oklch(55% 0.16 250);
+  --primary-foreground: oklch(99% 0.005 250);
+  --secondary: oklch(95% 0.02 235);
+  --secondary-foreground: oklch(32% 0.06 250);
+  --muted: oklch(95.5% 0.012 240);
+  --muted-foreground: oklch(52% 0.03 250);
+  --accent: oklch(90% 0.09 195);
+  --accent-foreground: oklch(26% 0.06 235);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(0.929 0.013 255.508);
@@ -99,13 +104,16 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
-  --signal-on: oklch(0.68 0.19 145);
-  --signal-on-fg: oklch(0.16 0.03 145);
-  --signal-off: oklch(0.72 0.02 257);
+  --signal-on: oklch(72% 0.17 55);
+  --signal-on-fg: oklch(20% 0.06 55);
+  --signal-off: oklch(75% 0.02 250);
+  --gate-line: oklch(42% 0.06 250);
+  --canvas: oklch(97.5% 0.012 235);
   --grid-dot: oklch(0.9 0.01 257);
   --gate-fill: oklch(1 0 0);
-  --signal-fill: oklch(0.94 0.06 145);
+  --signal-fill: oklch(0.94 0.07 55);
 }
+
 
 .dark {
   --background: oklch(0.129 0.042 264.695);
