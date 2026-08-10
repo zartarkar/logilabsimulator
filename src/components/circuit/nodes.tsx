@@ -26,10 +26,13 @@ function ValueBadge({ value }: { value: 0 | 1 }) {
           : "bg-muted text-muted-foreground",
       )}
     >
-      {value}
+      {value} · {value === 1 ? "ON" : "OFF"}
     </span>
   );
 }
+
+const DELETE_BTN =
+  "absolute -right-2 -top-2 h-5 w-5 items-center justify-center rounded-full border border-border bg-background text-xs text-destructive shadow hidden group-hover:flex";
 
 function InputHandles({ count }: { count: number }) {
   return (
@@ -56,7 +59,7 @@ export function GateNode({ data, selected }: NodeProps & { data: GateNodeData })
         "group relative flex flex-col items-center text-foreground",
         data.highlighted && "drop-shadow-[0_0_8px_var(--signal-on)]",
         data.critical && "text-[var(--signal-on)]",
-        selected && "text-primary",
+        selected && "text-primary drop-shadow-[0_0_6px_var(--signal-on)]",
       )}
       title={`${data.gateType} · ${data.expr}`}
     >
@@ -79,7 +82,7 @@ export function GateNode({ data, selected }: NodeProps & { data: GateNodeData })
             data.onDelete?.();
           }}
           aria-label={`Delete ${data.gateType} gate`}
-          className="absolute -right-2 -top-2 hidden h-5 w-5 items-center justify-center rounded-full border border-border bg-background text-xs text-destructive shadow group-hover:flex"
+          className={cn(DELETE_BTN, selected && "!flex")}
         >
           ×
         </button>
@@ -112,7 +115,7 @@ export function InputNode({ data, selected }: NodeProps & { data: GateNodeData }
         >
           <span className="h-5 w-5 rounded-full bg-background shadow" />
         </span>
-        <span className="tabular-nums">{data.value}</span>
+        <span className="tabular-nums">{data.value} · {on ? "ON" : "OFF"}</span>
       </button>
       <Handle id="out" type="source" position={Position.Right} className="!h-2 !w-2 !border-2 !border-border !bg-background" />
       {data.onDelete && (
@@ -122,7 +125,7 @@ export function InputNode({ data, selected }: NodeProps & { data: GateNodeData }
             data.onDelete?.();
           }}
           aria-label="Delete input"
-          className="absolute -right-2 -top-2 hidden h-5 w-5 items-center justify-center rounded-full border border-border bg-background text-xs text-destructive shadow group-hover:flex"
+          className={cn(DELETE_BTN, selected && "!flex")}
         >
           ×
         </button>
@@ -131,10 +134,10 @@ export function InputNode({ data, selected }: NodeProps & { data: GateNodeData }
   );
 }
 
-export function OutputNode({ data }: NodeProps & { data: GateNodeData }) {
+export function OutputNode({ data, selected }: NodeProps & { data: GateNodeData }) {
   const on = data.value === 1;
   return (
-    <div className="group relative flex flex-col items-center gap-1">
+    <div className={cn("group relative flex flex-col items-center gap-1", selected && "rounded-lg ring-2 ring-primary")}>
       <InputHandles count={1} />
       <div
         className={cn(
@@ -163,7 +166,7 @@ export function OutputNode({ data }: NodeProps & { data: GateNodeData }) {
             data.onDelete?.();
           }}
           aria-label="Delete output"
-          className="absolute -right-2 -top-2 hidden h-5 w-5 items-center justify-center rounded-full border border-border bg-background text-xs text-destructive shadow group-hover:flex"
+          className={cn(DELETE_BTN, selected && "!flex")}
         >
           ×
         </button>
@@ -172,10 +175,10 @@ export function OutputNode({ data }: NodeProps & { data: GateNodeData }) {
   );
 }
 
-export function ConstNode({ data }: NodeProps & { data: GateNodeData }) {
+export function ConstNode({ data, selected }: NodeProps & { data: GateNodeData }) {
   const on = data.value === 1;
   return (
-    <div className="relative flex flex-col items-center">
+    <div className={cn("group relative flex flex-col items-center", selected && "rounded-lg ring-2 ring-primary")}>
       <div
         className={cn(
           "flex h-9 w-9 items-center justify-center rounded-md border-2 font-mono text-sm font-bold",
@@ -185,7 +188,19 @@ export function ConstNode({ data }: NodeProps & { data: GateNodeData }) {
         {data.value}
       </div>
       <Handle id="out" type="source" position={Position.Right} className="!h-2 !w-2 !border-2 !border-border !bg-background" />
-      <span className="mt-0.5 text-[10px] text-muted-foreground">CONST</span>
+      <span className="mt-0.5 text-[10px] text-muted-foreground">{data.value === 1 ? "ON" : "OFF"}</span>
+      {data.onDelete && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            data.onDelete?.();
+          }}
+          aria-label="Delete constant"
+          className={cn(DELETE_BTN, selected && "!flex")}
+        >
+          ×
+        </button>
+      )}
     </div>
   );
 }
