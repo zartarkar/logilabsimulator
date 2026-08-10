@@ -82,6 +82,7 @@ function Inner() {
   const [nodes, setNodes] = useState<SBNode[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [counter, setCounter] = useState(0);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { screenToFlowPosition } = useReactFlow();
 
   const values = useMemo(() => simulate(nodes, edges), [nodes, edges]);
@@ -120,6 +121,7 @@ function Inner() {
         id: n.id,
         type: rfType(n.kind),
         position: { x: n.x, y: n.y },
+        selected: selectedIds.includes(n.id),
         data: {
           gateType: n.kind,
           label: n.label,
@@ -137,7 +139,7 @@ function Inner() {
           onDelete: () => removeNode(n.id),
         } satisfies GateNodeData,
       })),
-    [nodes, values, removeNode],
+    [nodes, values, removeNode, selectedIds],
   );
 
   const styledEdges = edges.map((e) => {
@@ -172,6 +174,10 @@ function Inner() {
         if (c.type === "position" && c.position) {
           const pos = c.position;
           next = next.map((n) => (n.id === c.id ? { ...n, x: pos.x, y: pos.y } : n));
+        } else if (c.type === "select") {
+          setSelectedIds((prev) =>
+            c.selected ? [...new Set([...prev, c.id])] : prev.filter((id) => id !== c.id),
+          );
         } else if (c.type === "remove") {
           removed.push(c.id);
           next = next.filter((n) => n.id !== c.id);
@@ -179,6 +185,7 @@ function Inner() {
       }
       return next;
     });
+    if (removed.length) setSelectedIds((prev) => prev.filter((id) => !removed.includes(id)));
     if (removed.length)
       setEdges((es) => es.filter((e) => !removed.includes(e.source) && !removed.includes(e.target)));
   }, []);
@@ -222,9 +229,22 @@ function Inner() {
           variant="outline"
           size="sm"
           className="md:mt-2"
+          disabled={selectedIds.length === 0}
+          onClick={() => {
+            selectedIds.forEach(removeNode);
+            setSelectedIds([]);
+            toast.success("Selected components removed");
+          }}
+        >
+          <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete selected
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() => {
             setNodes([]);
             setEdges([]);
+            setSelectedIds([]);
             toast.success("Canvas cleared");
           }}
         >
