@@ -4,7 +4,6 @@ import {
   ReactFlowProvider,
   Background,
   Controls,
-  MiniMap,
   addEdge,
   useReactFlow,
   type Connection,
@@ -20,6 +19,7 @@ import { evalGate } from "@/logic/evaluator";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { useLang } from "@/i18n";
 
 interface SBNode {
   id: string;
@@ -50,7 +50,7 @@ function rfType(t: CircuitNodeType) {
   return "gate";
 }
 
-function simulate(nodes: SBNode[], edges: Edge[]): Record<string, 0 | 1> {
+function simulate(nodes: SBNode[], edges: Edge[], override?: Record<string, 0 | 1>): Record<string, 0 | 1> {
   const incoming = new Map<string, { src: string; port: number }[]>();
   for (const n of nodes) incoming.set(n.id, []);
   for (const e of edges) {
@@ -59,7 +59,7 @@ function simulate(nodes: SBNode[], edges: Edge[]): Record<string, 0 | 1> {
   }
   const values: Record<string, 0 | 1> = {};
   for (const n of nodes) {
-    values[n.id] = n.kind === "INPUT" ? n.inputValue : n.kind === "CONST1" ? 1 : 0;
+    values[n.id] = n.kind === "INPUT" ? (override?.[n.id] ?? n.inputValue) : n.kind === "CONST1" ? 1 : 0;
   }
   // iterate until stable (bounded to avoid loops from user-made cycles)
   for (let pass = 0; pass < nodes.length + 2; pass++) {
@@ -268,7 +268,6 @@ function Inner() {
         >
           <Background gap={18} size={1} color="var(--grid-dot)" />
           <Controls className="!bg-card !text-foreground" />
-          <MiniMap pannable className="!bg-card" nodeColor={(n) => (((n.data as GateNodeData)?.value === 1 ? "#16a34a" : "#94a3b8"))} maskColor="rgba(100,116,139,0.15)" />
         </ReactFlow>
       </div>
     </div>
