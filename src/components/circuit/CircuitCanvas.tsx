@@ -44,7 +44,7 @@ function Inner({
   selectedId,
   onSelect,
   onToggleInput,
-  minimap = true,
+  minimap = false,
 }: Props) {
   const { fitView } = useReactFlow();
 
