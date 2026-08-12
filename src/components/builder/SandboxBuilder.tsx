@@ -251,24 +251,65 @@ function Inner() {
           <Trash2 className="mr-1 h-3.5 w-3.5" /> Clear all
         </Button>
       </aside>
-      <div className="min-h-0 flex-1">
-        <ReactFlow
-          nodes={rfNodes}
-          edges={styledEdges}
-          nodeTypes={nodeTypes}
-          onNodesChange={onNodesChange}
-          onEdgesChange={(changes) => {
-            const removed = changes.filter((c) => c.type === "remove").map((c) => c.id);
-            if (removed.length) setEdges((es) => es.filter((e) => !removed.includes(e.id)));
-          }}
-          onConnect={onConnect}
-          deleteKeyCode={["Backspace", "Delete"]}
-          proOptions={{ hideAttribution: true }}
-          fitView
-        >
-          <Background gap={18} size={1} color="var(--grid-dot)" />
-          <Controls className="!bg-card !text-foreground" />
-        </ReactFlow>
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="min-h-[240px] flex-1">
+          <ReactFlow
+            nodes={rfNodes}
+            edges={styledEdges}
+            nodeTypes={nodeTypes}
+            onNodesChange={onNodesChange}
+            onEdgesChange={(changes) => {
+              const removed = changes.filter((c) => c.type === "remove").map((c) => c.id);
+              if (removed.length) setEdges((es) => es.filter((e) => !removed.includes(e.id)));
+            }}
+            onConnect={onConnect}
+            deleteKeyCode={["Backspace", "Delete"]}
+            proOptions={{ hideAttribution: true }}
+            fitView
+          >
+            <Background gap={18} size={1} color="var(--grid-dot)" />
+            <Controls className="!bg-card !text-foreground" />
+          </ReactFlow>
+        </div>
+        <div className="h-[32vh] shrink-0 overflow-auto border-t border-border bg-card p-3">
+          <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("builderTruth")}</h3>
+          {truth ? (
+            <table className="mt-2 w-full border-collapse text-sm">
+              <thead>
+                <tr>
+                  {truth.inputs.map((n) => (
+                    <th key={n.id} className="border-b border-border px-3 py-1 text-left font-mono text-xs">
+                      {n.label}
+                    </th>
+                  ))}
+                  {truth.outputs.map((n) => (
+                    <th key={n.id} className="border-b border-border px-3 py-1 text-left font-mono text-xs font-bold">
+                      {n.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {truth.rows.map((r, i) => (
+                  <tr key={i} className="hover:bg-muted/60">
+                    {truth.inputs.map((n) => (
+                      <td key={n.id} className="border-b border-border/50 px-3 py-1 font-mono tabular-nums">
+                        {r.env[n.id]}
+                      </td>
+                    ))}
+                    {truth.outputs.map((n) => (
+                      <td key={n.id} className="border-b border-border/50 px-3 py-1 font-mono font-bold tabular-nums">
+                        {r.out[n.id]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="mt-2 text-sm text-muted-foreground">{t("builderTruthEmpty")}</p>
+          )}
+        </div>
       </div>
     </div>
   );
