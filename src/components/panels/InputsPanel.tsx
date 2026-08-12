@@ -2,22 +2,24 @@ import { Button } from "@/components/ui/button";
 import { useCircuitStore } from "@/store/useCircuitStore";
 import { cn } from "@/lib/utils";
 import { Shuffle, RotateCcw, CheckCheck } from "lucide-react";
+import { useLang } from "@/i18n";
 
 export function InputsPanel() {
   const { parsed, values, setValue, randomize, setAll } = useCircuitStore();
-  if (!parsed) return <p className="p-4 text-sm text-muted-foreground">Parse an expression to detect its variables.</p>;
+  const { t } = useLang();
+  if (!parsed) return <p className="p-4 text-sm text-muted-foreground">{t("parseFirst")}</p>;
 
   return (
     <div className="space-y-4 p-4">
       <div className="flex flex-wrap gap-2">
         <Button size="sm" variant="outline" onClick={randomize}>
-          <Shuffle className="mr-1 h-3.5 w-3.5" /> Randomize
+          <Shuffle className="mr-1 h-3.5 w-3.5" /> {t("randomize")}
         </Button>
         <Button size="sm" variant="outline" onClick={() => setAll(0)}>
-          <RotateCcw className="mr-1 h-3.5 w-3.5" /> All 0
+          <RotateCcw className="mr-1 h-3.5 w-3.5" /> {t("all0")}
         </Button>
         <Button size="sm" variant="outline" onClick={() => setAll(1)}>
-          <CheckCheck className="mr-1 h-3.5 w-3.5" /> All 1
+          <CheckCheck className="mr-1 h-3.5 w-3.5" /> {t("all1")}
         </Button>
       </div>
       <ul className="space-y-2">
