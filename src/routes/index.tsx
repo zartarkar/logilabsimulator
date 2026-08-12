@@ -111,11 +111,11 @@ function App() {
       <header className="shrink-0 border-b border-border bg-card">
         <div className="flex flex-wrap items-center gap-3 px-4 pt-4">
           <div className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
               <CircuitBoard className="h-5 w-5" />
             </span>
             <div>
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-primary">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-destructive">
                 ICT Learning Tool
               </div>
               <h1 className="font-display text-xl font-extrabold leading-tight tracking-tight">
