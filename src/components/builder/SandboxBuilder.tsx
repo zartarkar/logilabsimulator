@@ -84,8 +84,27 @@ function Inner() {
   const [counter, setCounter] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { screenToFlowPosition } = useReactFlow();
+  const { t } = useLang();
 
   const values = useMemo(() => simulate(nodes, edges), [nodes, edges]);
+
+  const truth = useMemo(() => {
+    const inputs = nodes.filter((n) => n.kind === "INPUT");
+    const outputs = nodes.filter((n) => n.kind === "OUTPUT");
+    if (!inputs.length || !outputs.length || inputs.length > 8) return null;
+    const rows: { env: Record<string, 0 | 1>; out: Record<string, 0 | 1> }[] = [];
+    for (let m = 0; m < 1 << inputs.length; m++) {
+      const env: Record<string, 0 | 1> = {};
+      inputs.forEach((n, i) => {
+        env[n.id] = ((m >> (inputs.length - 1 - i)) & 1) as 0 | 1;
+      });
+      const sim = simulate(nodes, edges, env);
+      const out: Record<string, 0 | 1> = {};
+      for (const o of outputs) out[o.id] = sim[o.id] ?? 0;
+      rows.push({ env, out });
+    }
+    return { inputs, outputs, rows };
+  }, [nodes, edges]);
 
   const addNode = useCallback(
     (kind: CircuitNodeType) => {
