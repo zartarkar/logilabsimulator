@@ -16,8 +16,7 @@ import {
   FileJson,
   Image as ImageIcon,
   FileCode2,
-  PanelLeftClose,
-  PanelLeftOpen,
+  Languages,
 } from "lucide-react";
 import { useCircuitStore } from "@/store/useCircuitStore";
 import { CircuitCanvas } from "@/components/circuit/CircuitCanvas";
@@ -30,6 +29,8 @@ import { SimplifyPanel } from "@/components/panels/SimplifyPanel";
 import { AstPanel } from "@/components/panels/AstPanel";
 import { SandboxBuilder } from "@/components/builder/SandboxBuilder";
 import { LearnPanel } from "@/components/panels/LearnPanel";
+import { TutorialDialog } from "@/components/TutorialDialog";
+import { LanguageProvider, useLang } from "@/i18n";
 
 import { EXAMPLES } from "@/logic/examples";
 import { analyze } from "@/logic/analysis";
@@ -54,7 +55,7 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: App,
+  component: Page,
 });
 
 function useTheme() {
@@ -76,10 +77,18 @@ function useTheme() {
   return { dark, toggle };
 }
 
+function Page() {
+  return (
+    <LanguageProvider>
+      <App />
+    </LanguageProvider>
+  );
+}
+
 function App() {
   const s = useCircuitStore();
   const { dark, toggle } = useTheme();
-  const [sidebar, setSidebar] = useState(true);
+  const { lang, setLang, t } = useLang();
   const [tab, setTab] = useState<"circuit" | "build" | "learn">("circuit");
 
   useEffect(() => {
@@ -109,29 +118,42 @@ function App() {
     <div className="flex h-screen flex-col bg-background text-foreground">
       <Toaster />
       <header className="shrink-0 border-b border-border bg-card">
-        <div className="flex flex-wrap items-center gap-3 px-4 pt-4">
+        <div className="grid items-center gap-3 px-4 py-3 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
           <div className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
               <CircuitBoard className="h-5 w-5" />
             </span>
-            <div>
+            <div className="leading-tight">
               <div className="text-[11px] font-semibold uppercase tracking-wider text-destructive">
-                ICT Learning Tool
+                {t("classLine")}
               </div>
-              <h1 className="font-display text-xl font-extrabold leading-tight tracking-tight">
-                Boolean Logic Simulator
-              </h1>
+              <div className="font-display text-sm font-extrabold">{t("chapterLine")}</div>
             </div>
           </div>
-          <p className="hidden max-w-md text-sm text-muted-foreground md:block">
-            Type an expression, watch the gates light up, build your own circuits and master Boolean laws.
-          </p>
-          <div className="ml-auto flex items-center gap-1">
-            {tab === "circuit" && (
-              <Button size="sm" variant="ghost" onClick={() => setSidebar((v) => !v)} aria-label="Toggle sidebar">
-                {sidebar ? <PanelLeftClose className="h-4 w-4" /> : <PanelLeftOpen className="h-4 w-4" />}
-              </Button>
-            )}
+
+          <nav className="flex flex-wrap justify-center gap-1">
+            {(
+              [
+                { id: "circuit", label: t("tabCircuit") },
+                { id: "build", label: t("tabBuild") },
+                { id: "learn", label: t("tabLearn") },
+              ] as const
+            ).map((x) => (
+              <button
+                key={x.id}
+                onClick={() => setTab(x.id)}
+                className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+                  tab === x.id
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                }`}
+              >
+                {x.label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="flex items-center justify-end gap-1">
             {s.graph && tab === "circuit" && (
               <>
                 <Button size="sm" variant="outline" onClick={() => exportSvg(s.graph!, s.parsed?.name ?? "circuit")}>
@@ -163,32 +185,27 @@ function App() {
                 </Button>
               </>
             )}
+            <TutorialDialog />
+            <div className="flex items-center overflow-hidden rounded-full border border-border">
+              <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
+              {(["en", "bn"] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  aria-pressed={lang === l}
+                  className={`px-2.5 py-1 text-xs font-bold ${
+                    lang === l ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  {l === "en" ? "EN" : "বাং"}
+                </button>
+              ))}
+            </div>
             <Button size="sm" variant="ghost" onClick={toggle} aria-label="Toggle theme">
               {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
           </div>
         </div>
-        <nav className="flex flex-wrap gap-1 px-4 py-3">
-          {(
-            [
-              { id: "circuit", label: "Expression Simulator" },
-              { id: "build", label: "Build Your Own Circuit" },
-              { id: "learn", label: "Learn" },
-            ] as const
-          ).map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
-                tab === t.id
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </nav>
       </header>
 
       {tab === "learn" ? (
@@ -200,12 +217,12 @@ function App() {
           <SandboxBuilder />
         </main>
       ) : (
-
-        <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-          {sidebar && (
-            <aside className="w-full shrink-0 overflow-y-auto border-b border-border bg-card p-3 lg:w-72 lg:border-b-0 lg:border-r">
+        <main className="flex min-h-0 flex-1 flex-col">
+          <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+            {/* LEFT: controls */}
+            <section className="w-full shrink-0 overflow-y-auto border-b border-border bg-card p-3 lg:w-[26rem] lg:border-b-0 lg:border-r">
               <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
-                Boolean expression
+                {t("expression")}
               </Label>
               <Textarea
                 id="expr"
@@ -221,56 +238,6 @@ function App() {
                 className="mt-1 font-mono text-sm"
                 placeholder="F = XYZ+XY+X'Y'Z"
               />
-              <div className="mt-2 flex gap-2">
-                <Button size="sm" className="flex-1" onClick={s.generate}>
-                  <Play className="mr-1 h-3.5 w-3.5" /> Generate
-                </Button>
-                <Button size="sm" variant="outline" onClick={s.parseOnly}>
-                  Parse
-                </Button>
-                <Button size="sm" variant="outline" onClick={s.runSimplify} aria-label="Simplify">
-                  <Zap className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-
-              <div className="mt-3 space-y-2 rounded-lg border border-border p-2 text-sm">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="mode" className="text-xs">
-                    Single-letter mode {s.mode === "single-letter" ? "(XYZ = X·Y·Z)" : "(named vars)"}
-                  </Label>
-                  <Switch
-                    id="mode"
-                    checked={s.mode === "single-letter"}
-                    onCheckedChange={(v) => s.setMode(v ? "single-letter" : "named")}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="two" className="text-xs">Two-input gate mode</Label>
-                  <Switch id="two" checked={s.twoInputMode} onCheckedChange={(v) => s.setOption("twoInputMode", v)} />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="share" className="text-xs">Share subexpressions</Label>
-                  <Switch id="share" checked={s.shareSubexpressions} onCheckedChange={(v) => s.setOption("shareSubexpressions", v)} />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="labels" className="text-xs">Show signal labels</Label>
-                  <Switch id="labels" checked={s.showLabels} onCheckedChange={(v) => s.setOption("showLabels", v)} />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="anim" className="text-xs">Animate signals</Label>
-                  <Switch id="anim" checked={s.animate} onCheckedChange={(v) => s.setOption("animate", v)} />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs">Layout</Label>
-                  <div className="flex gap-1">
-                    {(["LR", "TB"] as const).map((d) => (
-                      <Button key={d} size="sm" variant={s.direction === d ? "default" : "outline"} onClick={() => s.setDirection(d)}>
-                        {d}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </div>
 
               {s.error && (
                 <div role="alert" className="mt-3 rounded-lg border-2 border-destructive/60 bg-destructive/10 p-2 text-sm">
@@ -280,8 +247,76 @@ function App() {
                 </div>
               )}
 
-              <div className="mt-3">
-                <h3 className="text-xs font-semibold uppercase text-muted-foreground">Examples</h3>
+              <h3 className="mt-4 text-xs font-semibold uppercase text-muted-foreground">{t("inputValues")}</h3>
+              <div className="-mx-4">
+                <InputsPanel />
+              </div>
+
+              <div className="mt-2 flex gap-2">
+                <Button size="sm" className="flex-1" onClick={s.generate}>
+                  <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
+                </Button>
+                <Button size="sm" variant="outline" onClick={s.parseOnly}>
+                  {t("parse")}
+                </Button>
+                <Button size="sm" variant="outline" onClick={s.runSimplify} aria-label={t("simplify")}>
+                  <Zap className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+
+              <h3 className="mt-4 text-xs font-semibold uppercase text-muted-foreground">{t("stepSim")}</h3>
+              <div className="-mx-4">
+                <CalculationPanel />
+              </div>
+
+              <details className="mt-4 rounded-lg border border-border p-2 text-sm">
+                <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground">
+                  {t("settings")}
+                </summary>
+                <div className="mt-2 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="mode" className="text-xs">
+                      Single-letter mode {s.mode === "single-letter" ? "(XYZ = X·Y·Z)" : "(named vars)"}
+                    </Label>
+                    <Switch
+                      id="mode"
+                      checked={s.mode === "single-letter"}
+                      onCheckedChange={(v) => s.setMode(v ? "single-letter" : "named")}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="two" className="text-xs">Two-input gate mode</Label>
+                    <Switch id="two" checked={s.twoInputMode} onCheckedChange={(v) => s.setOption("twoInputMode", v)} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="share" className="text-xs">Share subexpressions</Label>
+                    <Switch id="share" checked={s.shareSubexpressions} onCheckedChange={(v) => s.setOption("shareSubexpressions", v)} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="labels" className="text-xs">Show signal labels</Label>
+                    <Switch id="labels" checked={s.showLabels} onCheckedChange={(v) => s.setOption("showLabels", v)} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="anim" className="text-xs">Animate signals</Label>
+                    <Switch id="anim" checked={s.animate} onCheckedChange={(v) => s.setOption("animate", v)} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs">Layout</Label>
+                    <div className="flex gap-1">
+                      {(["LR", "TB"] as const).map((d) => (
+                        <Button key={d} size="sm" variant={s.direction === d ? "default" : "outline"} onClick={() => s.setDirection(d)}>
+                          {d}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <details className="mt-3">
+                <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground">
+                  {t("examples")}
+                </summary>
                 {EXAMPLES.map((g) => (
                   <div key={g.label} className="mt-2">
                     <div className="text-[11px] font-medium text-muted-foreground">{g.label}</div>
@@ -302,90 +337,79 @@ function App() {
                     </div>
                   </div>
                 ))}
-              </div>
-            </aside>
-          )}
+              </details>
+            </section>
 
-          <main className="flex min-h-0 flex-1 flex-col">
-            <div className="flex flex-wrap items-center gap-3 border-b border-border bg-card px-3 py-1.5 text-xs">
-              <span className="font-mono">{s.parsed?.normalized ?? "—"}</span>
-              {stats && (
-                <span className="text-muted-foreground">
-                  {stats.gateCount} gates · {stats.wireCount} wires · depth {stats.depth} · {stats.delay} ns
+            {/* RIGHT: canvas */}
+            <section className="flex min-h-0 flex-1 flex-col">
+              <div className="flex flex-wrap items-center gap-3 border-b border-border bg-card px-3 py-1.5 text-xs">
+                <span className="font-mono">{s.parsed?.normalized ?? "—"}</span>
+                {stats && (
+                  <span className="text-muted-foreground">
+                    {stats.gateCount} gates · {stats.wireCount} wires · depth {stats.depth} · {stats.delay} ns
+                  </span>
+                )}
+                <span
+                  className={`ml-auto rounded px-2 py-0.5 font-mono font-bold ${
+                    outputValue === 1
+                      ? "bg-[var(--signal-on)] text-[var(--signal-on-fg)]"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {s.parsed?.name ?? "F"} = {outputValue} · {outputValue === 1 ? "ON" : "OFF"}
                 </span>
-              )}
-              <span
-                className={`ml-auto rounded px-2 py-0.5 font-mono font-bold ${
-                  outputValue === 1
-                    ? "bg-[var(--signal-on)] text-[var(--signal-on-fg)]"
-                    : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {s.parsed?.name ?? "F"} = {outputValue} · {outputValue === 1 ? "ON" : "OFF"}
-              </span>
-            </div>
-            <div className="min-h-[280px] flex-1">
-              {s.graph ? (
-                <CircuitCanvas
-                  graph={s.graph}
-                  nodeValues={s.nodeValues}
-                  edgeValues={s.edgeValues}
-                  showLabels={s.showLabels}
-                  animate={s.animate}
-                  criticalPath={stats?.criticalPath}
-                  selectedId={s.selectedId}
-                  onSelect={s.select}
-                  onToggleInput={(name) => s.setValue(name, s.values[name] === 1 ? 0 : 1)}
-                />
-              ) : (
-                <div className="flex h-full items-center justify-center p-6 text-center text-sm text-muted-foreground">
-                  Enter a Boolean expression and press Generate to build the circuit.
-                </div>
-              )}
-            </div>
-            <div className="h-[38vh] shrink-0 border-t border-border bg-card lg:h-[34vh]">
-              <Tabs defaultValue="truth" className="flex h-full flex-col">
-                <TabsList className="m-2 w-fit">
-                  <TabsTrigger value="truth">Truth table</TabsTrigger>
-                  <TabsTrigger value="simplify">Simplification</TabsTrigger>
-                  <TabsTrigger value="ast">AST &amp; validation</TabsTrigger>
-                </TabsList>
-                <TabsContent value="truth" className="min-h-0 flex-1 overflow-hidden">
-                  <TruthTablePanel />
-                </TabsContent>
-                <TabsContent value="simplify" className="min-h-0 flex-1 overflow-auto">
-                  <SimplifyPanel />
-                </TabsContent>
-                <TabsContent value="ast" className="min-h-0 flex-1 overflow-auto">
-                  <AstPanel />
-                </TabsContent>
-              </Tabs>
-            </div>
-          </main>
+              </div>
+              <div className="min-h-[280px] flex-1">
+                {s.graph ? (
+                  <CircuitCanvas
+                    graph={s.graph}
+                    nodeValues={s.nodeValues}
+                    edgeValues={s.edgeValues}
+                    showLabels={s.showLabels}
+                    animate={s.animate}
+                    criticalPath={stats?.criticalPath}
+                    selectedId={s.selectedId}
+                    onSelect={s.select}
+                    onToggleInput={(name) => s.setValue(name, s.values[name] === 1 ? 0 : 1)}
+                    minimap={false}
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center p-6 text-center text-sm text-muted-foreground">
+                    {t("emptyCanvas")}
+                  </div>
+                )}
+              </div>
+            </section>
+          </div>
 
-          <aside className="w-full shrink-0 overflow-y-auto border-t border-border bg-card lg:w-80 lg:border-l lg:border-t-0">
-            <Tabs defaultValue="inputs">
+          {/* BOTTOM: truth table + simplification */}
+          <div className="h-[36vh] shrink-0 border-t border-border bg-card">
+            <Tabs defaultValue="truth" className="flex h-full flex-col">
               <TabsList className="m-2 w-fit">
-                <TabsTrigger value="inputs">Inputs</TabsTrigger>
-                <TabsTrigger value="inspector">Gate</TabsTrigger>
-                <TabsTrigger value="calc">Steps</TabsTrigger>
-                <TabsTrigger value="analysis">Analysis</TabsTrigger>
+                <TabsTrigger value="truth">{t("truthTable")}</TabsTrigger>
+                <TabsTrigger value="simplify">{t("simplification")}</TabsTrigger>
+                <TabsTrigger value="ast">{t("ast")}</TabsTrigger>
+                <TabsTrigger value="gate">{t("gate")}</TabsTrigger>
+                <TabsTrigger value="analysis">{t("analysis")}</TabsTrigger>
               </TabsList>
-              <TabsContent value="inputs">
-                <InputsPanel />
+              <TabsContent value="truth" className="min-h-0 flex-1 overflow-hidden">
+                <TruthTablePanel />
               </TabsContent>
-              <TabsContent value="inspector">
+              <TabsContent value="simplify" className="min-h-0 flex-1 overflow-auto">
+                <SimplifyPanel />
+              </TabsContent>
+              <TabsContent value="ast" className="min-h-0 flex-1 overflow-auto">
+                <AstPanel />
+              </TabsContent>
+              <TabsContent value="gate" className="min-h-0 flex-1 overflow-auto">
                 <InspectorPanel />
               </TabsContent>
-              <TabsContent value="calc">
-                <CalculationPanel />
-              </TabsContent>
-              <TabsContent value="analysis">
+              <TabsContent value="analysis" className="min-h-0 flex-1 overflow-auto">
                 <AnalysisPanel />
               </TabsContent>
             </Tabs>
-          </aside>
-        </div>
+          </div>
+        </main>
       )}
     </div>
   );
