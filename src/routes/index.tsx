@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
@@ -13,9 +13,6 @@ import {
   Moon,
   Play,
   Zap,
-  FileJson,
-  Image as ImageIcon,
-  FileCode2,
   Languages,
 } from "lucide-react";
 import { useCircuitStore } from "@/store/useCircuitStore";
@@ -34,7 +31,7 @@ import { LanguageProvider, useLang } from "@/i18n";
 
 import { EXAMPLES } from "@/logic/examples";
 import { analyze } from "@/logic/analysis";
-import { exportJson, exportPng, exportSvg } from "@/lib/export";
+import bgAsset from "@/assets/background.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -92,6 +89,9 @@ function App() {
   const [tab, setTab] = useState<"circuit" | "build" | "learn">("circuit");
 
   useEffect(() => {
+    // Set background image
+    document.body.style.setProperty('--bg-image', `url(${bgAsset.url})`);
+
     const saved = localStorage.getItem("logiclab-project");
     if (saved) {
       try {
