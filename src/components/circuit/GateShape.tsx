@@ -14,8 +14,9 @@ export function GateShape({
   className?: string;
 }) {
   const stroke = "currentColor";
+  const gateColor = `var(--gate-${type.toLowerCase()})`;
   const fill = active ? "var(--signal-fill)" : "var(--gate-fill)";
-  const common = { stroke, strokeWidth: 2, fill, strokeLinejoin: "round" as const };
+  const common = { stroke: gateColor || "currentColor", strokeWidth: 2, fill, strokeLinejoin: "round" as const };
 
   const bubble = (cx: number) => <circle cx={cx} cy={24} r={5} {...common} />;
 

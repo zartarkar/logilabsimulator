@@ -142,9 +142,9 @@ function App() {
               <button
                 key={x.id}
                 onClick={() => setTab(x.id)}
-                className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+                className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors nav-tab-${x.id} ${
                   tab === x.id
-                    ? "bg-primary text-primary-foreground shadow-sm"
+                    ? "bg-destructive text-destructive-foreground shadow-sm"
                     : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                 }`}
               >
@@ -154,37 +154,6 @@ function App() {
           </nav>
 
           <div className="flex items-center justify-end gap-1">
-            {s.graph && tab === "circuit" && (
-              <>
-                <Button size="sm" variant="outline" onClick={() => exportSvg(s.graph!, s.parsed?.name ?? "circuit")}>
-                  <FileCode2 className="mr-1 h-3.5 w-3.5" /> SVG
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => void exportPng(s.graph!, s.parsed?.name ?? "circuit")}>
-                  <ImageIcon className="mr-1 h-3.5 w-3.5" /> PNG
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() =>
-                    exportJson(
-                      {
-                        expression: s.expression,
-                        normalized: s.parsed?.normalized,
-                        mode: s.mode,
-                        values: s.values,
-                        twoInputMode: s.twoInputMode,
-                        shareSubexpressions: s.shareSubexpressions,
-                        nodes: s.graph!.nodes,
-                        edges: s.graph!.edges,
-                      },
-                      s.parsed?.name ?? "circuit",
-                    )
-                  }
-                >
-                  <FileJson className="mr-1 h-3.5 w-3.5" /> JSON
-                </Button>
-              </>
-            )}
             <TutorialDialog />
             <div className="flex items-center overflow-hidden rounded-full border border-border">
               <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
@@ -248,12 +217,12 @@ function App() {
               )}
 
               <h3 className="mt-4 text-xs font-semibold uppercase text-muted-foreground">{t("inputValues")}</h3>
-              <div className="-mx-4">
+              <div className="-mx-4 inputs-panel-container">
                 <InputsPanel />
               </div>
 
               <div className="mt-2 flex gap-2">
-                <Button size="sm" className="flex-1" onClick={s.generate}>
+                <Button size="sm" variant="destructive" className="flex-1 font-bold" onClick={s.generate}>
                   <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
                 </Button>
                 <Button size="sm" variant="outline" onClick={s.parseOnly}>
@@ -265,7 +234,7 @@ function App() {
               </div>
 
               <h3 className="mt-4 text-xs font-semibold uppercase text-muted-foreground">{t("stepSim")}</h3>
-              <div className="-mx-4">
+              <div className="-mx-4 calculation-panel-container">
                 <CalculationPanel />
               </div>
 
@@ -382,9 +351,8 @@ function App() {
             </section>
           </div>
 
-          {/* BOTTOM: truth table + simplification */}
           <div className="h-[36vh] shrink-0 border-t border-border bg-card">
-            <Tabs defaultValue="truth" className="flex h-full flex-col">
+            <Tabs defaultValue="truth" className="flex h-full flex-col truth-table-tabs">
               <TabsList className="m-2 w-fit">
                 <TabsTrigger value="truth">{t("truthTable")}</TabsTrigger>
                 <TabsTrigger value="simplify">{t("simplification")}</TabsTrigger>
