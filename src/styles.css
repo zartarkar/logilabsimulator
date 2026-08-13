@@ -81,7 +81,7 @@
 /* 10 Minute School design system:
    red = brand identity, green = action, white/gray = surfaces. */
 :root {
-  --radius: 0.5rem; /* --r-sm 8px; cards use rounded-lg (16px) */
+  --radius: 0.5rem;
 
   --ten-red: #e8001d;
   --ten-red-dark: #931212;
@@ -124,10 +124,20 @@
   --signal-on-fg: #ffffff;
   --signal-off: #d1d5db;
   --gate-line: #374151;
-  --canvas: #f9fafb;
+  --canvas: transparent;
   --grid-dot: #e5e7eb;
   --gate-fill: #ffffff;
   --signal-fill: #e6f7ed;
+
+  /* Gate-wise colors */
+  --gate-and: #f97316;
+  --gate-or: #3b82f6;
+  --gate-not: #ef4444;
+  --gate-xor: #a855f7;
+  --gate-nand: #ea580c;
+  --gate-nor: #2563eb;
+  --gate-xnor: #9333ea;
+  --gate-buffer: #64748b;
 }
 
 .dark {
@@ -168,10 +178,20 @@
   --signal-on-fg: #06210f;
   --signal-off: #374151;
   --gate-line: #d1d5db;
-  --canvas: #0b1117;
+  --canvas: transparent;
   --grid-dot: #1f2937;
   --gate-fill: #121a22;
   --signal-fill: #10331f;
+
+  /* Gate-wise colors dark */
+  --gate-and: #fb923c;
+  --gate-or: #60a5fa;
+  --gate-not: #f87171;
+  --gate-xor: #c084fc;
+  --gate-nand: #f97316;
+  --gate-nor: #3b82f6;
+  --gate-xnor: #a855f7;
+  --gate-buffer: #94a3b8;
 }
 
 @layer base {
@@ -183,5 +203,9 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    background-image: var(--bg-image);
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
   }
 }
