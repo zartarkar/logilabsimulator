@@ -212,16 +212,16 @@ function Inner() {
   return (
     <div className="flex h-full min-h-0 flex-col md:flex-row">
       <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card p-3 md:w-52 md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
-        <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground md:block">Components</h3>
+        <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground md:block sandbox-components-header">Components</h3>
         <button
           onClick={() => addNode("INPUT")}
-          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted"
+          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted button-red text-white"
         >
           Input switch
         </button>
         <button
           onClick={() => addNode("OUTPUT")}
-          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted"
+          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted button-red text-white"
         >
           Output LED
         </button>
@@ -229,7 +229,7 @@ function Inner() {
           <button
             key={g}
             onClick={() => addNode(g)}
-            className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted"
+            className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted button-red text-white"
             aria-label={`Add ${g} gate`}
           >
             <span className="scale-[0.5] origin-left -mr-6">
@@ -238,16 +238,16 @@ function Inner() {
             <span className="font-mono text-xs">{g}</span>
           </button>
         ))}
-        <button onClick={() => addNode("CONST0")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted">
+        <button onClick={() => addNode("CONST0")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted button-red text-white">
           Constant 0
         </button>
-        <button onClick={() => addNode("CONST1")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted">
+        <button onClick={() => addNode("CONST1")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted button-red text-white">
           Constant 1
         </button>
         <Button
-          variant="outline"
+          variant="destructive"
           size="sm"
-          className="md:mt-2"
+          className="md:mt-2 button-red"
           disabled={selectedIds.length === 0}
           onClick={() => {
             selectedIds.forEach(removeNode);
@@ -258,8 +258,9 @@ function Inner() {
           <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete selected
         </Button>
         <Button
-          variant="outline"
+          variant="destructive"
           size="sm"
+          className="button-red"
           onClick={() => {
             setNodes([]);
             setEdges([]);

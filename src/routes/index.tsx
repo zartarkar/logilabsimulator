@@ -89,9 +89,8 @@ function App() {
   const [tab, setTab] = useState<"circuit" | "build" | "learn">("circuit");
 
   useEffect(() => {
-    // Set background image
-    document.body.style.setProperty('--bg-image', `url(${bgAsset.url})`);
 
+    // Note: The previous background image asset logic is removed in favor of the new CSS-based graph background.
     const saved = localStorage.getItem("logiclab-project");
     if (saved) {
       try {
@@ -170,7 +169,7 @@ function App() {
                 </button>
               ))}
             </div>
-            <Button size="sm" variant="ghost" onClick={toggle} aria-label="Toggle theme">
+            <Button size="sm" className="button-red" onClick={toggle} aria-label="Toggle theme">
               {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
           </div>
@@ -178,7 +177,7 @@ function App() {
       </header>
 
       {tab === "learn" ? (
-        <main className="min-h-0 flex-1 overflow-y-auto">
+        <main className="min-h-0 flex-1 overflow-y-auto learn-panel-container">
           <LearnPanel />
         </main>
       ) : tab === "build" ? (
@@ -225,10 +224,10 @@ function App() {
                 <Button size="sm" variant="destructive" className="flex-1 font-bold" onClick={s.generate}>
                   <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
                 </Button>
-                <Button size="sm" variant="outline" onClick={s.parseOnly}>
+                <Button size="sm" className="button-red" onClick={s.parseOnly}>
                   {t("parse")}
                 </Button>
-                <Button size="sm" variant="outline" onClick={s.runSimplify} aria-label={t("simplify")}>
+                <Button size="sm" className="button-red" onClick={s.runSimplify} aria-label={t("simplify")}>
                   <Zap className="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -273,7 +272,7 @@ function App() {
                     <Label className="text-xs">Layout</Label>
                     <div className="flex gap-1">
                       {(["LR", "TB"] as const).map((d) => (
-                        <Button key={d} size="sm" variant={s.direction === d ? "default" : "outline"} onClick={() => s.setDirection(d)}>
+                        <Button key={d} size="sm" className={s.direction === d ? "button-red" : "bg-muted text-muted-foreground"} onClick={() => s.setDirection(d)}>
                           {d}
                         </Button>
                       ))}

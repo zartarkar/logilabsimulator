@@ -13,6 +13,7 @@ export function TutorialDialog() {
       prevBtnText: lang === 'bn' ? 'পূর্ববর্তী' : 'Previous',
       doneBtnText: lang === 'bn' ? 'শেষ' : 'Done',
       steps: [
+        // --- 1. Common Header ---
         {
           element: '.flex.items-center.gap-2',
           popover: {
@@ -31,6 +32,7 @@ export function TutorialDialog() {
             align: 'center'
           }
         },
+        // --- 2. Expression Simulator (if active) ---
         {
           element: 'textarea#expr',
           popover: {
@@ -50,21 +52,12 @@ export function TutorialDialog() {
           }
         },
         {
-          element: 'button.bg-destructive',
+          element: 'button.bg-destructive, .button-red',
           popover: {
             title: t("step3t"),
             description: t("step3d"),
             side: "top",
             align: 'center'
-          }
-        },
-        {
-          element: '.calculation-panel-container',
-          popover: {
-            title: t("step4t"),
-            description: t("step4d"),
-            side: "right",
-            align: 'start'
           }
         },
         {
@@ -76,11 +69,31 @@ export function TutorialDialog() {
             align: 'center'
           }
         },
+        // --- 3. Build Your Own Circuit (if active) ---
         {
-          element: '.truth-table-tabs',
+          element: '.sandbox-components-header',
           popover: {
-            title: t("step5t"),
-            description: t("step5d"),
+            title: lang === 'bn' ? 'বিল্ডার প্যানেল' : 'Builder Palette',
+            description: lang === 'bn' ? 'এখানে আপনার নিজের সার্কিট তৈরি করতে গেট এবং কম্পোনেন্ট সিলেক্ট করুন।' : 'Select gates and components here to build your own custom circuit.',
+            side: "right",
+            align: 'start'
+          }
+        },
+        {
+          element: '.react-flow',
+          popover: {
+            title: lang === 'bn' ? 'ক্যানভাস' : 'Canvas',
+            description: lang === 'bn' ? 'গেটগুলো ড্র্যাগ করুন এবং তার দিয়ে কানেক্ট করুন।' : 'Drag gates around and connect them by their handles with wires.',
+            side: "bottom",
+            align: 'center'
+          }
+        },
+        // --- 4. Learn (if active) ---
+        {
+          element: '.learn-panel-container',
+          popover: {
+            title: lang === 'bn' ? 'শেখার প্যানেল' : 'Learning Resources',
+            description: lang === 'bn' ? 'এখানে আপনি বুলিয়ান সূত্র এবং লজিক গেট সম্পর্কে বিস্তারিত জানতে পারবেন।' : 'Explore Boolean laws, gate rules, and key pointers here.',
             side: "top",
             align: 'center'
           }
@@ -92,7 +105,7 @@ export function TutorialDialog() {
   };
 
   return (
-    <Button size="sm" variant="outline" className="gap-1" onClick={startTour}>
+    <Button size="sm" className="gap-1 button-red" onClick={startTour}>
       <GraduationCap className="h-4 w-4" /> {t("tutorial")}
     </Button>
   );
