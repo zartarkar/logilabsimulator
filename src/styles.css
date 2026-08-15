@@ -218,3 +218,8 @@
 .button-red:hover {
   background-color: var(--ten-red-dark) !important;
 }
+
+.button-lang-active {
+  background-color: var(--destructive) !important;
+  color: var(--destructive-foreground) !important;
+}

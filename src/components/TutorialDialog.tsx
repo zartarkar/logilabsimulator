@@ -105,7 +105,7 @@ export function TutorialDialog() {
   };
 
   return (
-    <Button size="sm" className="gap-1 button-red" onClick={startTour}>
+    <Button size="sm" variant="outline" className="gap-1" onClick={startTour}>
       <GraduationCap className="h-4 w-4" /> {t("tutorial")}
     </Button>
   );

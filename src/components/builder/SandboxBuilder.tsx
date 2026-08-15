@@ -215,13 +215,13 @@ function Inner() {
         <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground md:block sandbox-components-header">Components</h3>
         <button
           onClick={() => addNode("INPUT")}
-          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted button-red text-white"
+          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground"
         >
           Input switch
         </button>
         <button
           onClick={() => addNode("OUTPUT")}
-          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted button-red text-white"
+          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground"
         >
           Output LED
         </button>
@@ -229,7 +229,7 @@ function Inner() {
           <button
             key={g}
             onClick={() => addNode(g)}
-            className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted button-red text-white"
+            className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground"
             aria-label={`Add ${g} gate`}
           >
             <span className="scale-[0.5] origin-left -mr-6">
@@ -238,16 +238,16 @@ function Inner() {
             <span className="font-mono text-xs">{g}</span>
           </button>
         ))}
-        <button onClick={() => addNode("CONST0")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted button-red text-white">
+        <button onClick={() => addNode("CONST0")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground">
           Constant 0
         </button>
-        <button onClick={() => addNode("CONST1")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted button-red text-white">
+        <button onClick={() => addNode("CONST1")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground">
           Constant 1
         </button>
         <Button
-          variant="destructive"
+          variant="outline"
           size="sm"
-          className="md:mt-2 button-red"
+          className="md:mt-2"
           disabled={selectedIds.length === 0}
           onClick={() => {
             selectedIds.forEach(removeNode);
@@ -258,9 +258,8 @@ function Inner() {
           <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete selected
         </Button>
         <Button
-          variant="destructive"
+          variant="outline"
           size="sm"
-          className="button-red"
           onClick={() => {
             setNodes([]);
             setEdges([]);
