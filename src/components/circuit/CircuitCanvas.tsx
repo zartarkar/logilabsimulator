@@ -113,7 +113,7 @@ function Inner({
       minZoom={0.15}
       maxZoom={2.5}
       proOptions={{ hideAttribution: true }}
-      className="bg-background"
+      className="bg-transparent"
     >
       <Background gap={18} size={1} color="var(--grid-dot)" />
       <Controls onFitView={() => fitView({ padding: 0.2 })} className="!bg-card !text-foreground" />

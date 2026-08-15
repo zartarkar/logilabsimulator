@@ -115,9 +115,9 @@ function App() {
   const outputValue = s.graph ? (s.nodeValues[s.graph.outputId] ?? 0) : 0;
 
   return (
-    <div className="flex h-screen flex-col bg-background text-foreground">
+    <div className="flex h-screen flex-col bg-transparent text-foreground">
       <Toaster />
-      <header className="shrink-0 border-b border-border bg-card">
+      <header className="shrink-0 border-b border-border bg-card/80 backdrop-blur-md">
         <div className="grid items-center gap-3 px-4 py-3 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
           <div className="flex items-center gap-2">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
@@ -178,18 +178,18 @@ function App() {
       </header>
 
       {tab === "learn" ? (
-        <main className="min-h-0 flex-1 overflow-y-auto learn-panel-container">
+        <main className="min-h-0 flex-1 overflow-y-auto learn-panel-container bg-transparent">
           <LearnPanel />
         </main>
       ) : tab === "build" ? (
-        <main className="min-h-0 flex-1">
+        <main className="min-h-0 flex-1 bg-transparent">
           <SandboxBuilder />
         </main>
       ) : (
         <main className="flex min-h-0 flex-1 flex-col">
           <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
             {/* LEFT: controls */}
-            <section className="w-full shrink-0 overflow-y-auto border-b border-border bg-card p-3 lg:w-[26rem] lg:border-b-0 lg:border-r">
+            <section className="w-full shrink-0 overflow-y-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-[26rem] lg:border-b-0 lg:border-r">
               <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
                 {t("expression")}
               </Label>
@@ -311,7 +311,7 @@ function App() {
 
             {/* RIGHT: canvas */}
             <section className="flex min-h-0 flex-1 flex-col">
-              <div className="flex flex-wrap items-center gap-3 border-b border-border bg-card px-3 py-1.5 text-xs">
+              <div className="flex flex-wrap items-center gap-3 border-b border-border bg-card/60 backdrop-blur-sm px-3 py-1.5 text-xs">
                 <span className="font-mono">{s.parsed?.normalized ?? "—"}</span>
                 {stats && (
                   <span className="text-muted-foreground">
@@ -351,7 +351,7 @@ function App() {
             </section>
           </div>
 
-          <div className="h-[36vh] shrink-0 border-t border-border bg-card">
+          <div className="h-[36vh] shrink-0 border-t border-border bg-card/80 backdrop-blur-md">
             <Tabs defaultValue="truth" className="flex h-full flex-col truth-table-tabs">
               <TabsList className="m-2 w-fit">
                 <TabsTrigger value="truth">{t("truthTable")}</TabsTrigger>
