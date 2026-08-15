@@ -211,7 +211,9 @@
   }
 }
 
-.button-red {
+.button-red, 
+[data-state=active].button-red,
+.button-red:is([data-state=active]) {
   background-color: var(--destructive) !important;
   color: var(--destructive-foreground) !important;
 }

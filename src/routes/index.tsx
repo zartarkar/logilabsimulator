@@ -354,11 +354,11 @@ function App() {
           <div className="h-[36vh] shrink-0 border-t border-border bg-card/80 backdrop-blur-md">
             <Tabs defaultValue="truth" className="flex h-full flex-col truth-table-tabs">
               <TabsList className="m-2 w-fit">
-                <TabsTrigger value="truth">{t("truthTable")}</TabsTrigger>
-                <TabsTrigger value="simplify">{t("simplification")}</TabsTrigger>
-                <TabsTrigger value="ast">{t("ast")}</TabsTrigger>
-                <TabsTrigger value="gate">{t("gate")}</TabsTrigger>
-                <TabsTrigger value="analysis">{t("analysis")}</TabsTrigger>
+                <TabsTrigger value="truth" className="data-[state=active]:button-red">{t("truthTable")}</TabsTrigger>
+                <TabsTrigger value="simplify" className="data-[state=active]:button-red">{t("simplification")}</TabsTrigger>
+                <TabsTrigger value="ast" className="data-[state=active]:button-red">{t("ast")}</TabsTrigger>
+                <TabsTrigger value="gate" className="data-[state=active]:button-red">{t("gate")}</TabsTrigger>
+                <TabsTrigger value="analysis" className="data-[state=active]:button-red">{t("analysis")}</TabsTrigger>
               </TabsList>
               <TabsContent value="truth" className="min-h-0 flex-1 overflow-hidden">
                 <TruthTablePanel />
