@@ -26,10 +26,10 @@ export function CalculationPanel() {
   return (
     <div className="space-y-3 p-4">
       <div className="flex gap-2">
-        <Button size="sm" variant={beginner ? "default" : "outline"} onClick={() => setBeginner(true)}>
+        <Button size="sm" variant={beginner ? "default" : "outline"} onClick={() => setBeginner(true)} className={beginner ? "button-red" : ""}>
           Beginner
         </Button>
-        <Button size="sm" variant={!beginner ? "default" : "outline"} onClick={() => setBeginner(false)}>
+        <Button size="sm" variant={!beginner ? "default" : "outline"} onClick={() => setBeginner(false)} className={!beginner ? "button-red" : ""}>
           Compact
         </Button>
       </div>

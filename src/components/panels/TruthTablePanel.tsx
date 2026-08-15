@@ -78,7 +78,7 @@ export function TruthTablePanel() {
     <div className="flex h-full flex-col">
       <div className="flex flex-wrap items-center gap-2 border-b border-border p-2">
         {(["all", "1", "0"] as const).map((f) => (
-          <Button key={f} size="sm" variant={filter === f ? "default" : "outline"} onClick={() => setFilter(f)}>
+          <Button key={f} size="sm" variant={filter === f ? "default" : "outline"} onClick={() => setFilter(f)} className={filter === f ? "button-red" : ""}>
             {f === "all" ? "All rows" : `Output ${f}`}
           </Button>
         ))}
