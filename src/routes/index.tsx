@@ -14,7 +14,6 @@ import {
   Play,
   Zap,
   Languages,
-  Layout,
 } from "lucide-react";
 import { useCircuitStore } from "@/store/useCircuitStore";
 import { CircuitCanvas } from "@/components/circuit/CircuitCanvas";
@@ -58,32 +57,13 @@ export const Route = createFileRoute("/")({
 
 function useTheme() {
   const [dark, setDark] = useState(false);
-  const [bgType, setBgType] = useState<"grid" | "graph" | "blueprint">("grid");
 
   useEffect(() => {
     const stored = localStorage.getItem("logiclab-theme");
     const isDark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
     setDark(isDark);
     document.documentElement.classList.toggle("dark", isDark);
-
-    const storedBg = localStorage.getItem("logiclab-bg") as any;
-    if (storedBg) setBgType(storedBg);
   }, []);
-
-  useEffect(() => {
-    const root = document.body;
-    if (bgType === "grid") {
-      root.style.removeProperty("--bg-image");
-      root.style.removeProperty("--bg-size");
-    } else if (bgType === "graph") {
-      root.style.setProperty("--bg-image", "linear-gradient(var(--grid-dot) 1px, transparent 1px), linear-gradient(90deg, var(--grid-dot) 1px, transparent 1px)");
-      root.style.setProperty("--bg-size", "20px 20px");
-    } else if (bgType === "blueprint") {
-      root.style.setProperty("--bg-image", "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)");
-      root.style.setProperty("--bg-size", "100px 100px");
-    }
-    localStorage.setItem("logiclab-bg", bgType);
-  }, [bgType]);
 
   const toggle = () => {
     setDark((d) => {
@@ -94,7 +74,7 @@ function useTheme() {
     });
   };
 
-  return { dark, toggle, bgType, setBgType };
+  return { dark, toggle };
 }
 
 function Page() {
@@ -107,13 +87,18 @@ function Page() {
 
 function App() {
   const s = useCircuitStore();
-  const { dark, toggle, bgType, setBgType } = useTheme();
+  const { dark, toggle } = useTheme();
   const { lang, setLang, t } = useLang();
   const [tab, setTab] = useState<"circuit" | "build" | "learn">("circuit");
 
   useEffect(() => {
+    const bgUrl = dark 
+      ? "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=2070" 
+      : "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2070";
+    document.body.style.setProperty('--bg-image', `url(${bgUrl})`);
+  }, [dark]);
 
-    // Note: The previous background image asset logic is removed in favor of the new CSS-based graph background.
+  useEffect(() => {
     const saved = localStorage.getItem("logiclab-project");
     if (saved) {
       try {
@@ -175,41 +160,27 @@ function App() {
             ))}
           </nav>
 
-          <div className="flex items-center justify-end gap-1">
-            <div className="flex items-center overflow-hidden rounded-full border border-border mr-1">
-              <Layout className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
-              {(["grid", "graph", "blueprint"] as const).map((b) => (
-                <button
-                  key={b}
-                  onClick={() => setBgType(b)}
-                  className={`px-2 py-1 text-[10px] font-bold uppercase transition-colors ${
-                    bgType === b ? "bg-destructive text-destructive-foreground" : "text-muted-foreground hover:bg-muted"
-                  }`}
-                >
-                  {b.slice(0, 2)}
-                </button>
-              ))}
+            <div className="flex items-center justify-end gap-1">
+              <TutorialDialog />
+              <div className="flex items-center overflow-hidden rounded-full border border-border">
+                <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
+                {(["en", "bn"] as const).map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => setLang(l)}
+                    aria-pressed={lang === l}
+                    className={`px-2.5 py-1 text-xs font-bold transition-colors ${
+                      lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {l === "en" ? "EN" : "বাং"}
+                  </button>
+                ))}
+              </div>
+              <Button size="sm" variant="outline" onClick={toggle} aria-label="Toggle theme">
+                {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </Button>
             </div>
-            <TutorialDialog />
-            <div className="flex items-center overflow-hidden rounded-full border border-border">
-              <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
-              {(["en", "bn"] as const).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  aria-pressed={lang === l}
-                  className={`px-2.5 py-1 text-xs font-bold transition-colors ${
-                    lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
-                  }`}
-                >
-                  {l === "en" ? "EN" : "বাং"}
-                </button>
-              ))}
-            </div>
-            <Button size="sm" variant="outline" onClick={toggle} aria-label="Toggle theme">
-              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
-          </div>
         </div>
       </header>
 
