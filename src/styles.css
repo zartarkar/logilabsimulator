@@ -87,8 +87,7 @@
   --ten-red: #e8001d;
   --ten-red-dark: #931212;
   --ten-ink: #111827;
-
-  --background: #ffffff;
+  --background: #fdfdfd;
   --foreground: #111827;
   --card: #ffffff;
   --card-foreground: #111827;
@@ -204,8 +203,10 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-image: 
+      linear-gradient(to right, var(--grid-dot) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-dot) 1px, transparent 1px);
+    background-size: 40px 40px;
     background-attachment: fixed;
   }
 }
