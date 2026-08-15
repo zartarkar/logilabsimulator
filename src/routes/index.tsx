@@ -14,6 +14,7 @@ import {
   Play,
   Zap,
   Languages,
+  Layout,
 } from "lucide-react";
 import { useCircuitStore } from "@/store/useCircuitStore";
 import { CircuitCanvas } from "@/components/circuit/CircuitCanvas";
@@ -57,12 +58,33 @@ export const Route = createFileRoute("/")({
 
 function useTheme() {
   const [dark, setDark] = useState(false);
+  const [bgType, setBgType] = useState<"grid" | "graph" | "blueprint">("grid");
+
   useEffect(() => {
     const stored = localStorage.getItem("logiclab-theme");
     const isDark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
     setDark(isDark);
     document.documentElement.classList.toggle("dark", isDark);
+
+    const storedBg = localStorage.getItem("logiclab-bg") as any;
+    if (storedBg) setBgType(storedBg);
   }, []);
+
+  useEffect(() => {
+    const root = document.body;
+    if (bgType === "grid") {
+      root.style.removeProperty("--bg-image");
+      root.style.removeProperty("--bg-size");
+    } else if (bgType === "graph") {
+      root.style.setProperty("--bg-image", "linear-gradient(var(--grid-dot) 1px, transparent 1px), linear-gradient(90deg, var(--grid-dot) 1px, transparent 1px)");
+      root.style.setProperty("--bg-size", "20px 20px");
+    } else if (bgType === "blueprint") {
+      root.style.setProperty("--bg-image", "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)");
+      root.style.setProperty("--bg-size", "100px 100px");
+    }
+    localStorage.setItem("logiclab-bg", bgType);
+  }, [bgType]);
+
   const toggle = () => {
     setDark((d) => {
       const next = !d;
@@ -71,7 +93,8 @@ function useTheme() {
       return next;
     });
   };
-  return { dark, toggle };
+
+  return { dark, toggle, bgType, setBgType };
 }
 
 function Page() {
@@ -84,7 +107,7 @@ function Page() {
 
 function App() {
   const s = useCircuitStore();
-  const { dark, toggle } = useTheme();
+  const { dark, toggle, bgType, setBgType } = useTheme();
   const { lang, setLang, t } = useLang();
   const [tab, setTab] = useState<"circuit" | "build" | "learn">("circuit");
 
@@ -153,6 +176,20 @@ function App() {
           </nav>
 
           <div className="flex items-center justify-end gap-1">
+            <div className="flex items-center overflow-hidden rounded-full border border-border mr-1">
+              <Layout className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
+              {(["grid", "graph", "blueprint"] as const).map((b) => (
+                <button
+                  key={b}
+                  onClick={() => setBgType(b)}
+                  className={`px-2 py-1 text-[10px] font-bold uppercase transition-colors ${
+                    bgType === b ? "bg-destructive text-destructive-foreground" : "text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  {b.slice(0, 2)}
+                </button>
+              ))}
+            </div>
             <TutorialDialog />
             <div className="flex items-center overflow-hidden rounded-full border border-border">
               <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
