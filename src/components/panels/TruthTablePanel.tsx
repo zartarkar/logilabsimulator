@@ -50,7 +50,7 @@ export function TruthTablePanel() {
           This expression has {vars.length} variables — {2 ** vars.length} rows. Combinations grow as 2ⁿ, so the table
           may be slow to render.
         </p>
-        <Button size="sm" onClick={() => setConfirmed(true)}>
+        <Button size="sm" className="button-red" onClick={() => setConfirmed(true)}>
           Generate anyway
         </Button>
       </div>
@@ -78,19 +78,19 @@ export function TruthTablePanel() {
     <div className="flex h-full flex-col">
       <div className="flex flex-wrap items-center gap-2 border-b border-border p-2">
         {(["all", "1", "0"] as const).map((f) => (
-          <Button key={f} size="sm" variant={filter === f ? "default" : "outline"} onClick={() => setFilter(f)}>
+          <Button key={f} size="sm" className={filter === f ? "button-red" : "bg-muted text-muted-foreground"} onClick={() => setFilter(f)}>
             {f === "all" ? "All rows" : `Output ${f}`}
           </Button>
         ))}
-        <Button size="sm" variant="outline" onClick={() => setShowIntermediate((s) => !s)}>
+        <Button size="sm" className="button-red" onClick={() => setShowIntermediate((s) => !s)}>
           {showIntermediate ? "Hide" : "Show"} intermediates
         </Button>
-        <Button size="sm" variant="outline" onClick={download}>
+        <Button size="sm" className="button-red" onClick={download}>
           <Download className="mr-1 h-3.5 w-3.5" /> CSV
         </Button>
         <Button
           size="sm"
-          variant="outline"
+          className="button-red"
           onClick={() => {
             void navigator.clipboard.writeText(csv());
             toast.success("Truth table copied");
