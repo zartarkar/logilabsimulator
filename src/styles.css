@@ -204,8 +204,9 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    background-image: none;
-    background-color: var(--color-background);
+    background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-attachment: fixed;
   }
 }
 
