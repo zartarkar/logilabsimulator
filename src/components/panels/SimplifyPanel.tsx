@@ -13,7 +13,7 @@ export function SimplifyPanel() {
 
   return (
     <div className="space-y-3 p-4">
-      <Button size="sm" className="button-red" onClick={runSimplify}>
+      <Button size="sm" variant="outline" onClick={runSimplify}>
         <Wand2 className="mr-1 h-3.5 w-3.5" /> Simplify expression
       </Button>
       {!simplified && <p className="text-sm text-muted-foreground">Uses Quine–McCluskey minimisation with full equivalence verification.</p>}

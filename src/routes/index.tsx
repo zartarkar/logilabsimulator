@@ -161,15 +161,15 @@ function App() {
                   key={l}
                   onClick={() => setLang(l)}
                   aria-pressed={lang === l}
-                  className={`px-2.5 py-1 text-xs font-bold ${
-                    lang === l ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                  className={`px-2.5 py-1 text-xs font-bold transition-colors ${
+                    lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
                   }`}
                 >
                   {l === "en" ? "EN" : "বাং"}
                 </button>
               ))}
             </div>
-            <Button size="sm" className="button-red" onClick={toggle} aria-label="Toggle theme">
+            <Button size="sm" variant="outline" onClick={toggle} aria-label="Toggle theme">
               {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
           </div>
@@ -221,13 +221,13 @@ function App() {
               </div>
 
               <div className="mt-2 flex gap-2">
-                <Button size="sm" variant="destructive" className="flex-1 font-bold" onClick={s.generate}>
+                <Button size="sm" variant="destructive" className="flex-1 font-bold button-red" onClick={s.generate}>
                   <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
                 </Button>
-                <Button size="sm" className="button-red" onClick={s.parseOnly}>
+                <Button size="sm" variant="outline" onClick={s.parseOnly}>
                   {t("parse")}
                 </Button>
-                <Button size="sm" className="button-red" onClick={s.runSimplify} aria-label={t("simplify")}>
+                <Button size="sm" variant="outline" onClick={s.runSimplify} aria-label={t("simplify")}>
                   <Zap className="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -272,7 +272,7 @@ function App() {
                     <Label className="text-xs">Layout</Label>
                     <div className="flex gap-1">
                       {(["LR", "TB"] as const).map((d) => (
-                        <Button key={d} size="sm" className={s.direction === d ? "button-red" : "bg-muted text-muted-foreground"} onClick={() => s.setDirection(d)}>
+                        <Button key={d} size="sm" variant={s.direction === d ? "default" : "outline"} onClick={() => s.setDirection(d)}>
                           {d}
                         </Button>
                       ))}
