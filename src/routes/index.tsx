@@ -182,7 +182,7 @@ function App() {
           <LearnPanel />
         </main>
       ) : tab === "build" ? (
-        <main className="min-h-0 flex-1">
+        <main className="min-h-0 flex-1 bg-transparent">
           <SandboxBuilder />
         </main>
       ) : (
