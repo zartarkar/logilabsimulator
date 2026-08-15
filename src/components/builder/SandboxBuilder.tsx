@@ -210,8 +210,8 @@ function Inner() {
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 flex-col md:flex-row">
-      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card p-3 md:w-52 md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
+    <div className="flex h-full min-h-0 flex-col md:flex-row bg-transparent">
+      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 md:w-52 md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
         <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground md:block sandbox-components-header">Components</h3>
         <button
           onClick={() => addNode("INPUT")}
@@ -290,7 +290,7 @@ function Inner() {
             <Controls className="!bg-card !text-foreground" />
           </ReactFlow>
         </div>
-        <div className="h-[32vh] shrink-0 overflow-auto border-t border-border bg-card p-3">
+        <div className="h-[32vh] shrink-0 overflow-auto border-t border-border bg-card/80 backdrop-blur-md p-3">
           <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("builderTruth")}</h3>
           {truth ? (
             <table className="mt-2 w-full border-collapse text-sm">
