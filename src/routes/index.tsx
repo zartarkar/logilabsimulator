@@ -92,13 +92,6 @@ function App() {
   const [tab, setTab] = useState<"circuit" | "build" | "learn">("circuit");
 
   useEffect(() => {
-    const bgUrl = dark 
-      ? "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=2070" 
-      : "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2070";
-    document.body.style.setProperty('--bg-image', `url(${bgUrl})`);
-  }, [dark]);
-
-  useEffect(() => {
     const saved = localStorage.getItem("logiclab-project");
     if (saved) {
       try {
