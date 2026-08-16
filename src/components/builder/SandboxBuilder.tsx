@@ -216,8 +216,8 @@ function Inner() {
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-y-auto lg:overflow-hidden">
-      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-52 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r z-10">
+    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-y-auto lg:overflow-hidden touch-none lg:touch-auto">
+      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-52 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto">
         <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground lg:block sandbox-components-header">Components</h3>
         <button
           onClick={() => addNode("INPUT")}
@@ -291,6 +291,10 @@ function Inner() {
             deleteKeyCode={["Backspace", "Delete"]}
             proOptions={{ hideAttribution: true }}
             fitView
+            fitViewOptions={{ padding: 0.2 }}
+            panOnScroll
+            selectionOnDrag
+            panOnDrag={[1, 2]}
           >
             <Background gap={18} size={1} color="var(--grid-dot)" />
             <Controls className="!bg-card !text-foreground" />
