@@ -41,7 +41,7 @@ import bgAsset from "@/assets/background.jpg.asset.json";
 
 const searchSchema = z.object({
   q: z.string().optional(),
-  tab: z.enum(["circuit", "build", "learn"]).optional(),
+  tab: z.enum(["simulator", "builder", "learn"]).optional(),
   v: z.string().optional(),
 });
 
@@ -160,17 +160,29 @@ function App() {
     const currentTab = s.tab;
     const currentV = valuesStr || undefined;
 
+    // Determine if we should include currentQ based on the tab
+    // If we're in builder or learn, q might be irrelevant or we might want to hide it
+    // The user said "jei tab e thakbo age oi tab name ashbe then the rest"
+    // This implies /?tab=simulator&q=... or /?tab=builder...
+    
     if (currentQ !== q || currentTab !== qTab || currentV !== qValues) {
+      const search: any = { tab: currentTab };
+      
+      // Only include q if we are in the simulator tab or if it's already present
+      if (currentTab === 'simulator' && currentQ) {
+        search.q = currentQ;
+      }
+      
+      if (currentV) {
+        search.v = currentV;
+      }
+
       navigate({ 
-        search: { 
-          q: currentQ,
-          tab: currentTab,
-          v: currentV
-        },
+        search,
         replace: true
       });
     }
-  }, [s.expression, s.tab, s.values, s.parsed]);
+  }, [s.expression, s.tab, s.values, s.parsed, q, qTab, qValues]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -290,8 +302,8 @@ function App() {
           <nav className="flex justify-center gap-1">
             {(
               [
-                { id: "circuit", label: t("tabCircuit") },
-                { id: "build", label: t("tabBuild") },
+                { id: "simulator", label: t("tabCircuit") },
+                { id: "builder", label: t("tabBuild") },
                 { id: "learn", label: t("tabLearn") },
               ] as const
             ).map((x) => (
@@ -339,7 +351,7 @@ function App() {
         <main className="min-h-0 flex-1 overflow-y-auto learn-panel-container bg-transparent">
           <LearnPanel />
         </main>
-      ) : s.tab === "build" ? (
+      ) : s.tab === "builder" ? (
         <main className="min-h-0 flex-1 overflow-hidden bg-transparent">
           <SandboxBuilder />
         </main>
