@@ -9,7 +9,7 @@ export const recognizeCircuitFromImage = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const { generateText } = await import("ai");
-      const { google } = await import("@ai-sdk/google");
+      const { createGoogleGenerativeAI } = await import("@ai-sdk/google");
 
       const apiKey = process.env['GOOGLE_GENERATIVE_AI_API_KEY'];
       if (!apiKey) {
@@ -19,9 +19,10 @@ export const recognizeCircuitFromImage = createServerFn({ method: "POST" })
         };
       }
 
-      // Using the default google instance which handles the standard model IDs correctly
-      // The API key is already picked up from process.env.GOOGLE_GENERATIVE_AI_API_KEY by the provider
-      const model = google("gemini-1.5-flash");
+      const google = createGoogleGenerativeAI({
+        apiKey: apiKey,
+      });
+      const model = google("models/gemini-1.5-flash");
 
       const prompt = `Analyze this image of a Boolean expression or a digital logic circuit. 
       
