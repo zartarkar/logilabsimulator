@@ -78,13 +78,19 @@ Do not include any other text, explanations, or markdown formatting.`;
       const ocrText = await performOCR(data.base64Image);
       
       // Simple heuristic to extract something that looks like an expression
-      let cleaned = ocrText.replace(/[^\w\s'+.()!]/g, '').trim();
+      // Improved heuristic to extract Boolean expressions
+      let cleaned = ocrText
+        .replace(/\n/g, ' ')
+        .replace(/[^\w\s'+.()!]/g, '')
+        .trim();
       
-      // Try to find something that looks like an assignment or just variables
-      if (cleaned.length < 2) {
+      // Try to find a substring that looks like an expression (at least one variable and an operator or group)
+      const likelyExpression = cleaned.match(/[A-Z]\s*['+.*]\s*[A-Z]|[A-Z]['+]|[A-Z]\./i);
+      
+      if (cleaned.length < 2 && !likelyExpression) {
         return {
           success: false,
-          error: "Could not detect a clear expression in the image. Please try typing it manually."
+          error: "Could not detect a clear expression in the image. Please try typing it manually or ensure the image is high-contrast."
         };
       }
 
