@@ -1,5 +1,5 @@
-import { useEffect, useState, useMemo } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,10 @@ import {
   Play,
   Zap,
   Languages,
+  Camera,
+  Upload,
 } from "lucide-react";
+import { z } from "zod";
 import { useCircuitStore } from "@/store/useCircuitStore";
 import { CircuitCanvas } from "@/components/circuit/CircuitCanvas";
 import { InputsPanel } from "@/components/panels/InputsPanel";
