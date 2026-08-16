@@ -415,8 +415,7 @@ function App() {
               </div>
 
               {/* Analysis and stats removed as per request to simplify options */}
-            </section>
-
+              
               <details className="mt-3">
                 <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground">
                   {t("examples")}
