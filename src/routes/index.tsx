@@ -141,7 +141,9 @@ function App() {
 
     if (changed) {
       useCircuitStore.setState(updates);
-      if (updates.expression !== undefined) {
+      // Only generate if we actually have an expression either from URL or state
+      const finalExpression = updates.expression ?? s.expression;
+      if (finalExpression) {
         s.generate();
       }
     }
