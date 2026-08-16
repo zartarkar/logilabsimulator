@@ -11,7 +11,13 @@ export const recognizeCircuitFromImage = createServerFn({ method: "POST" })
       const { generateText } = await import("ai");
       const { google } = await import("@ai-sdk/google");
 
+      const apiKey = process.env['GOOGLE_GENERATIVE_AI_API_KEY'];
+      if (!apiKey) {
+        return { success: false, error: "AI service not configured. Please add GOOGLE_GENERATIVE_AI_API_KEY to secrets." };
+      }
+
       const prompt = `Analyze this image of a Boolean expression or a digital logic circuit. 
+
       
 If it's a Boolean expression written in text (like A' + B + C or similar):
 1. Identify all variables and operators.
