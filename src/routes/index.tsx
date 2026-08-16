@@ -537,6 +537,3 @@ function App() {
     </div>
   );
 }
-    </div>
-  );
-}
