@@ -119,7 +119,7 @@ export function tokenize(source: string, mode: SyntaxMode): Token[] {
       const word = source.slice(i, j);
       const upper = word.toUpperCase();
       if (WORD_OPS[upper]) {
-        // If it's NOT, check if it's prefix or postfix (usually prefix for words)
+        // Handle common OCR errors or variations in Boolean notation
         push(WORD_OPS[upper]!, upper, i, j);
         i = j;
         continue;
