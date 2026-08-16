@@ -49,7 +49,7 @@ Do not include any other text, explanations, or markdown formatting.`;
               { type: "text", text: prompt },
               {
                 type: "image",
-                image: data.base64Image,
+                image: Buffer.from(data.base64Image, 'base64'),
               },
             ],
           },
