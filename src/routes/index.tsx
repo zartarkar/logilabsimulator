@@ -40,9 +40,9 @@ import { analyze } from "@/logic/analysis";
 import bgAsset from "@/assets/background.jpg.asset.json";
 
 const searchSchema = z.object({
-  q: z.string().optional(),
+  q: z.string().catch("").optional(),
   tab: z.enum(["simulator", "builder", "learn", "circuit"]).catch("simulator").optional(),
-  v: z.string().optional(),
+  v: z.string().catch("").optional(),
 });
 
 export const Route = createFileRoute("/")({
