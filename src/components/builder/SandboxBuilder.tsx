@@ -110,17 +110,21 @@ function Inner() {
     (kind: CircuitNodeType) => {
       const id = `sb${counter + 1}`;
       setCounter((c) => c + 1);
+      
       const center = screenToFlowPosition({
         x: window.innerWidth / 2,
         y: window.innerHeight / 2,
       });
+      
       const i = counter;
       const spot = {
-        x: center.x - 300 + (i % 4) * 200,
-        y: center.y - 180 + Math.floor(i / 4) * 130,
+        x: center.x - 100 + (i % 4) * 50,
+        y: center.y - 100 + Math.floor(i / 4) * 50,
       };
+      
       const label =
         kind === "INPUT" ? String.fromCharCode(65 + (counter % 26)) : kind === "OUTPUT" ? "OUT" : kind;
+      
       setNodes((ns) => [
         ...ns,
         { id, kind, label, x: spot.x, y: spot.y, inputValue: 0 },
@@ -205,14 +209,15 @@ function Inner() {
       }
       return next;
     });
-    if (removed.length) setSelectedIds((prev) => prev.filter((id) => !removed.includes(id)));
-    if (removed.length)
+    if (removed.length) {
+      setSelectedIds((prev) => prev.filter((id) => !removed.includes(id)));
       setEdges((es) => es.filter((e) => !removed.includes(e.source) && !removed.includes(e.target)));
+    }
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container">
-      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-52 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r">
+    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-y-auto lg:overflow-hidden touch-none lg:touch-auto">
+      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-52 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto">
         <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground lg:block sandbox-components-header">Components</h3>
         <button
           onClick={() => addNode("INPUT")}
@@ -271,8 +276,8 @@ function Inner() {
           <Trash2 className="mr-1 h-3.5 w-3.5" /> Clear all
         </Button>
       </aside>
-      <div className="flex min-h-0 flex-1 flex-col">
-        <div className="min-h-[240px] flex-1">
+      <div className="flex min-h-0 flex-1 flex-col lg:overflow-hidden">
+        <div className="min-h-[400px] lg:min-h-0 flex-1">
           <ReactFlow
             nodes={rfNodes}
             edges={styledEdges}
@@ -286,6 +291,10 @@ function Inner() {
             deleteKeyCode={["Backspace", "Delete"]}
             proOptions={{ hideAttribution: true }}
             fitView
+            fitViewOptions={{ padding: 0.2 }}
+            panOnScroll
+            selectionOnDrag
+            panOnDrag={[1, 2]}
           >
             <Background gap={18} size={1} color="var(--grid-dot)" />
             <Controls className="!bg-card !text-foreground" />
