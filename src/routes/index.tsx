@@ -127,11 +127,11 @@ function App() {
       const parsedValues: Record<string, 0 | 1> = {};
       qValues.split(',').forEach(pair => {
         const name = pair.slice(0, -1);
-        const val = pair.slice(-1) === '1' ? 1 : 0;
+        const valStr = pair.slice(-1);
+        const val = valStr === '1' ? 1 : 0;
         if (name) parsedValues[name] = val;
       });
       
-      // Check if values actually changed to avoid infinite loop
       const valuesChanged = Object.entries(parsedValues).some(([k, v]) => s.values[k] !== v);
       if (valuesChanged) {
         updates.values = { ...s.values, ...parsedValues };
@@ -147,23 +147,24 @@ function App() {
     }
   }, [q, qTab, qValues]);
 
-  // Update query param when state changes
   useEffect(() => {
+    const relevantVars = s.parsed?.variables || [];
     const valuesStr = Object.entries(s.values)
+      .filter(([k]) => relevantVars.includes(k))
       .map(([k, v]) => `${k}${v}`)
       .join(',');
     
     if (s.expression !== q || s.tab !== qTab || valuesStr !== qValues) {
       navigate({ 
         search: { 
-          q: s.expression,
+          q: s.expression || undefined,
           tab: s.tab,
           v: valuesStr || undefined
         },
         replace: true
       });
     }
-  }, [s.expression, s.tab, s.values]);
+  }, [s.expression, s.tab, s.values, s.parsed]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
