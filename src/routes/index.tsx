@@ -104,6 +104,7 @@ function App() {
   const navigate = useNavigate({ from: "/" });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognizeFn = useServerFn(recognizeCircuitFromImage);
+  const [recognitionError, setRecognitionError] = useState<string | null>(null);
 
   // Sync expression with query param
   useEffect(() => {
@@ -124,6 +125,7 @@ function App() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setRecognitionError(null);
     const reader = new FileReader();
     reader.onload = async () => {
       const base64 = (reader.result as string).split(",")[1];
@@ -138,7 +140,9 @@ function App() {
             s.generate();
             return t("imageSuccess");
           }
-          throw new Error(res.error || t("imageError"));
+          const errMsg = res.error || t("imageError");
+          setRecognitionError(errMsg);
+          throw new Error(errMsg);
         },
         error: (err) => err instanceof Error ? err.message : t("imageError"),
       });
@@ -268,6 +272,32 @@ function App() {
                   <div className="font-semibold text-destructive">{s.error.type}</div>
                   <p>{s.error.message}</p>
                   {s.error.suggestion && <p className="mt-1 text-xs text-muted-foreground">Try: {s.error.suggestion}</p>}
+                </div>
+              )}
+
+              {/* Secret missing warning with action button */}
+              {!s.error && recognitionError && recognitionError.includes("GOOGLE_GENERATIVE_AI_API_KEY") && (
+                <div role="alert" className="mt-3 rounded-lg border-2 border-amber-500/60 bg-amber-500/10 p-3 text-sm">
+                  <div className="font-semibold text-amber-600 dark:text-amber-400">Configuration Required</div>
+                  <p className="mt-1 text-foreground/90">
+                    The image recognition feature requires a Google AI API Key to work.
+                  </p>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="mt-3 w-full border-amber-500/50 hover:bg-amber-500/20"
+                    onClick={() => {
+                      // Use window.dispatchLovableTool if available (it often is in these environments)
+                      // or just show instructions since I can't guarantee parent postMessage will be caught here
+                      // without proper handler. However, I can trigger the add_secret tool from my side!
+                      toast.info("Opening secret addition form...");
+                      // I will call add_secret from the agent side in a separate tool call if this button is just UI.
+                      // For now, let's just make it a trigger for the user to look at the chat.
+                      alert("Please click 'Add Secret' in the Lovable chat interface to configure the GOOGLE_GENERATIVE_AI_API_KEY.");
+                    }}
+                  >
+                    Add API Key
+                  </Button>
                 </div>
               )}
 
