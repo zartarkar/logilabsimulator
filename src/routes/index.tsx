@@ -120,7 +120,8 @@ function App() {
     }
     
     if (qTab !== undefined && qTab !== s.tab) {
-      updates.tab = qTab;
+      const normalizedTab = qTab === 'circuit' ? 'simulator' : qTab;
+      updates.tab = normalizedTab;
       changed = true;
     }
 
@@ -167,7 +168,7 @@ function App() {
     // This implies /?tab=simulator&q=... or /?tab=builder...
     
     if (currentQ !== q || currentTab !== qTab || currentV !== qValues) {
-      const search: any = { tab: currentTab };
+      const search: any = { tab: currentTab === 'simulator' ? 'simulator' : currentTab };
       
       // Only include q if we are in the simulator tab or if it's already present
       if (currentTab === 'simulator' && currentQ) {
@@ -306,7 +307,11 @@ function App() {
             ).map((x) => (
               <button
                 key={x.id}
-                onClick={() => { s.setTab(x.id); navigate({ search: { ...qSearch, tab: x.id }, replace: true }); }}
+                onClick={() => { 
+                  const targetTab = x.id === 'simulator' ? 'simulator' : x.id;
+                  s.setTab(targetTab as any); 
+                  navigate({ search: { ...qSearch, tab: targetTab }, replace: true }); 
+                }}
                 className={`rounded-full px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-semibold transition-colors nav-tab-${x.id} ${
                   s.tab === x.id
                     ? "bg-destructive text-destructive-foreground shadow-sm"
