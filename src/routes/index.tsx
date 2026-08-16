@@ -271,6 +271,31 @@ function App() {
                 </div>
               )}
 
+              {/* Secret missing warning with action button */}
+              {!s.error && recognizeFn.error && recognizeFn.error.message.includes("GOOGLE_GENERATIVE_AI_API_KEY") && (
+                <div role="alert" className="mt-3 rounded-lg border-2 border-amber-500/60 bg-amber-500/10 p-3 text-sm">
+                  <div className="font-semibold text-amber-600 dark:text-amber-400">Configuration Required</div>
+                  <p className="mt-1 text-foreground/90">
+                    The image recognition feature requires a Google AI API Key to work.
+                  </p>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="mt-3 w-full border-amber-500/50 hover:bg-amber-500/20"
+                    onClick={() => {
+                      // Dispatch the secret tool
+                      window.parent?.postMessage({
+                        type: 'lovable--dispatch-tool',
+                        tool: 'secrets--add_secret',
+                        arguments: { secret_names: ['GOOGLE_GENERATIVE_AI_API_KEY'] }
+                      }, '*');
+                    }}
+                  >
+                    Add API Key
+                  </Button>
+                </div>
+              )}
+
               <h3 className="mt-4 text-xs font-semibold uppercase text-muted-foreground">{t("inputValues")}</h3>
               <div className="-mx-4 inputs-panel-container">
                 <InputsPanel />
