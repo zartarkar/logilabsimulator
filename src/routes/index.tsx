@@ -41,7 +41,7 @@ import bgAsset from "@/assets/background.jpg.asset.json";
 
 const searchSchema = z.object({
   q: z.string().optional(),
-  tab: z.enum(["simulator", "builder", "learn"]).optional(),
+  tab: z.enum(["simulator", "builder", "learn", "circuit"]).catch("simulator").optional(),
   v: z.string().optional(),
 });
 
