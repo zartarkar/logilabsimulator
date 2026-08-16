@@ -277,18 +277,14 @@ function App() {
     <div className="flex h-screen flex-col bg-transparent text-foreground">
       <Toaster />
       <header className="shrink-0 border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="flex flex-col gap-3 px-4 py-3 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center lg:py-1">
-          <div className="flex items-center justify-between lg:justify-start gap-2">
-            <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
-                <CircuitBoard className="h-5 w-5" />
-              </span>
-              <div className="leading-tight">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-destructive">
-                  {t("classLine")}
-                </div>
-                <div className="font-display text-sm font-extrabold leading-none">{t("chapterLine")}</div>
+        <div className="flex flex-col gap-3 px-4 py-3 lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:py-1">
+          <div className="flex items-center gap-4">
+            <img src="https://cdn.10minuteschool.com/images/svg/Origin%20Labs%20Black.svg" alt="Origin Labs" className="h-8 w-auto" />
+            <div className="leading-tight">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-destructive">
+                {t("classLine")}
               </div>
+              <div className="font-display text-sm font-extrabold leading-none">{t("chapterLine")}</div>
             </div>
             
             <div className="flex items-center gap-1 lg:hidden">
@@ -309,7 +305,7 @@ function App() {
             ).map((x) => (
               <button
                 key={x.id}
-                onClick={() => s.setTab(x.id)}
+                onClick={() => { s.setTab(x.id); navigate({ search: { ...qSearch, tab: x.id }, replace: true }); }}
                 className={`rounded-full px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-semibold transition-colors nav-tab-${x.id} ${
                   s.tab === x.id
                     ? "bg-destructive text-destructive-foreground shadow-sm"
