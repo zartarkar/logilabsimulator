@@ -22,7 +22,8 @@ export const recognizeCircuitFromImage = createServerFn({ method: "POST" })
       const google = createGoogleGenerativeAI({
         apiKey: apiKey,
       });
-      const model = google("models/gemini-1.5-flash");
+      // Switching to a more explicit model identifier that often resolves v1beta issues
+      const model = google("gemini-1.5-flash-latest");
 
       const prompt = `Analyze this image of a Boolean expression or a digital logic circuit. 
       
