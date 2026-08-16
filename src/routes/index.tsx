@@ -41,7 +41,7 @@ import bgAsset from "@/assets/background.jpg.asset.json";
 
 const searchSchema = z.object({
   q: z.string().optional(),
-  tab: z.enum(["circuit", "build", "learn"]).optional(),
+  tab: z.enum(["simulator", "builder", "learn"]).optional(),
   v: z.string().optional(),
 });
 
@@ -290,8 +290,8 @@ function App() {
           <nav className="flex justify-center gap-1">
             {(
               [
-                { id: "circuit", label: t("tabCircuit") },
-                { id: "build", label: t("tabBuild") },
+                { id: "simulator", label: t("tabCircuit") },
+                { id: "builder", label: t("tabBuild") },
                 { id: "learn", label: t("tabLearn") },
               ] as const
             ).map((x) => (
@@ -339,7 +339,7 @@ function App() {
         <main className="min-h-0 flex-1 overflow-y-auto learn-panel-container bg-transparent">
           <LearnPanel />
         </main>
-      ) : s.tab === "build" ? (
+      ) : s.tab === "builder" ? (
         <main className="min-h-0 flex-1 overflow-hidden bg-transparent">
           <SandboxBuilder />
         </main>
