@@ -110,17 +110,21 @@ function Inner() {
     (kind: CircuitNodeType) => {
       const id = `sb${counter + 1}`;
       setCounter((c) => c + 1);
+      
       const center = screenToFlowPosition({
         x: window.innerWidth / 2,
         y: window.innerHeight / 2,
       });
+      
       const i = counter;
       const spot = {
-        x: center.x - 300 + (i % 4) * 200,
-        y: center.y - 180 + Math.floor(i / 4) * 130,
+        x: center.x - 100 + (i % 4) * 50,
+        y: center.y - 100 + Math.floor(i / 4) * 50,
       };
+      
       const label =
         kind === "INPUT" ? String.fromCharCode(65 + (counter % 26)) : kind === "OUTPUT" ? "OUT" : kind;
+      
       setNodes((ns) => [
         ...ns,
         { id, kind, label, x: spot.x, y: spot.y, inputValue: 0 },
