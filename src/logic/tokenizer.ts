@@ -74,6 +74,13 @@ export function tokenize(source: string, mode: SyntaxMode): Token[] {
       case "!":
       case "~":
       case "\u00ac":
+      case "\u0305": // Combining Overline
+        push("NOT", c, start, i + 1);
+        i++;
+        continue;
+      case "\u2014": // Em dash often used as overline in some fonts
+      case "\u2013": // En dash
+      case "\u00af": // Macron
         push("NOT", c, start, i + 1);
         i++;
         continue;
@@ -112,6 +119,7 @@ export function tokenize(source: string, mode: SyntaxMode): Token[] {
       const word = source.slice(i, j);
       const upper = word.toUpperCase();
       if (WORD_OPS[upper]) {
+        // If it's NOT, check if it's prefix or postfix (usually prefix for words)
         push(WORD_OPS[upper]!, upper, i, j);
         i = j;
         continue;

@@ -39,9 +39,19 @@ function wrap(child: AstNode, parentPrec: number): string {
 export function makeOp(kind: GateType, children: AstNode[]): AstNode {
   const prec = PREC[kind] ?? 4;
   let expr: string;
-  if (kind === "NOT") expr = `${wrap(children[0]!, 5)}'`;
-  else if (kind === "BUFFER") expr = children[0]!.expr;
-  else expr = children.map((c) => wrap(c, prec)).join(SYMBOL[kind]);
+  if (kind === "NOT") {
+    const child = children[0]!;
+    // Use overline style for normalized output if it's a simple variable, else apostrophe
+    if (child.kind === "VAR") {
+      expr = `${child.expr}'`;
+    } else {
+      expr = `(${child.expr})'`;
+    }
+  } else if (kind === "BUFFER") {
+    expr = children[0]!.expr;
+  } else {
+    expr = children.map((c) => wrap(c, prec)).join(SYMBOL[kind]);
+  }
   return { id: nextId(), kind, children, expr };
 }
 
