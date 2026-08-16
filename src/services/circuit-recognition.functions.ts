@@ -20,22 +20,22 @@ export const recognizeCircuitFromImage = createServerFn({ method: "POST" })
           const google = createGoogleGenerativeAI({ apiKey });
           const model = google("gemini-1.5-flash-latest"); // Try latest first for better compatibility
 
-          const prompt = `Analyze this image of a Boolean expression or a digital logic circuit. 
-          
-If it's a Boolean expression written in text (like A' + B + C or similar):
-1. Identify all variables and operators.
-2. Note that a line above a term (overline) or an apostrophe (') signifies NOT.
-3. Return the expression in a standard format using AND, OR, NOT, XOR, NAND, NOR, XNOR or symbols like +, ., ', !.
-4. Output should start with "F = ".
+          const prompt = `Analyze this image of a digital logic circuit or a Boolean expression.
 
 If it's a logic circuit diagram:
-1. Identify the input variables (usually on the left).
-2. Trace the gates from inputs to the final output.
-3. Determine the Boolean expression that represents the entire circuit.
-4. Output should start with "F = ".
+1. Identify all gates (AND, OR, NOT, NAND, NOR, XOR, XNOR).
+2. Identify all input variables (e.g., A, B, C) and where they connect.
+3. Identify all intermediate connections and the final output.
+4. Convert this circuit into its canonical Boolean expression.
+5. Note: A bubble/circle at the input or output of a gate signifies inversion (NOT).
+6. Return the result in the format "F = <expression>".
 
-Return ONLY the Boolean expression string, for example: "F = (A' + B + C)(A' + B')". 
-Do not include any other text, explanations, or markdown formatting.`;
+If it's a handwritten or printed Boolean expression:
+1. Identify all variables and operators.
+2. An overline (line above) or an apostrophe (') signifies NOT.
+3. Return the expression in the format "F = <expression>".
+
+Return ONLY the "F = ..." string. No explanations. Example: "F = (A + B) . C'" or "F = A'B + AB'".`;
 
           const { text } = await generateText({
             model: model,
