@@ -32,6 +32,7 @@ import { LearnPanel } from "@/components/panels/LearnPanel";
 import { TutorialDialog } from "@/components/TutorialDialog";
 import { LanguageProvider, useLang } from "@/i18n";
 import { recognizeCircuitFromImage } from "@/services/circuit-recognition.functions";
+import { performClientOCR } from "@/services/ocr-client";
 import { useServerFn } from "@tanstack/react-start";
 
 import { EXAMPLES } from "@/logic/examples";
@@ -128,11 +129,50 @@ function App() {
     setRecognitionError(null);
     const reader = new FileReader();
     reader.onload = async () => {
-      const base64 = (reader.result as string).split(",")[1];
+      const base64DataUrl = reader.result as string;
+      const base64 = base64DataUrl.split(",")[1];
       if (!base64) return;
 
-      const promise = recognizeFn({ data: { base64Image: base64 } });
-      toast.promise(promise, {
+      const processPromise = (async () => {
+        try {
+          // 1. Try AI Recognition via Server Function (High Quality)
+          const res = await recognizeFn({ data: { base64Image: base64 } });
+          
+          if (res.success && res.expression) {
+            return res;
+          }
+          
+          // 2. If AI fails or is not configured, fallback to Browser-side OCR
+          console.log("AI recognition failed or not configured, trying browser-side OCR...");
+          const ocrText = await performClientOCR(base64DataUrl);
+          
+          // Clean and format OCR text
+          let cleaned = ocrText
+            .replace(/\n/g, ' ')
+            .replace(/[^\w\s'+.()!]/g, '')
+            .trim();
+          
+          if (cleaned.length < 2) {
+            throw new Error(res.error || t("imageError"));
+          }
+
+          if (!cleaned.includes('=') && !cleaned.includes('F')) {
+            cleaned = "F = " + cleaned;
+          }
+
+          return {
+            success: true,
+            expression: cleaned,
+            explanation: "Extracted via browser-side OCR."
+          };
+        } catch (error: any) {
+          const errMsg = error?.message || t("imageError");
+          setRecognitionError(errMsg);
+          throw error;
+        }
+      })();
+
+      toast.promise(processPromise, {
         loading: t("processingImage"),
         success: (res) => {
           if (res.success && res.expression) {
@@ -140,9 +180,7 @@ function App() {
             s.generate();
             return t("imageSuccess");
           }
-          const errMsg = res.error || t("imageError");
-          setRecognitionError(errMsg);
-          throw new Error(errMsg);
+          throw new Error(t("imageError"));
         },
         error: (err) => err instanceof Error ? err.message : t("imageError"),
       });
