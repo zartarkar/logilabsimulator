@@ -15,10 +15,10 @@ export const recognizeCircuitFromImage = createServerFn({ method: "POST" })
       const apiKey = process.env['GOOGLE_GENERATIVE_AI_API_KEY'];
       
       // Try AI recognition first if API key is present
-      if (apiKey) {
+      if (apiKey && apiKey.trim().length > 0) {
         try {
           const google = createGoogleGenerativeAI({ apiKey });
-          const model = google("gemini-1.5-flash"); // Standard identifier
+          const model = google("gemini-1.5-flash-latest"); // Try latest first for better compatibility
 
           const prompt = `Analyze this image of a Boolean expression or a digital logic circuit. 
           
