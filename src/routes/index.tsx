@@ -494,7 +494,7 @@ function App() {
                   {s.parsed?.name ?? "F"} = {outputValue} · {outputValue === 1 ? "ON" : "OFF"}
                 </span>
               </div>
-              <div className="min-h-[280px] flex-1">
+              <div className="relative min-h-[350px] flex-1 lg:min-h-0">
                 {s.graph ? (
                   <CircuitCanvas
                     graph={s.graph}
@@ -517,7 +517,7 @@ function App() {
             </section>
           </div>
 
-          <div className="h-[36vh] shrink-0 border-t border-border bg-card/80 backdrop-blur-md">
+          <div className="h-[40vh] shrink-0 border-t border-border bg-card/80 backdrop-blur-md lg:h-[36vh]">
             <Tabs defaultValue="truth" className="flex h-full flex-col truth-table-tabs">
               <TabsList className="m-2 w-fit">
                 <TabsTrigger value="truth" className="data-[state=active]:button-red">{t("truthTable")}</TabsTrigger>
