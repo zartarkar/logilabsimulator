@@ -41,7 +41,7 @@ Return ONLY the Boolean expression string, for example: "F = (A' + B + C)(A' + B
 Do not include any other text, explanations, or markdown formatting.`;
 
       const { text } = await generateText({
-        model: google("gemini-1.5-flash-latest"),
+        model: google("gemini-1.5-flash-8b"),
         messages: [
           {
             role: "user",
