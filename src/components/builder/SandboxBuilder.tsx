@@ -150,10 +150,11 @@ function Inner() {
           showLabels: true,
           onToggle:
             n.kind === "INPUT"
-              ? () =>
+              ? () => {
                   setNodes((ns) =>
                     ns.map((x) => (x.id === n.id ? { ...x, inputValue: x.inputValue ? 0 : 1 } : x)),
-                  )
+                  );
+                }
               : undefined,
           onDelete: () => removeNode(n.id),
         } satisfies GateNodeData,
@@ -210,7 +211,7 @@ function Inner() {
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent">
+    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container">
       <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-52 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r">
         <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground lg:block sandbox-components-header">Components</h3>
         <button

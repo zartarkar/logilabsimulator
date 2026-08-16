@@ -41,6 +41,8 @@ import bgAsset from "@/assets/background.jpg.asset.json";
 
 const searchSchema = z.object({
   q: z.string().optional(),
+  tab: z.enum(["circuit", "build", "learn"]).optional(),
+  v: z.string().optional(),
 });
 
 export const Route = createFileRoute("/")({
@@ -100,27 +102,75 @@ function App() {
   const s = useCircuitStore();
   const { dark, toggle } = useTheme();
   const { lang, setLang, t } = useLang();
-  const [tab, setTab] = useState<"circuit" | "build" | "learn">("circuit");
-  const { q } = useSearch({ from: "/" });
+  const { q, tab: qTab, v: qValues } = useSearch({ from: "/" });
   const navigate = useNavigate({ from: "/" });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognizeFn = useServerFn(recognizeCircuitFromImage);
   const [recognitionError, setRecognitionError] = useState<string | null>(null);
 
-  // Sync expression with query param
+  // Sync state with query param on initial load or URL change
   useEffect(() => {
-    if (q && q !== s.expression) {
-      s.setExpression(q);
-      s.generate();
+    let changed = false;
+    const updates: any = {};
+    
+    if (q !== undefined && q !== s.expression) {
+      updates.expression = q;
+      changed = true;
     }
-  }, [q]);
+    
+    if (qTab !== undefined && qTab !== s.tab) {
+      updates.tab = qTab;
+      changed = true;
+    }
 
-  // Update query param when expression changes
-  useEffect(() => {
-    if (s.expression !== q) {
-      navigate({ search: { q: s.expression } });
+    if (qValues !== undefined) {
+      const parsedValues: Record<string, 0 | 1> = {};
+      qValues.split(',').forEach(pair => {
+        const name = pair.slice(0, -1);
+        const valStr = pair.slice(-1);
+        const val = valStr === '1' ? 1 : 0;
+        if (name) parsedValues[name] = val;
+      });
+      
+      const valuesChanged = Object.entries(parsedValues).some(([k, v]) => s.values[k] !== v);
+      if (valuesChanged) {
+        updates.values = { ...s.values, ...parsedValues };
+        changed = true;
+      }
     }
-  }, [s.expression]);
+
+    if (changed) {
+      useCircuitStore.setState(updates);
+      // Only generate if we actually have an expression either from URL or state
+      const finalExpression = updates.expression ?? s.expression;
+      if (finalExpression) {
+        s.generate();
+      }
+    }
+  }, [q, qTab, qValues]);
+
+  useEffect(() => {
+    const relevantVars = s.parsed?.variables || [];
+    const valuesStr = Object.entries(s.values)
+      .filter(([k]) => relevantVars.includes(k))
+      .map(([k, v]) => `${k}${v}`)
+      .join(',');
+    
+    const currentQ = s.expression || undefined;
+    const currentTab = s.tab;
+    const currentV = valuesStr || undefined;
+
+    if (currentQ !== q || currentTab !== qTab || currentV !== qValues) {
+      navigate({ 
+        search: { 
+          q: currentQ,
+          tab: currentTab,
+          v: currentV
+        },
+        replace: true
+      });
+    }
+  }, [s.expression, s.tab, s.values, s.parsed]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -190,7 +240,7 @@ function App() {
 
   useEffect(() => {
     const saved = localStorage.getItem("logiclab-project");
-    if (saved) {
+    if (saved && !q && !qTab && !qValues) {
       try {
         const data = JSON.parse(saved) as { expression?: string; values?: Record<string, 0 | 1>; mode?: "single-letter" | "named" };
         if (data.expression) useCircuitStore.setState({ expression: data.expression, values: data.values ?? {}, mode: data.mode ?? "single-letter" });
@@ -247,9 +297,9 @@ function App() {
             ).map((x) => (
               <button
                 key={x.id}
-                onClick={() => setTab(x.id)}
+                onClick={() => s.setTab(x.id)}
                 className={`rounded-full px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-semibold transition-colors nav-tab-${x.id} ${
-                  tab === x.id
+                  s.tab === x.id
                     ? "bg-destructive text-destructive-foreground shadow-sm"
                     : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                 }`}
@@ -285,11 +335,11 @@ function App() {
         </div>
       </header>
 
-      {tab === "learn" ? (
+      {s.tab === "learn" ? (
         <main className="min-h-0 flex-1 overflow-y-auto learn-panel-container bg-transparent">
           <LearnPanel />
         </main>
-      ) : tab === "build" ? (
+      ) : s.tab === "build" ? (
         <main className="min-h-0 flex-1 overflow-hidden bg-transparent">
           <SandboxBuilder />
         </main>

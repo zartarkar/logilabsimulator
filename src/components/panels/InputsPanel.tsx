@@ -28,7 +28,10 @@ export function InputsPanel() {
           return (
             <li key={v}>
               <button
-                onClick={() => setValue(v, on ? 0 : 1)}
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  setValue(v, on ? 0 : 1);
+                }}
                 aria-pressed={on}
                 aria-label={`Variable ${v} is ${on ? 1 : 0}, click to toggle`}
                 className={cn(
