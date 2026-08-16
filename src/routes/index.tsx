@@ -414,49 +414,8 @@ function App() {
                 </div>
               </div>
 
-              <details className="mt-4 rounded-lg border border-border p-2 text-sm">
-                <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground">
-                  {t("settings")}
-                </summary>
-                <div className="mt-2 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="mode" className="text-xs">
-                      Single-letter mode {s.mode === "single-letter" ? "(XYZ = X·Y·Z)" : "(named vars)"}
-                    </Label>
-                    <Switch
-                      id="mode"
-                      checked={s.mode === "single-letter"}
-                      onCheckedChange={(v) => s.setMode(v ? "single-letter" : "named")}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="two" className="text-xs">Two-input gate mode</Label>
-                    <Switch id="two" checked={s.twoInputMode} onCheckedChange={(v) => s.setOption("twoInputMode", v)} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="share" className="text-xs">Share subexpressions</Label>
-                    <Switch id="share" checked={s.shareSubexpressions} onCheckedChange={(v) => s.setOption("shareSubexpressions", v)} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="labels" className="text-xs">Show signal labels</Label>
-                    <Switch id="labels" checked={s.showLabels} onCheckedChange={(v) => s.setOption("showLabels", v)} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="anim" className="text-xs">Animate signals</Label>
-                    <Switch id="anim" checked={s.animate} onCheckedChange={(v) => s.setOption("animate", v)} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label className="text-xs">Layout</Label>
-                    <div className="flex gap-1">
-                      {(["LR", "TB"] as const).map((d) => (
-                        <Button key={d} size="sm" variant={s.direction === d ? "default" : "outline"} onClick={() => s.setDirection(d)}>
-                          {d}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </details>
+              {/* Analysis and stats removed as per request to simplify options */}
+            </section>
 
               <details className="mt-3">
                 <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground">
