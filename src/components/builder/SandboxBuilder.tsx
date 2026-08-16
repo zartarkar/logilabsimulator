@@ -210,9 +210,9 @@ function Inner() {
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 flex-col md:flex-row bg-transparent">
-      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 md:w-52 md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
-        <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground md:block sandbox-components-header">Components</h3>
+    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent">
+      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-52 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r">
+        <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground lg:block sandbox-components-header">Components</h3>
         <button
           onClick={() => addNode("INPUT")}
           className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground"
@@ -247,7 +247,7 @@ function Inner() {
         <Button
           variant="outline"
           size="sm"
-          className="md:mt-2"
+          className="lg:mt-2"
           disabled={selectedIds.length === 0}
           onClick={() => {
             selectedIds.forEach(removeNode);

@@ -193,7 +193,7 @@ export function LearnPanel() {
         <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
           <Sigma className="h-4 w-4 text-primary" /> Boolean Laws · বুলিয়ান সূত্রাবলি
         </h3>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
           {laws.map((l) => (
             <article key={l.name} className="rounded-xl border border-border bg-card p-3 shadow-sm">
               <div className="font-semibold">{l.name}</div>

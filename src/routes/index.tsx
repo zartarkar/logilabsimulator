@@ -214,21 +214,30 @@ function App() {
   return (
     <div className="flex h-screen flex-col bg-transparent text-foreground">
       <Toaster />
-      <header className="shrink-0 border-b border-border bg-card/80 backdrop-blur-md">
-        <div className="grid items-center gap-3 px-4 py-3 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-          <div className="flex items-center gap-2">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
-              <CircuitBoard className="h-5 w-5" />
-            </span>
-            <div className="leading-tight">
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-destructive">
-                {t("classLine")}
+      <header className="shrink-0 border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="flex flex-col gap-3 px-4 py-3 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center lg:py-1">
+          <div className="flex items-center justify-between lg:justify-start gap-2">
+            <div className="flex items-center gap-2">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
+                <CircuitBoard className="h-5 w-5" />
+              </span>
+              <div className="leading-tight">
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-destructive">
+                  {t("classLine")}
+                </div>
+                <div className="font-display text-sm font-extrabold leading-none">{t("chapterLine")}</div>
               </div>
-              <div className="font-display text-sm font-extrabold">{t("chapterLine")}</div>
+            </div>
+            
+            <div className="flex items-center gap-1 lg:hidden">
+              <TutorialDialog />
+              <Button size="sm" variant="outline" className="h-8 w-8 p-0" onClick={toggle} aria-label="Toggle theme">
+                {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </Button>
             </div>
           </div>
 
-          <nav className="flex flex-wrap justify-center gap-1">
+          <nav className="flex justify-center gap-1">
             {(
               [
                 { id: "circuit", label: t("tabCircuit") },
@@ -239,7 +248,7 @@ function App() {
               <button
                 key={x.id}
                 onClick={() => setTab(x.id)}
-                className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors nav-tab-${x.id} ${
+                className={`rounded-full px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-semibold transition-colors nav-tab-${x.id} ${
                   tab === x.id
                     ? "bg-destructive text-destructive-foreground shadow-sm"
                     : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
@@ -250,27 +259,29 @@ function App() {
             ))}
           </nav>
 
-            <div className="flex items-center justify-end gap-1">
+          <div className="flex items-center justify-center lg:justify-end gap-2">
+            <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">
+              <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
+              {(["en", "bn"] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  aria-pressed={lang === l}
+                  className={`px-3 py-1 text-xs font-bold transition-colors ${
+                    lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  {l === "en" ? "EN" : "বাং"}
+                </button>
+              ))}
+            </div>
+            <div className="hidden lg:flex items-center gap-1">
               <TutorialDialog />
-              <div className="flex items-center overflow-hidden rounded-full border border-border">
-                <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
-                {(["en", "bn"] as const).map((l) => (
-                  <button
-                    key={l}
-                    onClick={() => setLang(l)}
-                    aria-pressed={lang === l}
-                    className={`px-2.5 py-1 text-xs font-bold transition-colors ${
-                      lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {l === "en" ? "EN" : "বাং"}
-                  </button>
-                ))}
-              </div>
-              <Button size="sm" variant="outline" onClick={toggle} aria-label="Toggle theme">
+              <Button size="sm" variant="outline" className="h-9 w-9 p-0" onClick={toggle} aria-label="Toggle theme">
                 {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
             </div>
+          </div>
         </div>
       </header>
 
@@ -279,14 +290,14 @@ function App() {
           <LearnPanel />
         </main>
       ) : tab === "build" ? (
-        <main className="min-h-0 flex-1 bg-transparent">
+        <main className="min-h-0 flex-1 overflow-hidden bg-transparent">
           <SandboxBuilder />
         </main>
       ) : (
-        <main className="flex min-h-0 flex-1 flex-col">
+        <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
           <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
             {/* LEFT: controls */}
-            <section className="w-full shrink-0 overflow-y-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-[26rem] lg:border-b-0 lg:border-r">
+            <section className="w-full shrink-0 overflow-y-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-[26rem] lg:border-b-0 lg:border-r lg:max-h-full max-h-[50vh]">
               <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
                 {t("expression")}
               </Label>
@@ -469,7 +480,7 @@ function App() {
                   {s.parsed?.name ?? "F"} = {outputValue} · {outputValue === 1 ? "ON" : "OFF"}
                 </span>
               </div>
-              <div className="min-h-[280px] flex-1">
+              <div className="relative min-h-[350px] flex-1 lg:min-h-0">
                 {s.graph ? (
                   <CircuitCanvas
                     graph={s.graph}
@@ -492,7 +503,7 @@ function App() {
             </section>
           </div>
 
-          <div className="h-[36vh] shrink-0 border-t border-border bg-card/80 backdrop-blur-md">
+          <div className="h-[40vh] shrink-0 border-t border-border bg-card/80 backdrop-blur-md lg:h-[36vh]">
             <Tabs defaultValue="truth" className="flex h-full flex-col truth-table-tabs">
               <TabsList className="m-2 w-fit">
                 <TabsTrigger value="truth" className="data-[state=active]:button-red">{t("truthTable")}</TabsTrigger>
