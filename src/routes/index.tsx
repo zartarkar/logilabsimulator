@@ -102,7 +102,8 @@ function App() {
   const s = useCircuitStore();
   const { dark, toggle } = useTheme();
   const { lang, setLang, t } = useLang();
-  const { q, tab: qTab, v: qValues } = useSearch({ from: "/" });
+  const qSearch = useSearch({ from: "/" });
+  const { q, tab: qTab, v: qValues } = qSearch;
   const navigate = useNavigate({ from: "/" });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognizeFn = useServerFn(recognizeCircuitFromImage);
@@ -277,18 +278,14 @@ function App() {
     <div className="flex h-screen flex-col bg-transparent text-foreground">
       <Toaster />
       <header className="shrink-0 border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="flex flex-col gap-3 px-4 py-3 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center lg:py-1">
-          <div className="flex items-center justify-between lg:justify-start gap-2">
-            <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
-                <CircuitBoard className="h-5 w-5" />
-              </span>
-              <div className="leading-tight">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-destructive">
-                  {t("classLine")}
-                </div>
-                <div className="font-display text-sm font-extrabold leading-none">{t("chapterLine")}</div>
+        <div className="flex flex-col gap-3 px-4 py-3 lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:py-1">
+          <div className="flex items-center gap-4">
+            <img src="https://cdn.10minuteschool.com/images/svg/Origin%20Labs%20Black.svg" alt="Origin Labs" className="h-8 w-auto" />
+            <div className="leading-tight">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-destructive">
+                {t("classLine")}
               </div>
+              <div className="font-display text-sm font-extrabold leading-none">{t("chapterLine")}</div>
             </div>
             
             <div className="flex items-center gap-1 lg:hidden">
@@ -309,7 +306,7 @@ function App() {
             ).map((x) => (
               <button
                 key={x.id}
-                onClick={() => s.setTab(x.id)}
+                onClick={() => { s.setTab(x.id); navigate({ search: { ...qSearch, tab: x.id }, replace: true }); }}
                 className={`rounded-full px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-semibold transition-colors nav-tab-${x.id} ${
                   s.tab === x.id
                     ? "bg-destructive text-destructive-foreground shadow-sm"
@@ -358,144 +355,67 @@ function App() {
       ) : (
         <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
           <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-            {/* LEFT: controls */}
-            <section className="w-full shrink-0 overflow-y-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-[26rem] lg:border-b-0 lg:border-r lg:max-h-full max-h-[50vh]">
-              <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
-                {t("expression")}
-              </Label>
-              <Textarea
-                id="expr"
-                value={s.expression}
-                onChange={(e) => s.setExpression(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    s.generate();
-                  }
-                }}
-                rows={3}
-                className="mt-1 font-mono text-sm"
-                placeholder="F = XYZ+XY+X'Y'Z"
-              />
+            {/* LEFT: Controls & Input */}
+            <section className="flex flex-col w-full shrink-0 border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-[26rem] lg:border-b-0 lg:border-r overflow-y-auto">
+              <div>
+                <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
+                  {t("expression")}
+                </Label>
+                <Textarea
+                  id="expr"
+                  value={s.expression}
+                  onChange={(e) => s.setExpression(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      s.generate();
+                    }
+                  }}
+                  rows={2}
+                  className="mt-1 font-mono text-sm"
+                  placeholder="F = XYZ+XY+X'Y'Z"
+                />
+                <div className="mt-2 flex gap-2">
+                  <Button size="sm" variant="destructive" className="flex-1 font-bold button-red" onClick={s.generate}>
+                    <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
+                  </Button>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    className="hidden"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                  />
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="image-upload-button"
+                    onClick={() => fileInputRef.current?.click()}
+                    title={t("uploadCircuit")}
+                  >
+                    <Camera className="h-3.5 w-3.5 mr-1" />
+                    <Upload className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
 
               {s.error && (
                 <div role="alert" className="mt-3 rounded-lg border-2 border-destructive/60 bg-destructive/10 p-2 text-sm">
                   <div className="font-semibold text-destructive">{s.error.type}</div>
                   <p>{s.error.message}</p>
-                  {s.error.suggestion && <p className="mt-1 text-xs text-muted-foreground">Try: {s.error.suggestion}</p>}
                 </div>
               )}
 
-              {/* Secret missing warning with action button */}
-              {!s.error && recognitionError && recognitionError.includes("GOOGLE_GENERATIVE_AI_API_KEY") && (
-                <div role="alert" className="mt-3 rounded-lg border-2 border-amber-500/60 bg-amber-500/10 p-3 text-sm">
-                  <div className="font-semibold text-amber-600 dark:text-amber-400">Configuration Required</div>
-                  <p className="mt-1 text-foreground/90">
-                    The image recognition feature requires a Google AI API Key to work.
-                  </p>
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    className="mt-3 w-full border-amber-500/50 hover:bg-amber-500/20"
-                    onClick={() => {
-                      // Use window.dispatchLovableTool if available (it often is in these environments)
-                      // or just show instructions since I can't guarantee parent postMessage will be caught here
-                      // without proper handler. However, I can trigger the add_secret tool from my side!
-                      toast.info("Opening secret addition form...");
-                      // I will call add_secret from the agent side in a separate tool call if this button is just UI.
-                      // For now, let's just make it a trigger for the user to look at the chat.
-                      alert("Please click 'Add Secret' in the Lovable chat interface to configure the GOOGLE_GENERATIVE_AI_API_KEY.");
-                    }}
-                  >
-                    Add API Key
-                  </Button>
+              <div className="mt-4 flex-1">
+                <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("inputValues")}</h3>
+                <div className="-mx-4 inputs-panel-container">
+                  <InputsPanel />
                 </div>
-              )}
-
-              <h3 className="mt-4 text-xs font-semibold uppercase text-muted-foreground">{t("inputValues")}</h3>
-              <div className="-mx-4 inputs-panel-container">
-                <InputsPanel />
               </div>
 
-              <div className="mt-2 flex gap-2">
-                <Button size="sm" variant="destructive" className="flex-1 font-bold button-red" onClick={s.generate}>
-                  <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
-                </Button>
-                <Button size="sm" variant="outline" onClick={s.parseOnly}>
-                  {t("parse")}
-                </Button>
-                <Button size="sm" variant="outline" onClick={s.runSimplify} aria-label={t("simplify")}>
-                  <Zap className="h-3.5 w-3.5" />
-                </Button>
-                <input
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageUpload}
-                />
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  className="image-upload-button"
-                  onClick={() => fileInputRef.current?.click()}
-                  title={t("uploadCircuit")}
-                >
-                  <Camera className="h-3.5 w-3.5 mr-1" />
-                  <Upload className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-
-              <h3 className="mt-4 text-xs font-semibold uppercase text-muted-foreground">{t("stepSim")}</h3>
-              <div className="-mx-4 calculation-panel-container">
-                <CalculationPanel />
-              </div>
-
-              <details className="mt-4 rounded-lg border border-border p-2 text-sm">
-                <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground">
-                  {t("settings")}
-                </summary>
-                <div className="mt-2 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="mode" className="text-xs">
-                      Single-letter mode {s.mode === "single-letter" ? "(XYZ = X·Y·Z)" : "(named vars)"}
-                    </Label>
-                    <Switch
-                      id="mode"
-                      checked={s.mode === "single-letter"}
-                      onCheckedChange={(v) => s.setMode(v ? "single-letter" : "named")}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="two" className="text-xs">Two-input gate mode</Label>
-                    <Switch id="two" checked={s.twoInputMode} onCheckedChange={(v) => s.setOption("twoInputMode", v)} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="share" className="text-xs">Share subexpressions</Label>
-                    <Switch id="share" checked={s.shareSubexpressions} onCheckedChange={(v) => s.setOption("shareSubexpressions", v)} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="labels" className="text-xs">Show signal labels</Label>
-                    <Switch id="labels" checked={s.showLabels} onCheckedChange={(v) => s.setOption("showLabels", v)} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="anim" className="text-xs">Animate signals</Label>
-                    <Switch id="anim" checked={s.animate} onCheckedChange={(v) => s.setOption("animate", v)} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label className="text-xs">Layout</Label>
-                    <div className="flex gap-1">
-                      {(["LR", "TB"] as const).map((d) => (
-                        <Button key={d} size="sm" variant={s.direction === d ? "default" : "outline"} onClick={() => s.setDirection(d)}>
-                          {d}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </details>
-
+              {/* Analysis and stats removed as per request to simplify options */}
+              
               <details className="mt-3">
                 <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground">
                   {t("examples")}
@@ -523,26 +443,14 @@ function App() {
               </details>
             </section>
 
-            {/* RIGHT: canvas */}
-            <section className="flex min-h-0 flex-1 flex-col">
-              <div className="flex flex-wrap items-center gap-3 border-b border-border bg-card/60 backdrop-blur-sm px-3 py-1.5 text-xs">
-                <span className="font-mono">{s.parsed?.normalized ?? "—"}</span>
-                {stats && (
-                  <span className="text-muted-foreground">
-                    {stats.gateCount} gates · {stats.wireCount} wires · depth {stats.depth} · {stats.delay} ns
-                  </span>
-                )}
-                <span
-                  className={`ml-auto rounded px-2 py-0.5 font-mono font-bold ${
-                    outputValue === 1
-                      ? "bg-[var(--signal-on)] text-[var(--signal-on-fg)]"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {s.parsed?.name ?? "F"} = {outputValue} · {outputValue === 1 ? "ON" : "OFF"}
-                </span>
-              </div>
-              <div className="relative min-h-[350px] flex-1 lg:min-h-0">
+            {/* RIGHT: Canvas */}
+            <section className="relative flex-1 bg-transparent min-h-[400px]">
+              {s.graph && (
+                <div className="absolute top-2 right-2 z-10 rounded bg-card/80 px-2 py-1 text-[10px] font-mono backdrop-blur-sm border border-border lg:top-auto lg:bottom-2 lg:right-4">
+                   {s.parsed?.name ?? "F"} = {s.nodeValues[s.graph.outputId] ?? 0} · {(s.nodeValues[s.graph.outputId] ?? 0) === 1 ? "ON" : "OFF"}
+                </div>
+              )}
+              <div className="absolute inset-0 canvas-container">
                 {s.graph ? (
                   <CircuitCanvas
                     graph={s.graph}
@@ -565,32 +473,23 @@ function App() {
             </section>
           </div>
 
-          <div className="h-[40vh] shrink-0 border-t border-border bg-card/80 backdrop-blur-md lg:h-[36vh]">
-            <Tabs defaultValue="truth" className="flex h-full flex-col truth-table-tabs">
-              <TabsList className="m-2 w-fit">
-                <TabsTrigger value="truth" className="data-[state=active]:button-red">{t("truthTable")}</TabsTrigger>
-                <TabsTrigger value="simplify" className="data-[state=active]:button-red">{t("simplification")}</TabsTrigger>
-                <TabsTrigger value="ast" className="data-[state=active]:button-red">{t("ast")}</TabsTrigger>
-                <TabsTrigger value="gate" className="data-[state=active]:button-red">{t("gate")}</TabsTrigger>
-                <TabsTrigger value="analysis" className="data-[state=active]:button-red">{t("analysis")}</TabsTrigger>
+          {/* BOTTOM: Truth Table & Simplification */}
+          <section className="h-[24rem] shrink-0 border-t border-border bg-card/80 backdrop-blur-md overflow-hidden flex flex-col">
+            <Tabs defaultValue="truth" className="flex flex-col h-full">
+              <TabsList className="w-full justify-start rounded-none border-b bg-transparent px-2 h-10 shrink-0">
+                <TabsTrigger value="truth" className="data-[state=active]:button-red h-8">{t("truthTable")}</TabsTrigger>
+                <TabsTrigger value="simplify" className="data-[state=active]:button-red h-8">{t("simplification")}</TabsTrigger>
               </TabsList>
-              <TabsContent value="truth" className="min-h-0 flex-1 overflow-hidden">
-                <TruthTablePanel />
-              </TabsContent>
-              <TabsContent value="simplify" className="min-h-0 flex-1 overflow-auto">
-                <SimplifyPanel />
-              </TabsContent>
-              <TabsContent value="ast" className="min-h-0 flex-1 overflow-auto">
-                <AstPanel />
-              </TabsContent>
-              <TabsContent value="gate" className="min-h-0 flex-1 overflow-auto">
-                <InspectorPanel />
-              </TabsContent>
-              <TabsContent value="analysis" className="min-h-0 flex-1 overflow-auto">
-                <AnalysisPanel />
-              </TabsContent>
+              <div className="flex-1 overflow-auto">
+                <TabsContent value="truth" className="m-0 h-full">
+                  <TruthTablePanel />
+                </TabsContent>
+                <TabsContent value="simplify" className="m-0 h-full p-4">
+                  <SimplifyPanel />
+                </TabsContent>
+              </div>
             </Tabs>
-          </div>
+          </section>
         </main>
       )}
     </div>

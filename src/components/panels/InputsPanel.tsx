@@ -11,17 +11,7 @@ export function InputsPanel() {
 
   return (
     <div className="space-y-4 p-4">
-      <div className="flex flex-wrap gap-2">
-        <Button size="sm" variant="outline" onClick={randomize}>
-          <Shuffle className="mr-1 h-3.5 w-3.5" /> {t("randomize")}
-        </Button>
-        <Button size="sm" variant="outline" onClick={() => setAll(0)}>
-          <RotateCcw className="mr-1 h-3.5 w-3.5" /> {t("all0")}
-        </Button>
-        <Button size="sm" variant="outline" onClick={() => setAll(1)}>
-          <CheckCheck className="mr-1 h-3.5 w-3.5" /> {t("all1")}
-        </Button>
-      </div>
+      {/* Buttons removed to keep focus on truth table and simplification in current layout */}
       <ul className="space-y-2">
         {parsed.variables.map((v) => {
           const on = values[v] === 1;
