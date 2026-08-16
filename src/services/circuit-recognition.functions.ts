@@ -9,15 +9,21 @@ export const recognizeCircuitFromImage = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const { generateText } = await import("ai");
-      const { google } = await import("@ai-sdk/google");
+      const { createGoogleGenerativeAI } = await import("@ai-sdk/google");
 
       const apiKey = process.env['GOOGLE_GENERATIVE_AI_API_KEY'];
       if (!apiKey) {
-        return { success: false, error: "AI service not configured. Please add GOOGLE_GENERATIVE_AI_API_KEY to secrets." };
+        return { 
+          success: false, 
+          error: "Google AI API Key is missing. Please add GOOGLE_GENERATIVE_AI_API_KEY to the project secrets." 
+        };
       }
 
-      const prompt = `Analyze this image of a Boolean expression or a digital logic circuit. 
+      const google = createGoogleGenerativeAI({
+        apiKey: apiKey,
+      });
 
+      const prompt = `Analyze this image of a Boolean expression or a digital logic circuit. 
       
 If it's a Boolean expression written in text (like A' + B + C or similar):
 1. Identify all variables and operators.
@@ -56,13 +62,21 @@ Do not include any other text, explanations, or markdown formatting.`;
         expression = expression.replace(/```[a-z]*\n?|```/g, "").trim();
       }
 
+      // Basic validation of the expression
+      if (!expression.includes('=') && expression.length > 0) {
+        expression = "F = " + expression;
+      }
+
       return {
         success: true,
         expression: expression,
         explanation: "Extracted from image analysis using AI."
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error("Circuit recognition error:", error);
-      return { success: false, error: "Failed to process image. Please ensure the expression is clear." };
+      return { 
+        success: false, 
+        error: error?.message || "Failed to process image. Please ensure the expression is clear." 
+      };
     }
   });
