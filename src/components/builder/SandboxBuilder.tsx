@@ -271,7 +271,7 @@ function Inner() {
           <Trash2 className="mr-1 h-3.5 w-3.5" /> Clear all
         </Button>
       </aside>
-      <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex min-h-0 flex-1 flex-col lg:overflow-hidden">
         <div className="min-h-[400px] lg:min-h-0 flex-1">
           <ReactFlow
             nodes={rfNodes}
