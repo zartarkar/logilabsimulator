@@ -10,23 +10,18 @@ export const recognizeCircuitFromImage = createServerFn({ method: "POST" })
     try {
       const { generateText } = await import("ai");
       const { createGoogleGenerativeAI } = await import("@ai-sdk/google");
+      const { performOCR } = await import("./circuit-recognition.server");
 
       const apiKey = process.env['GOOGLE_GENERATIVE_AI_API_KEY'];
-      if (!apiKey) {
-        return { 
-          success: false, 
-          error: "Google AI API Key is missing. Please add GOOGLE_GENERATIVE_AI_API_KEY to the project secrets." 
-        };
-      }
-
-      const google = createGoogleGenerativeAI({
-        apiKey: apiKey,
-      });
-      // Switching to a more explicit model identifier that often resolves v1beta issues
-      const model = google("gemini-1.5-flash-latest");
-
-      const prompt = `Analyze this image of a Boolean expression or a digital logic circuit. 
       
+      // Try AI recognition first if API key is present
+      if (apiKey) {
+        try {
+          const google = createGoogleGenerativeAI({ apiKey });
+          const model = google("gemini-1.5-flash"); // Standard identifier
+
+          const prompt = `Analyze this image of a Boolean expression or a digital logic circuit. 
+          
 If it's a Boolean expression written in text (like A' + B + C or similar):
 1. Identify all variables and operators.
 2. Note that a line above a term (overline) or an apostrophe (') signifies NOT.
@@ -42,43 +37,72 @@ If it's a logic circuit diagram:
 Return ONLY the Boolean expression string, for example: "F = (A' + B + C)(A' + B')". 
 Do not include any other text, explanations, or markdown formatting.`;
 
-      const { text } = await generateText({
-        model: model,
-        messages: [
-          {
-            role: "user",
-            content: [
-              { type: "text", text: prompt },
+          const { text } = await generateText({
+            model: model,
+            messages: [
               {
-                type: "image",
-                image: Buffer.from(data.base64Image, 'base64'),
+                role: "user",
+                content: [
+                  { type: "text", text: prompt },
+                  {
+                    type: "image",
+                    image: Buffer.from(data.base64Image, 'base64'),
+                  },
+                ],
               },
             ],
-          },
-        ],
-      });
+          });
 
-      // Clean up the response just in case
-      let expression = text.trim();
-      if (expression.startsWith("```")) {
-        expression = expression.replace(/```[a-z]*\n?|```/g, "").trim();
+          let expression = text.trim();
+          if (expression.startsWith("```")) {
+            expression = expression.replace(/```[a-z]*\n?|```/g, "").trim();
+          }
+
+          if (expression && expression.length > 0) {
+            if (!expression.includes('=') && !expression.includes('F')) {
+               expression = "F = " + expression;
+            }
+            return {
+              success: true,
+              expression: expression,
+              explanation: "Extracted from image analysis using AI."
+            };
+          }
+        } catch (aiError: any) {
+          console.error("AI Recognition failed, falling back to OCR:", aiError);
+          // Fall through to OCR
+        }
       }
 
-      // Basic validation of the expression
-      if (!expression.includes('=') && expression.length > 0) {
-        expression = "F = " + expression;
+      // Fallback to OCR if AI fails or no API key
+      const ocrText = await performOCR(data.base64Image);
+      
+      // Simple heuristic to extract something that looks like an expression
+      let cleaned = ocrText.replace(/[^\w\s'+.()!]/g, '').trim();
+      
+      // Try to find something that looks like an assignment or just variables
+      if (cleaned.length < 2) {
+        return {
+          success: false,
+          error: "Could not detect a clear expression in the image. Please try typing it manually."
+        };
+      }
+
+      if (!cleaned.includes('=') && !cleaned.includes('F')) {
+        cleaned = "F = " + cleaned;
       }
 
       return {
         success: true,
-        expression: expression,
-        explanation: "Extracted from image analysis using AI."
+        expression: cleaned,
+        explanation: "Extracted using OCR (AI was unavailable or failed)."
       };
+
     } catch (error: any) {
       console.error("Circuit recognition error:", error);
       return { 
         success: false, 
-        error: error?.message || "Failed to process image. Please ensure the expression is clear." 
+        error: "Failed to process image. Please ensure the expression is clear and well-lit." 
       };
     }
   });
