@@ -15,6 +15,7 @@ export interface Parsed {
 
 interface State {
   expression: string;
+  tab: "circuit" | "build" | "learn";
   mode: SyntaxMode;
   twoInputMode: boolean;
   shareSubexpressions: boolean;
@@ -28,10 +29,11 @@ interface State {
   nodeValues: Record<string, 0 | 1>;
   edgeValues: Record<string, 0 | 1>;
   selectedId: string | null;
-  simplified: SimplifyResult | null;
+  simplified: null | SimplifyResult;
   simplifiedGraph: CircuitGraph | null;
   validation: { ok: boolean; issues: string[]; acyclic: boolean; equivalent: boolean } | null;
   setExpression: (v: string) => void;
+  setTab: (t: "circuit" | "build" | "learn") => void;
   setMode: (m: SyntaxMode) => void;
   setOption: (k: "twoInputMode" | "shareSubexpressions" | "showLabels" | "animate", v: boolean) => void;
   setDirection: (d: "LR" | "TB") => void;
@@ -58,6 +60,7 @@ function snapshot(graph: CircuitGraph, env: Env) {
 
 export const useCircuitStore = create<State>((set, get) => ({
   expression: "F = XYZ+XY+X'Y'Z",
+  tab: "circuit",
   mode: "single-letter",
   twoInputMode: false,
   shareSubexpressions: false,
@@ -76,6 +79,7 @@ export const useCircuitStore = create<State>((set, get) => ({
   validation: null,
 
   setExpression: (expression) => set({ expression }),
+  setTab: (tab) => set({ tab }),
   setMode: (mode) => {
     set({ mode });
     if (get().parsed) get().generate();
