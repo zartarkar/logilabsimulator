@@ -359,9 +359,9 @@ function App() {
         </main>
       ) : (
         <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
-          <div className="flex min-h-0 flex-1 flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
+          <div className="flex min-h-0 flex-1 flex-col lg:flex-row overflow-y-auto lg:overflow-hidden touch-none lg:touch-auto">
             {/* LEFT: Controls & Input */}
-            <section className="flex flex-col w-full shrink-0 border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-[26rem] lg:border-b-0 lg:border-r overflow-y-auto">
+            <section className="flex flex-col w-full shrink-0 border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-[26rem] lg:border-b-0 lg:border-r overflow-y-auto touch-auto">
               <div>
                 <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
                   {t("expression")}
