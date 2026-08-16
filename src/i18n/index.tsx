@@ -78,6 +78,10 @@ export const DICT: Dict = {
   all0: { en: "All 0", bn: "সব ০" },
   all1: { en: "All 1", bn: "সব ১" },
   parseFirst: { en: "Parse an expression to detect its variables.", bn: "ভেরিয়েবল দেখতে একটি এক্সপ্রেশন পার্স করো।" },
+  uploadCircuit: { en: "Upload/Take Photo", bn: "আপলোড/ছবি তুলুন" },
+  processingImage: { en: "Processing image...", bn: "ছবি প্রসেস করা হচ্ছে..." },
+  imageSuccess: { en: "Circuit recognized!", bn: "সার্কিট শনাক্ত করা হয়েছে!" },
+  imageError: { en: "Failed to recognize circuit.", bn: "সার্কিট শনাক্ত করা যায়নি।" },
 };
 
 interface Ctx {

@@ -1,5 +1,5 @@
-import { useEffect, useState, useMemo } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,10 @@ import {
   Play,
   Zap,
   Languages,
+  Camera,
+  Upload,
 } from "lucide-react";
+import { z } from "zod";
 import { useCircuitStore } from "@/store/useCircuitStore";
 import { CircuitCanvas } from "@/components/circuit/CircuitCanvas";
 import { InputsPanel } from "@/components/panels/InputsPanel";
@@ -28,12 +31,19 @@ import { SandboxBuilder } from "@/components/builder/SandboxBuilder";
 import { LearnPanel } from "@/components/panels/LearnPanel";
 import { TutorialDialog } from "@/components/TutorialDialog";
 import { LanguageProvider, useLang } from "@/i18n";
+import { recognizeCircuitFromImage } from "@/services/circuit-recognition.functions";
+import { useServerFn } from "@tanstack/react-start";
 
 import { EXAMPLES } from "@/logic/examples";
 import { analyze } from "@/logic/analysis";
 import bgAsset from "@/assets/background.jpg.asset.json";
 
+const searchSchema = z.object({
+  q: z.string().optional(),
+});
+
 export const Route = createFileRoute("/")({
+  validateSearch: (search) => searchSchema.parse(search),
   head: () => ({
     meta: [
       { title: "LogicLab — Boolean Expression to Logic Circuit Simulator" },
@@ -90,6 +100,51 @@ function App() {
   const { dark, toggle } = useTheme();
   const { lang, setLang, t } = useLang();
   const [tab, setTab] = useState<"circuit" | "build" | "learn">("circuit");
+  const { q } = useSearch({ from: "/" });
+  const navigate = useNavigate({ from: "/" });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const recognizeFn = useServerFn(recognizeCircuitFromImage);
+
+  // Sync expression with query param
+  useEffect(() => {
+    if (q && q !== s.expression) {
+      s.setExpression(q);
+      s.generate();
+    }
+  }, [q]);
+
+  // Update query param when expression changes
+  useEffect(() => {
+    if (s.expression !== q) {
+      navigate({ search: { q: s.expression } });
+    }
+  }, [s.expression]);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const base64 = (reader.result as string).split(",")[1];
+      if (!base64) return;
+
+      const promise = recognizeFn({ data: { base64Image: base64 } });
+      toast.promise(promise, {
+        loading: t("processingImage"),
+        success: (res) => {
+          if (res.success && res.expression) {
+            s.setExpression(res.expression);
+            s.generate();
+            return t("imageSuccess");
+          }
+          throw new Error(res.error || "Failed");
+        },
+        error: t("imageError"),
+      });
+    };
+    reader.readAsDataURL(file);
+  };
 
   useEffect(() => {
     const saved = localStorage.getItem("logiclab-project");
@@ -230,6 +285,24 @@ function App() {
                 </Button>
                 <Button size="sm" variant="outline" onClick={s.runSimplify} aria-label={t("simplify")}>
                   <Zap className="h-3.5 w-3.5" />
+                </Button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                />
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="image-upload-button"
+                  onClick={() => fileInputRef.current?.click()}
+                  title={t("uploadCircuit")}
+                >
+                  <Camera className="h-3.5 w-3.5 mr-1" />
+                  <Upload className="h-3.5 w-3.5" />
                 </Button>
               </div>
 
