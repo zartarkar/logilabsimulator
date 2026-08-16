@@ -15,10 +15,10 @@ export const recognizeCircuitFromImage = createServerFn({ method: "POST" })
       const apiKey = process.env['GOOGLE_GENERATIVE_AI_API_KEY'];
       
       // Try AI recognition first if API key is present
-      if (apiKey) {
+      if (apiKey && apiKey.trim().length > 0) {
         try {
           const google = createGoogleGenerativeAI({ apiKey });
-          const model = google("gemini-1.5-flash"); // Standard identifier
+          const model = google("gemini-1.5-flash-latest"); // Try latest first for better compatibility
 
           const prompt = `Analyze this image of a Boolean expression or a digital logic circuit. 
           
@@ -78,13 +78,19 @@ Do not include any other text, explanations, or markdown formatting.`;
       const ocrText = await performOCR(data.base64Image);
       
       // Simple heuristic to extract something that looks like an expression
-      let cleaned = ocrText.replace(/[^\w\s'+.()!]/g, '').trim();
+      // Improved heuristic to extract Boolean expressions
+      let cleaned = ocrText
+        .replace(/\n/g, ' ')
+        .replace(/[^\w\s'+.()!]/g, '')
+        .trim();
       
-      // Try to find something that looks like an assignment or just variables
-      if (cleaned.length < 2) {
+      // Try to find a substring that looks like an expression (at least one variable and an operator or group)
+      const likelyExpression = cleaned.match(/[A-Z]\s*['+.*]\s*[A-Z]|[A-Z]['+]|[A-Z]\./i);
+      
+      if (cleaned.length < 2 && !likelyExpression) {
         return {
           success: false,
-          error: "Could not detect a clear expression in the image. Please try typing it manually."
+          error: "Could not detect a clear expression in the image. Please try typing it manually or ensure the image is high-contrast."
         };
       }
 
@@ -100,6 +106,22 @@ Do not include any other text, explanations, or markdown formatting.`;
 
     } catch (error: any) {
       console.error("Circuit recognition error:", error);
+      const errorMessage = error?.message || "";
+      
+      if (errorMessage.includes("Model") && errorMessage.includes("not found")) {
+        return {
+          success: false,
+          error: "The AI model is temporarily unavailable. Please try again in a few moments or use a clearer image for OCR fallback."
+        };
+      }
+
+      if (errorMessage.includes("API key")) {
+        return {
+          success: false,
+          error: "GOOGLE_GENERATIVE_AI_API_KEY is missing or invalid. Please add it to project secrets."
+        };
+      }
+
       return { 
         success: false, 
         error: "Failed to process image. Please ensure the expression is clear and well-lit." 
