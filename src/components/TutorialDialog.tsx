@@ -97,6 +97,16 @@ export function TutorialDialog() {
             side: "top",
             align: 'center'
           }
+        },
+        // --- 5. Image Recognition ---
+        {
+          element: '.image-upload-button',
+          popover: {
+            title: lang === 'bn' ? 'ছবি শনাক্তকরণ' : 'Circuit Recognition',
+            description: lang === 'bn' ? 'একটি লজিক সার্কিটের ছবি আপলোড করুন বা তুলুন এবং অ্যাপটি স্বয়ংক্রিয়ভাবে সেটি তৈরি করবে।' : 'Upload or take a photo of a logic circuit, and the app will automatically generate it for you.',
+            side: "top",
+            align: 'center'
+          }
         }
       ]
     });
