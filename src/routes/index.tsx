@@ -154,12 +154,16 @@ function App() {
       .map(([k, v]) => `${k}${v}`)
       .join(',');
     
-    if (s.expression !== q || s.tab !== qTab || valuesStr !== qValues) {
+    const currentQ = s.expression || undefined;
+    const currentTab = s.tab;
+    const currentV = valuesStr || undefined;
+
+    if (currentQ !== q || currentTab !== qTab || currentV !== qValues) {
       navigate({ 
         search: { 
-          q: s.expression || undefined,
-          tab: s.tab,
-          v: valuesStr || undefined
+          q: currentQ,
+          tab: currentTab,
+          v: currentV
         },
         replace: true
       });
