@@ -100,6 +100,22 @@ Do not include any other text, explanations, or markdown formatting.`;
 
     } catch (error: any) {
       console.error("Circuit recognition error:", error);
+      const errorMessage = error?.message || "";
+      
+      if (errorMessage.includes("Model") && errorMessage.includes("not found")) {
+        return {
+          success: false,
+          error: "The AI model is temporarily unavailable. Please try again in a few moments or use a clearer image for OCR fallback."
+        };
+      }
+
+      if (errorMessage.includes("API key")) {
+        return {
+          success: false,
+          error: "GOOGLE_GENERATIVE_AI_API_KEY is missing or invalid. Please add it to project secrets."
+        };
+      }
+
       return { 
         success: false, 
         error: "Failed to process image. Please ensure the expression is clear and well-lit." 
