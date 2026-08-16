@@ -238,7 +238,7 @@ function App() {
 
   useEffect(() => {
     const saved = localStorage.getItem("logiclab-project");
-    if (saved) {
+    if (saved && !q && !qTab && !qValues) {
       try {
         const data = JSON.parse(saved) as { expression?: string; values?: Record<string, 0 | 1>; mode?: "single-letter" | "named" };
         if (data.expression) useCircuitStore.setState({ expression: data.expression, values: data.values ?? {}, mode: data.mode ?? "single-letter" });
