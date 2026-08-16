@@ -85,19 +85,6 @@ export function TruthTablePanel() {
         <Button size="sm" variant="outline" onClick={() => setShowIntermediate((s) => !s)}>
           {showIntermediate ? "Hide" : "Show"} intermediates
         </Button>
-        <Button size="sm" variant="outline" onClick={download}>
-          <Download className="mr-1 h-3.5 w-3.5" /> CSV
-        </Button>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => {
-            void navigator.clipboard.writeText(csv());
-            toast.success("Truth table copied");
-          }}
-        >
-          <Copy className="mr-1 h-3.5 w-3.5" /> Copy
-        </Button>
         <span className="ml-auto text-xs text-muted-foreground">{visible.length} rows</span>
       </div>
       <div className="min-h-0 flex-1 overflow-auto">
