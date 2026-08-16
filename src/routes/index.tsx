@@ -138,9 +138,9 @@ function App() {
             s.generate();
             return t("imageSuccess");
           }
-          throw new Error(res.error || "Failed");
+          throw new Error(res.error || t("imageError"));
         },
-        error: t("imageError"),
+        error: (err) => err instanceof Error ? err.message : t("imageError"),
       });
     };
     reader.readAsDataURL(file);
