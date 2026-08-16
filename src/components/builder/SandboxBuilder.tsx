@@ -211,8 +211,8 @@ function Inner() {
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container">
-      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-52 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r">
+    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-y-auto lg:overflow-hidden">
+      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-52 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r z-10">
         <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground lg:block sandbox-components-header">Components</h3>
         <button
           onClick={() => addNode("INPUT")}
@@ -272,7 +272,7 @@ function Inner() {
         </Button>
       </aside>
       <div className="flex min-h-0 flex-1 flex-col">
-        <div className="min-h-[240px] flex-1">
+        <div className="min-h-[400px] lg:min-h-0 flex-1">
           <ReactFlow
             nodes={rfNodes}
             edges={styledEdges}

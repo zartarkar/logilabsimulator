@@ -359,7 +359,7 @@ function App() {
         </main>
       ) : (
         <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
-          <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+          <div className="flex min-h-0 flex-1 flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
             {/* LEFT: Controls & Input */}
             <section className="flex flex-col w-full shrink-0 border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-[26rem] lg:border-b-0 lg:border-r overflow-y-auto">
               <div>
@@ -449,7 +449,7 @@ function App() {
             </section>
 
             {/* RIGHT: Canvas */}
-            <section className="relative flex-1 bg-transparent min-h-[400px]">
+            <section className="relative flex-1 bg-transparent min-h-[500px] lg:min-h-0">
               {s.graph && (
                 <div className="absolute top-2 right-2 z-10 rounded bg-card/80 px-2 py-1 text-[10px] font-mono backdrop-blur-sm border border-border lg:top-auto lg:bottom-2 lg:right-4">
                    {s.parsed?.name ?? "F"} = {s.nodeValues[s.graph.outputId] ?? 0} · {(s.nodeValues[s.graph.outputId] ?? 0) === 1 ? "ON" : "OFF"}
