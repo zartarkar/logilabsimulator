@@ -205,9 +205,10 @@ function Inner() {
       }
       return next;
     });
-    if (removed.length) setSelectedIds((prev) => prev.filter((id) => !removed.includes(id)));
-    if (removed.length)
+    if (removed.length) {
+      setSelectedIds((prev) => prev.filter((id) => !removed.includes(id)));
       setEdges((es) => es.filter((e) => !removed.includes(e.source) && !removed.includes(e.target)));
+    }
   }, []);
 
   return (
