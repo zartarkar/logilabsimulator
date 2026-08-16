@@ -102,7 +102,8 @@ function App() {
   const s = useCircuitStore();
   const { dark, toggle } = useTheme();
   const { lang, setLang, t } = useLang();
-  const { q, tab: qTab, v: qValues } = useSearch({ from: "/" });
+  const qSearch = useSearch({ from: "/" });
+  const { q, tab: qTab, v: qValues } = qSearch;
   const navigate = useNavigate({ from: "/" });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognizeFn = useServerFn(recognizeCircuitFromImage);
