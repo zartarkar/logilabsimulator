@@ -22,9 +22,8 @@ export const recognizeCircuitFromImage = createServerFn({ method: "POST" })
       const google = createGoogleGenerativeAI({
         apiKey: apiKey,
       });
-      // The AI SDK's Google provider allows specifying versioning. 
-      // If the default v1beta fails, we can try specific model strings.
-      const model = google("gemini-1.5-flash");
+      // Switching to a more explicit model identifier that often resolves v1beta issues
+      const model = google("gemini-1.5-flash-latest");
 
       const prompt = `Analyze this image of a Boolean expression or a digital logic circuit. 
       
