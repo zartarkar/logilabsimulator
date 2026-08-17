@@ -136,8 +136,14 @@ function Inner({
         fitViewOptions={{ padding: 0.24 }}
         minZoom={0.15}
         maxZoom={2.5}
-        panOnScroll
-        zoomOnPinch
+        panOnScroll={false}
+        zoomOnPinch={false}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        elementsSelectable={true}
+        panOnDrag={false}
+        preventScrolling={false}
+        zoomOnScroll={false}
         proOptions={{ hideAttribution: true }}
         className="bg-transparent"
       >
