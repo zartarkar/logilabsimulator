@@ -16,14 +16,12 @@ import {
   Languages,
   Camera,
   Upload,
-  PanelRightClose,
-  PanelRightOpen,
+
 } from "lucide-react";
 import { z } from "zod";
 import { useCircuitStore } from "@/store/useCircuitStore";
 import { CircuitCanvas } from "@/components/circuit/CircuitCanvas";
 import { InputsPanel } from "@/components/panels/InputsPanel";
-import { InspectorPanel } from "@/components/panels/InspectorPanel";
 import { CalculationPanel } from "@/components/panels/CalculationPanel";
 import { AnalysisPanel } from "@/components/panels/AnalysisPanel";
 import { TruthTablePanel } from "@/components/panels/TruthTablePanel";
