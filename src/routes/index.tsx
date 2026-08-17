@@ -16,14 +16,12 @@ import {
   Languages,
   Camera,
   Upload,
-  PanelRightClose,
-  PanelRightOpen,
+
 } from "lucide-react";
 import { z } from "zod";
 import { useCircuitStore } from "@/store/useCircuitStore";
 import { CircuitCanvas } from "@/components/circuit/CircuitCanvas";
 import { InputsPanel } from "@/components/panels/InputsPanel";
-import { InspectorPanel } from "@/components/panels/InspectorPanel";
 import { CalculationPanel } from "@/components/panels/CalculationPanel";
 import { AnalysisPanel } from "@/components/panels/AnalysisPanel";
 import { TruthTablePanel } from "@/components/panels/TruthTablePanel";
@@ -110,7 +108,7 @@ function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognizeFn = useServerFn(recognizeCircuitFromImage);
   const [recognitionError, setRecognitionError] = useState<string | null>(null);
-  const [canvasSidebarOpen, setCanvasSidebarOpen] = useState(true);
+  // removed canvasSidebarOpen state as requested to expand canvas space
 
   // Sync state with query param on initial load or URL change
   useEffect(() => {
@@ -373,7 +371,7 @@ function App() {
           <SandboxBuilder />
         </main>
       ) : (
-        <main className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:overflow-hidden">
+        <main className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:overflow-hidden no-scrollbar">
           <div className="flex flex-none flex-col lg:min-h-0 lg:flex-1 lg:flex-row lg:overflow-hidden">
             {/* LEFT: Controls & Input */}
             <section className="flex w-full shrink-0 flex-col border-b border-border bg-card/60 p-3 backdrop-blur-sm lg:w-[26rem] lg:overflow-y-auto lg:border-b-0 lg:border-r">
@@ -468,17 +466,6 @@ function App() {
             {/* RIGHT: Canvas */}
             <section className="flex aspect-[4/3] w-full flex-none flex-col bg-transparent md:aspect-auto md:flex-row lg:h-auto lg:min-h-0 lg:flex-1 overflow-hidden">
               <div className="relative h-full min-w-0 flex-1 canvas-container overflow-hidden lg:min-h-0">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  className="absolute right-2 top-2 z-20 h-8 w-8 bg-card/90"
-                  onClick={() => setCanvasSidebarOpen((open) => !open)}
-                  aria-label={canvasSidebarOpen ? "Hide circuit sidebar" : "Show circuit sidebar"}
-                  title={canvasSidebarOpen ? "Hide circuit sidebar" : "Show circuit sidebar"}
-                >
-                  {canvasSidebarOpen ? <PanelRightClose /> : <PanelRightOpen />}
-                </Button>
                 {s.graph && (
                   <div className="absolute bottom-2 right-2 z-10 rounded border border-border bg-card/90 px-2 py-1 font-mono text-[10px] backdrop-blur-sm">
                     {s.parsed?.name ?? "F"} = {s.nodeValues[s.graph.outputId] ?? 0} · {(s.nodeValues[s.graph.outputId] ?? 0) === 1 ? "ON" : "OFF"}
@@ -505,14 +492,6 @@ function App() {
                   )}
                 </div>
               </div>
-              {canvasSidebarOpen && (
-                <aside className="h-56 shrink-0 overflow-y-auto border-t border-border bg-card/80 backdrop-blur-sm md:h-auto md:w-64 md:border-l md:border-t-0" aria-label="Circuit inspector">
-                  <div className="sticky top-0 z-10 border-b border-border bg-card/95 px-4 py-2 text-xs font-semibold uppercase text-muted-foreground">
-                    Circuit inspector
-                  </div>
-                  <InspectorPanel />
-                </aside>
-              )}
             </section>
           </div>
 

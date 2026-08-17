@@ -304,10 +304,11 @@ function Inner() {
             <Controls className="!bg-card !text-foreground" />
           </ReactFlow>
         </div>
-        <div className="h-[32vh] shrink-0 overflow-auto border-t border-border bg-card/80 backdrop-blur-md p-3">
+        <div className="h-[22rem] shrink-0 overflow-auto border-t border-border bg-card/80 backdrop-blur-md p-3 lg:h-[24rem]">
           <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("builderTruth")}</h3>
           {truth ? (
-            <table className="mt-2 w-full border-collapse text-sm">
+            <div className="overflow-x-auto">
+              <table className="mt-2 w-full border-collapse text-sm">
               <thead>
                 <tr>
                   {truth.inputs.map((n) => (
@@ -339,6 +340,7 @@ function Inner() {
                 ))}
               </tbody>
             </table>
+          </div>
           ) : (
             <p className="mt-2 text-sm text-muted-foreground">{t("builderTruthEmpty")}</p>
           )}
