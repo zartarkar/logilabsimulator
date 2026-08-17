@@ -77,13 +77,8 @@ export function TruthTablePanel() {
   return (
     <div className="flex h-full flex-col">
       <div className="flex flex-wrap items-center gap-2 border-b border-border p-2">
-        {(["all", "1", "0"] as const).map((f) => (
-          <Button key={f} size="sm" variant={filter === f ? "default" : "outline"} onClick={() => setFilter(f)} className={filter === f ? "button-red" : ""}>
-            {f === "all" ? "All rows" : `Output ${f}`}
-          </Button>
-        ))}
-        <Button size="sm" variant="outline" onClick={() => setShowIntermediate((s) => !s)}>
-          {showIntermediate ? "Hide" : "Show"} intermediates
+        <Button size="sm" variant={filter === "all" ? "default" : "outline"} onClick={() => setFilter("all")} className={filter === "all" ? "button-red" : ""}>
+          All rows
         </Button>
         <span className="ml-auto text-xs text-muted-foreground">{visible.length} rows</span>
       </div>
