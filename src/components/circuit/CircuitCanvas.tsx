@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useEffect, useRef } from "react";
 import {
   ReactFlow,
   Background,
@@ -47,6 +47,18 @@ function Inner({
   minimap = false,
 }: Props) {
   const { fitView } = useReactFlow();
+  const flowRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fit = () => requestAnimationFrame(() => fitView({ padding: 0.24, duration: 220 }));
+    fit();
+
+    const element = flowRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver(fit);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [fitView, graph]);
 
   const nodes: Node[] = useMemo(
     () =>
@@ -103,30 +115,35 @@ function Inner({
   );
 
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      nodeTypes={nodeTypes}
-      onNodeClick={onNodeClick}
-      onPaneClick={() => onSelect?.(null)}
-      fitView
-      minZoom={0.15}
-      maxZoom={2.5}
-      proOptions={{ hideAttribution: true }}
-      className="bg-transparent"
-    >
-      <Background gap={18} size={1} color="var(--grid-dot)" />
-      <Controls onFitView={() => fitView({ padding: 0.2 })} className="!bg-card !text-foreground" />
-      {minimap && (
-        <MiniMap
-          pannable
-          zoomable
-          className="!bg-card"
-          nodeColor={(n) => ((n.data as GateNodeData)?.value === 1 ? "#16a34a" : "#94a3b8")}
-          maskColor="rgba(100,116,139,0.15)"
-        />
-      )}
-    </ReactFlow>
+    <div ref={flowRef} className="h-full min-h-0 w-full">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={nodeTypes}
+        onNodeClick={onNodeClick}
+        onPaneClick={() => onSelect?.(null)}
+        fitView
+        fitViewOptions={{ padding: 0.24 }}
+        minZoom={0.15}
+        maxZoom={2.5}
+        panOnScroll
+        zoomOnPinch
+        proOptions={{ hideAttribution: true }}
+        className="bg-transparent"
+      >
+        <Background gap={18} size={1} color="var(--grid-dot)" />
+        <Controls onFitView={() => fitView({ padding: 0.24 })} className="!bg-card !text-foreground" />
+        {minimap && (
+          <MiniMap
+            pannable
+            zoomable
+            className="!bg-card"
+            nodeColor={(n) => ((n.data as GateNodeData)?.value === 1 ? "#16a34a" : "#94a3b8")}
+            maskColor="rgba(100,116,139,0.15)"
+          />
+        )}
+      </ReactFlow>
+    </div>
   );
 }
 

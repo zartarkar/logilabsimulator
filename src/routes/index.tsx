@@ -16,6 +16,8 @@ import {
   Languages,
   Camera,
   Upload,
+  PanelRightClose,
+  PanelRightOpen,
 } from "lucide-react";
 import { z } from "zod";
 import { useCircuitStore } from "@/store/useCircuitStore";
@@ -108,6 +110,7 @@ function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognizeFn = useServerFn(recognizeCircuitFromImage);
   const [recognitionError, setRecognitionError] = useState<string | null>(null);
+  const [canvasSidebarOpen, setCanvasSidebarOpen] = useState(true);
 
   // Sync state with query param on initial load or URL change
   useEffect(() => {
@@ -276,9 +279,9 @@ function App() {
   const outputValue = s.graph ? (s.nodeValues[s.graph.outputId] ?? 0) : 0;
 
   return (
-    <div className="flex h-screen flex-col bg-transparent text-foreground">
+    <div className="flex h-dvh flex-col bg-transparent pt-2 text-foreground sm:pt-3">
       <Toaster />
-      <header className="shrink-0 border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
+      <header className="sticky top-2 z-50 mx-2 shrink-0 rounded-lg border border-border bg-card/90 shadow-sm backdrop-blur-md sm:top-3 sm:mx-3">
         <div className="flex flex-col gap-3 px-4 py-3 lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:py-1">
           <div className="flex items-center gap-4">
             <img src="https://cdn.10minuteschool.com/images/svg/Origin%20Labs%20Black.svg" alt="Origin Labs" className="h-8 w-auto" />
@@ -358,10 +361,10 @@ function App() {
           <SandboxBuilder />
         </main>
       ) : (
-        <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
-          <div className="flex min-h-0 flex-1 flex-col lg:flex-row overflow-y-auto lg:overflow-hidden touch-none lg:touch-auto">
+        <main className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:overflow-hidden">
+          <div className="flex flex-none flex-col lg:min-h-0 lg:flex-1 lg:flex-row lg:overflow-hidden">
             {/* LEFT: Controls & Input */}
-            <section className="flex flex-col w-full shrink-0 border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-[26rem] lg:border-b-0 lg:border-r overflow-y-auto touch-auto">
+            <section className="flex w-full shrink-0 flex-col border-b border-border bg-card/60 p-3 backdrop-blur-sm lg:w-[26rem] lg:overflow-y-auto lg:border-b-0 lg:border-r">
               <div>
                 <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
                   {t("expression")}
@@ -414,7 +417,7 @@ function App() {
 
               <div className="mt-4 flex-1">
                 <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("inputValues")}</h3>
-                <div className="-mx-4 inputs-panel-container">
+                <div className="-mx-3 inputs-panel-container">
                   <InputsPanel />
                 </div>
               </div>
@@ -449,37 +452,58 @@ function App() {
             </section>
 
             {/* RIGHT: Canvas */}
-            <section className="relative flex-1 bg-transparent min-h-[500px] lg:min-h-0">
-              {s.graph && (
-                <div className="absolute top-2 right-2 z-10 rounded bg-card/80 px-2 py-1 text-[10px] font-mono backdrop-blur-sm border border-border lg:top-auto lg:bottom-2 lg:right-4">
-                   {s.parsed?.name ?? "F"} = {s.nodeValues[s.graph.outputId] ?? 0} · {(s.nodeValues[s.graph.outputId] ?? 0) === 1 ? "ON" : "OFF"}
-                </div>
-              )}
-              <div className="absolute inset-0 canvas-container">
-                {s.graph ? (
-                  <CircuitCanvas
-                    graph={s.graph}
-                    nodeValues={s.nodeValues}
-                    edgeValues={s.edgeValues}
-                    showLabels={s.showLabels}
-                    animate={s.animate}
-                    criticalPath={stats?.criticalPath}
-                    selectedId={s.selectedId}
-                    onSelect={s.select}
-                    onToggleInput={(name) => s.setValue(name, s.values[name] === 1 ? 0 : 1)}
-                    minimap={false}
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center p-6 text-center text-sm text-muted-foreground">
-                    {t("emptyCanvas")}
+            <section className="flex h-[min(72vh,34rem)] min-h-[25rem] w-full flex-none flex-col bg-transparent md:flex-row lg:h-auto lg:min-h-0 lg:flex-1">
+              <div className="relative min-h-[22rem] min-w-0 flex-1 canvas-container">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="absolute right-2 top-2 z-20 h-8 w-8 bg-card/90"
+                  onClick={() => setCanvasSidebarOpen((open) => !open)}
+                  aria-label={canvasSidebarOpen ? "Hide circuit sidebar" : "Show circuit sidebar"}
+                  title={canvasSidebarOpen ? "Hide circuit sidebar" : "Show circuit sidebar"}
+                >
+                  {canvasSidebarOpen ? <PanelRightClose /> : <PanelRightOpen />}
+                </Button>
+                {s.graph && (
+                  <div className="absolute bottom-2 right-2 z-10 rounded border border-border bg-card/90 px-2 py-1 font-mono text-[10px] backdrop-blur-sm">
+                    {s.parsed?.name ?? "F"} = {s.nodeValues[s.graph.outputId] ?? 0} · {(s.nodeValues[s.graph.outputId] ?? 0) === 1 ? "ON" : "OFF"}
                   </div>
                 )}
+                <div className="absolute inset-0">
+                  {s.graph ? (
+                    <CircuitCanvas
+                      graph={s.graph}
+                      nodeValues={s.nodeValues}
+                      edgeValues={s.edgeValues}
+                      showLabels={s.showLabels}
+                      animate={s.animate}
+                      criticalPath={stats?.criticalPath}
+                      selectedId={s.selectedId}
+                      onSelect={s.select}
+                      onToggleInput={(name) => s.setValue(name, s.values[name] === 1 ? 0 : 1)}
+                      minimap={false}
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center p-6 text-center text-sm text-muted-foreground">
+                      {t("emptyCanvas")}
+                    </div>
+                  )}
+                </div>
               </div>
+              {canvasSidebarOpen && (
+                <aside className="h-44 shrink-0 overflow-y-auto border-t border-border bg-card/80 backdrop-blur-sm md:h-auto md:w-64 md:border-l md:border-t-0" aria-label="Circuit inspector">
+                  <div className="sticky top-0 z-10 border-b border-border bg-card/95 px-4 py-2 text-xs font-semibold uppercase text-muted-foreground">
+                    Circuit inspector
+                  </div>
+                  <InspectorPanel />
+                </aside>
+              )}
             </section>
           </div>
 
           {/* BOTTOM: Truth Table & Simplification */}
-          <section className="h-[24rem] shrink-0 border-t border-border bg-card/80 backdrop-blur-md overflow-hidden flex flex-col">
+          <section className="h-[22rem] min-h-[22rem] shrink-0 border-t border-border bg-card/80 backdrop-blur-md overflow-hidden flex flex-col lg:h-[24rem] lg:min-h-0">
             <Tabs defaultValue="truth" className="flex flex-col h-full">
               <TabsList className="w-full justify-start rounded-none border-b bg-transparent px-2 h-10 shrink-0">
                 <TabsTrigger value="truth" className="data-[state=active]:button-red h-8">{t("truthTable")}</TabsTrigger>
