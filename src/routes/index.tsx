@@ -466,8 +466,8 @@ function App() {
             </section>
 
             {/* RIGHT: Canvas */}
-            <section className="flex min-h-[35rem] w-full flex-none flex-col bg-transparent md:flex-row lg:h-auto lg:min-h-0 lg:flex-1 overflow-hidden">
-              <div className="relative min-h-[25rem] min-w-0 flex-1 canvas-container overflow-hidden lg:min-h-0">
+            <section className="flex aspect-[4/3] w-full flex-none flex-col bg-transparent md:aspect-auto md:flex-row lg:h-auto lg:min-h-0 lg:flex-1 overflow-hidden">
+              <div className="relative h-full min-w-0 flex-1 canvas-container overflow-hidden lg:min-h-0">
                 <Button
                   type="button"
                   variant="outline"

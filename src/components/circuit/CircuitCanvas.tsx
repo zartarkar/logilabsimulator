@@ -50,7 +50,17 @@ function Inner({
   const flowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fit = () => requestAnimationFrame(() => fitView({ padding: 0.24, duration: 220 }));
+    const fit = () => {
+      if (!flowRef.current) return;
+      const { width, height } = flowRef.current.getBoundingClientRect();
+      // On mobile, if the height is much larger than width (portrait), 
+      // or if it's generally small, we use more aggressive padding.
+      const isMobile = window.innerWidth < 768;
+      const padding = isMobile ? 0.05 : 0.24;
+      
+      requestAnimationFrame(() => fitView({ padding, duration: 220 }));
+    };
+    
     fit();
 
     const element = flowRef.current;
