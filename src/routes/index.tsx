@@ -454,8 +454,8 @@ function App() {
             </section>
 
             {/* RIGHT: Canvas */}
-            <section className="flex min-h-[30rem] w-full flex-none flex-col bg-transparent md:flex-row lg:h-auto lg:min-h-0 lg:flex-1 overflow-hidden">
-              <div className="relative min-h-[20rem] min-w-0 flex-1 canvas-container overflow-hidden">
+            <section className="flex min-h-[35rem] w-full flex-none flex-col bg-transparent md:flex-row lg:h-auto lg:min-h-0 lg:flex-1 overflow-hidden">
+              <div className="relative min-h-[25rem] min-w-0 flex-1 canvas-container overflow-hidden lg:min-h-0">
                 <Button
                   type="button"
                   variant="outline"
@@ -494,7 +494,7 @@ function App() {
                 </div>
               </div>
               {canvasSidebarOpen && (
-                <aside className="h-44 shrink-0 overflow-y-auto border-t border-border bg-card/80 backdrop-blur-sm md:h-auto md:w-64 md:border-l md:border-t-0" aria-label="Circuit inspector">
+                <aside className="h-56 shrink-0 overflow-y-auto border-t border-border bg-card/80 backdrop-blur-sm md:h-auto md:w-64 md:border-l md:border-t-0" aria-label="Circuit inspector">
                   <div className="sticky top-0 z-10 border-b border-border bg-card/95 px-4 py-2 text-xs font-semibold uppercase text-muted-foreground">
                     Circuit inspector
                   </div>
