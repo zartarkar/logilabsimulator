@@ -367,7 +367,7 @@ function App() {
           <LearnPanel />
         </main>
       ) : s.tab === "builder" ? (
-        <main className="min-h-0 flex-1 overflow-hidden bg-transparent flex flex-col lg:h-[calc(100dvh-120px)]">
+        <main className="min-h-0 flex-1 overflow-hidden bg-transparent flex flex-col">
           <SandboxBuilder />
         </main>
       ) : (
