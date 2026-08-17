@@ -254,3 +254,18 @@
 .inputs-panel-container ul {
   -webkit-overflow-scrolling: touch;
 }
+
+.canvas-container {
+  touch-action: none;
+}
+
+@media (max-width: 1024px) {
+  .sandbox-container {
+    height: calc(100dvh - 120px);
+  }
+  
+  .sandbox-container aside {
+    height: auto;
+    max-height: 120px;
+  }
+}
