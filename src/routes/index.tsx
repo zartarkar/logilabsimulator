@@ -281,73 +281,85 @@ function App() {
   return (
     <div className="flex h-dvh flex-col bg-transparent pt-2 text-foreground sm:pt-3">
       <Toaster />
-      <header className="sticky top-2 z-50 mx-2 shrink-0 rounded-lg border border-border bg-card/90 shadow-sm backdrop-blur-md sm:top-3 sm:mx-3">
-        <div className="flex flex-col gap-3 px-4 py-3 lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:py-1">
-          <div className="flex items-center gap-4">
-            <img src="https://cdn.10minuteschool.com/images/svg/Origin%20Labs%20Black.svg" alt="Origin Labs" className="h-8 w-auto" />
-            <div className="leading-tight">
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-destructive">
-                {t("classLine")}
-              </div>
-              <div className="font-display text-sm font-extrabold leading-none">{t("chapterLine")}</div>
+      <header className="sticky top-0 z-50 shrink-0 border-b border-border bg-card/90 shadow-sm backdrop-blur-md">
+        <div className="flex flex-col">
+          {/* Row 1: Logo and Controls */}
+          <div className="flex items-center justify-between border-b border-border/50 px-4 py-2">
+            <div className="flex items-center gap-4">
+              <img
+                src="https://cdn.10minuteschool.com/images/svg/Origin%20Labs%20Black.svg"
+                alt="Origin Labs"
+                className="h-7 w-auto sm:h-8"
+              />
             </div>
-            
-            <div className="flex items-center gap-1 lg:hidden">
-              <TutorialDialog />
-              <Button size="sm" variant="outline" className="h-8 w-8 p-0" onClick={toggle} aria-label="Toggle theme">
-                {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </Button>
+
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">
+                <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
+                {(["en", "bn"] as const).map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => setLang(l)}
+                    aria-pressed={lang === l}
+                    className={`px-2.5 py-1 text-[10px] font-bold transition-colors sm:px-3 sm:text-xs ${
+                      lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {l === "en" ? "EN" : "বাং"}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-1.5">
+                <TutorialDialog />
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8 w-8 p-0 sm:h-9 sm:w-9"
+                  onClick={toggle}
+                  aria-label="Toggle theme"
+                >
+                  {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </Button>
+              </div>
             </div>
           </div>
 
-          <nav className="flex justify-center gap-1">
-            {(
-              [
-                { id: "simulator", label: t("tabCircuit") },
-                { id: "builder", label: t("tabBuild") },
-                { id: "learn", label: t("tabLearn") },
-              ] as const
-            ).map((x) => (
-              <button
-                key={x.id}
-                onClick={() => { 
-                  const targetTab = x.id === 'simulator' ? 'simulator' : x.id;
-                  s.setTab(targetTab as any); 
-                  navigate({ search: { ...qSearch, tab: targetTab }, replace: true }); 
-                }}
-                className={`rounded-full px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-semibold transition-colors nav-tab-${x.id} ${
-                  s.tab === x.id
-                    ? "bg-destructive text-destructive-foreground shadow-sm"
-                    : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                }`}
-              >
-                {x.label}
-              </button>
-            ))}
-          </nav>
+          {/* Row 2: Chapter Info and Tabs */}
+          <div className="flex flex-col gap-3 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+            <div className="leading-tight">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-destructive">
+                {t("classLine")}
+              </div>
+              <div className="font-display text-xs font-extrabold leading-none sm:text-sm">
+                {t("chapterLine")}
+              </div>
+            </div>
 
-          <div className="flex items-center justify-center lg:justify-end gap-2">
-            <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">
-              <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
-              {(["en", "bn"] as const).map((l) => (
+            <nav className="flex justify-start gap-1 sm:justify-center">
+              {(
+                [
+                  { id: "simulator", label: t("tabCircuit") },
+                  { id: "builder", label: t("tabBuild") },
+                  { id: "learn", label: t("tabLearn") },
+                ] as const
+              ).map((x) => (
                 <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  aria-pressed={lang === l}
-                  className={`px-3 py-1 text-xs font-bold transition-colors ${
-                    lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
+                  key={x.id}
+                  onClick={() => {
+                    const targetTab = x.id === "simulator" ? "simulator" : x.id;
+                    s.setTab(targetTab as any);
+                    navigate({ search: { ...qSearch, tab: targetTab }, replace: true });
+                  }}
+                  className={`rounded-full px-2.5 py-1 text-[10px] font-semibold transition-colors sm:px-4 sm:py-1.5 sm:text-xs nav-tab-${x.id} ${
+                    s.tab === x.id
+                      ? "bg-destructive text-destructive-foreground shadow-sm"
+                      : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                   }`}
                 >
-                  {l === "en" ? "EN" : "বাং"}
+                  {x.label}
                 </button>
               ))}
-            </div>
-            <div className="hidden lg:flex items-center gap-1">
-              <TutorialDialog />
-              <Button size="sm" variant="outline" className="h-9 w-9 p-0" onClick={toggle} aria-label="Toggle theme">
-                {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </Button>
-            </div>
+            </nav>
           </div>
         </div>
       </header>
