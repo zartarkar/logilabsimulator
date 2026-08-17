@@ -357,7 +357,7 @@ function App() {
           <LearnPanel />
         </main>
       ) : s.tab === "builder" ? (
-        <main className="min-h-0 flex-1 overflow-hidden bg-transparent">
+        <main className="min-h-0 flex-1 overflow-hidden bg-transparent flex flex-col">
           <SandboxBuilder />
         </main>
       ) : (
@@ -452,8 +452,8 @@ function App() {
             </section>
 
             {/* RIGHT: Canvas */}
-            <section className="flex h-[min(72vh,34rem)] min-h-[25rem] w-full flex-none flex-col bg-transparent md:flex-row lg:h-auto lg:min-h-0 lg:flex-1">
-              <div className="relative min-h-[22rem] min-w-0 flex-1 canvas-container">
+            <section className="flex min-h-[30rem] w-full flex-none flex-col bg-transparent md:flex-row lg:h-auto lg:min-h-0 lg:flex-1 overflow-hidden">
+              <div className="relative min-h-[20rem] min-w-0 flex-1 canvas-container overflow-hidden">
                 <Button
                   type="button"
                   variant="outline"
@@ -503,7 +503,7 @@ function App() {
           </div>
 
           {/* BOTTOM: Truth Table & Simplification */}
-          <section className="h-[22rem] min-h-[22rem] shrink-0 border-t border-border bg-card/80 backdrop-blur-md overflow-hidden flex flex-col lg:h-[24rem] lg:min-h-0">
+          <section className="h-[22rem] min-h-[18rem] shrink-0 border-t border-border bg-card/80 backdrop-blur-md overflow-hidden flex flex-col lg:h-[24rem] lg:min-h-0">
             <Tabs defaultValue="truth" className="flex flex-col h-full">
               <TabsList className="w-full justify-start rounded-none border-b bg-transparent px-2 h-10 shrink-0">
                 <TabsTrigger value="truth" className="data-[state=active]:button-red h-8">{t("truthTable")}</TabsTrigger>
