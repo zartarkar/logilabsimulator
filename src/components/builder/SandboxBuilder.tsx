@@ -216,18 +216,18 @@ function Inner() {
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-hidden touch-none lg:touch-auto">
+    <div className="flex h-full min-h-0 flex-col bg-transparent sandbox-container overflow-hidden touch-none lg:touch-auto">
       <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-48 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto no-scrollbar">
         <h3 className="hidden text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 lg:block mb-2">Components</h3>
         <button
           onClick={() => addNode("INPUT")}
-          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground"
+          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground whitespace-nowrap"
         >
           Input switch
         </button>
         <button
           onClick={() => addNode("OUTPUT")}
-          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground"
+          className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground whitespace-nowrap"
         >
           Output LED
         </button>
@@ -244,10 +244,10 @@ function Inner() {
             <span className="font-mono text-xs">{g}</span>
           </button>
         ))}
-        <button onClick={() => addNode("CONST0")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground">
+        <button onClick={() => addNode("CONST0")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground whitespace-nowrap">
           Constant 0
         </button>
-        <button onClick={() => addNode("CONST1")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground">
+        <button onClick={() => addNode("CONST1")} className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground whitespace-nowrap">
           Constant 1
         </button>
         <Button
@@ -261,7 +261,7 @@ function Inner() {
             toast.success("Selected components removed");
           }}
         >
-          <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete selected
+          <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete
         </Button>
         <Button
           variant="outline"
@@ -273,10 +273,10 @@ function Inner() {
             toast.success("Canvas cleared");
           }}
         >
-          <Trash2 className="mr-1 h-3.5 w-3.5" /> Clear all
+          <Trash2 className="mr-1 h-3.5 w-3.5" /> Clear
         </Button>
       </aside>
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden relative">
         <div className="flex-1 relative">
           <ReactFlow
             nodes={rfNodes}
@@ -304,47 +304,54 @@ function Inner() {
             <Controls className="!bg-card !text-foreground" />
           </ReactFlow>
         </div>
-        <div className="h-[22rem] shrink-0 overflow-auto border-t border-border bg-card/80 backdrop-blur-md p-3 lg:h-[24rem]">
-          <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("builderTruth")}</h3>
-          {truth ? (
-            <div className="overflow-x-auto">
-              <table className="mt-2 w-full border-collapse text-sm">
-              <thead>
-                <tr>
-                  {truth.inputs.map((n) => (
-                    <th key={n.id} className="border-b border-border px-3 py-1 text-left font-mono text-xs">
-                      {n.label}
-                    </th>
-                  ))}
-                  {truth.outputs.map((n) => (
-                    <th key={n.id} className="border-b border-border px-3 py-1 text-left font-mono text-xs font-bold">
-                      {n.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {truth.rows.map((r, i) => (
-                  <tr key={i} className="hover:bg-muted/60">
-                    {truth.inputs.map((n) => (
-                      <td key={n.id} className="border-b border-border/50 px-3 py-1 font-mono tabular-nums">
-                        {r.env[n.id]}
-                      </td>
+        
+        {/* Overlaid Truth Table - reduced prominence as requested */}
+        <details className="absolute bottom-4 left-4 right-4 z-20 group">
+          <summary className="flex w-max cursor-pointer list-none items-center gap-2 rounded-full border border-border bg-card/90 px-4 py-2 text-xs font-bold shadow-lg backdrop-blur-sm hover:bg-card transition-all">
+            <span className="h-2 w-2 rounded-full bg-primary" />
+            {t("builderTruth")}
+          </summary>
+          <div className="mt-2 max-h-48 overflow-auto rounded-xl border border-border bg-card/95 p-3 shadow-2xl backdrop-blur-md">
+            {truth ? (
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-sm">
+                  <thead>
+                    <tr>
+                      {truth.inputs.map((n) => (
+                        <th key={n.id} className="border-b border-border px-3 py-1 text-left font-mono text-xs">
+                          {n.label}
+                        </th>
+                      ))}
+                      {truth.outputs.map((n) => (
+                        <th key={n.id} className="border-b border-border px-3 py-1 text-left font-mono text-xs font-bold">
+                          {n.label}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {truth.rows.map((r, i) => (
+                      <tr key={i} className="hover:bg-muted/60">
+                        {truth.inputs.map((n) => (
+                          <td key={n.id} className="border-b border-border/50 px-3 py-1 font-mono tabular-nums">
+                            {r.env[n.id]}
+                          </td>
+                        ))}
+                        {truth.outputs.map((n) => (
+                          <td key={n.id} className="border-b border-border/50 px-3 py-1 font-mono font-bold tabular-nums">
+                            {r.out[n.id]}
+                          </td>
+                        ))}
+                      </tr>
                     ))}
-                    {truth.outputs.map((n) => (
-                      <td key={n.id} className="border-b border-border/50 px-3 py-1 font-mono font-bold tabular-nums">
-                        {r.out[n.id]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">{t("builderTruthEmpty")}</p>
+            )}
           </div>
-          ) : (
-            <p className="mt-2 text-sm text-muted-foreground">{t("builderTruthEmpty")}</p>
-          )}
-        </div>
+        </details>
       </div>
     </div>
   );

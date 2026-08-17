@@ -261,13 +261,14 @@
 
 @media (max-width: 1024px) {
   .sandbox-container {
-    height: auto;
-    min-height: 400px;
-    aspect-ratio: 4/3;
+    height: 100%;
+    min-height: 0;
+    flex: 1;
   }
   
   .sandbox-container aside {
     height: auto;
-    max-height: 120px;
+    max-height: 80px;
+    padding: 0.5rem;
   }
 }
