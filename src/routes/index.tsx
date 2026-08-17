@@ -373,7 +373,7 @@ function App() {
           <SandboxBuilder />
         </main>
       ) : (
-        <main className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:overflow-hidden">
+        <main className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:overflow-hidden no-scrollbar">
           <div className="flex flex-none flex-col lg:min-h-0 lg:flex-1 lg:flex-row lg:overflow-hidden">
             {/* LEFT: Controls & Input */}
             <section className="flex w-full shrink-0 flex-col border-b border-border bg-card/60 p-3 backdrop-blur-sm lg:w-[26rem] lg:overflow-y-auto lg:border-b-0 lg:border-r">
