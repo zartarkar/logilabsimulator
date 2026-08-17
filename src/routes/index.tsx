@@ -279,7 +279,7 @@ function App() {
   const outputValue = s.graph ? (s.nodeValues[s.graph.outputId] ?? 0) : 0;
 
   return (
-    <div className="flex h-dvh flex-col bg-transparent pt-2 text-foreground sm:pt-3">
+    <div className="flex h-dvh flex-col bg-transparent text-foreground">
       <Toaster />
       <header className="sticky top-0 z-50 shrink-0 border-b border-border bg-card/90 shadow-sm backdrop-blur-md">
         <div className="flex flex-col">
