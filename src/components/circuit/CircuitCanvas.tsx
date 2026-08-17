@@ -143,6 +143,7 @@ function Inner({
         elementsSelectable={true}
         panOnDrag={false}
         preventScrolling={false}
+        zoomOnScroll={false}
         proOptions={{ hideAttribution: true }}
         className="bg-transparent"
       >
