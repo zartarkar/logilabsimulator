@@ -1,23 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { useCircuitStore } from "@/store/useCircuitStore";
 import { cn } from "@/lib/utils";
-import { Shuffle, RotateCcw, CheckCheck } from "lucide-react";
 import { useLang } from "@/i18n";
 
 export function InputsPanel() {
-  const { parsed, values, setValue, randomize, setAll } = useCircuitStore();
+  const { parsed, values, setValue } = useCircuitStore();
   const { t } = useLang();
   if (!parsed) return <p className="p-4 text-sm text-muted-foreground">{t("parseFirst")}</p>;
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="p-3">
       {/* Buttons removed to keep focus on truth table and simplification in current layout */}
-      <ul className="space-y-2">
+      <ul className="flex max-w-full gap-2 overflow-x-auto pb-1">
         {parsed.variables.map((v) => {
           const on = values[v] === 1;
           return (
-            <li key={v}>
-              <button
+            <li key={v} className="shrink-0">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
                 onClick={(e) => {
                   e.currentTarget.blur();
                   setValue(v, on ? 0 : 1);
@@ -25,26 +27,23 @@ export function InputsPanel() {
                 aria-pressed={on}
                 aria-label={`Variable ${v} is ${on ? 1 : 0}, click to toggle`}
                 className={cn(
-                  "flex w-full items-center justify-between rounded-lg border-2 px-3 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "h-9 gap-2 border-2 px-2.5 text-left",
                   on ? "border-[var(--signal-on)] bg-[var(--signal-on)]/10" : "border-border bg-card",
                 )}
               >
                 <span className="font-mono text-sm font-semibold">{v}</span>
-                <span className="flex items-center gap-2">
-                  <span className={cn("text-[11px] font-semibold", on ? "text-[var(--signal-on)]" : "text-muted-foreground")}>
-                    {on ? "ON" : "OFF"}
-                  </span>
+                <span className="flex items-center gap-1.5">
                   <span
                     className={cn(
-                      "flex h-6 w-11 items-center rounded-full p-0.5 transition-all",
+                      "flex h-5 w-9 items-center rounded-full p-0.5 transition-all",
                       on ? "justify-end bg-[var(--signal-on)]" : "justify-start bg-muted",
                     )}
                   >
-                    <span className="h-5 w-5 rounded-full bg-background shadow" />
+                    <span className="h-4 w-4 rounded-full bg-background shadow" />
                   </span>
-                  <span className="w-3 font-mono text-sm font-bold tabular-nums">{on ? 1 : 0}</span>
+                  <span className="w-3 font-mono text-xs font-bold tabular-nums">{on ? 1 : 0}</span>
                 </span>
-              </button>
+              </Button>
             </li>
           );
         })}
