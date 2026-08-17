@@ -357,7 +357,7 @@ function App() {
           <LearnPanel />
         </main>
       ) : s.tab === "builder" ? (
-        <main className="min-h-0 flex-1 overflow-hidden bg-transparent flex flex-col">
+        <main className="min-h-0 flex-1 overflow-hidden bg-transparent flex flex-col lg:h-[calc(100dvh-120px)]">
           <SandboxBuilder />
         </main>
       ) : (
@@ -365,90 +365,92 @@ function App() {
           <div className="flex flex-none flex-col lg:min-h-0 lg:flex-1 lg:flex-row lg:overflow-hidden">
             {/* LEFT: Controls & Input */}
             <section className="flex w-full shrink-0 flex-col border-b border-border bg-card/60 p-3 backdrop-blur-sm lg:w-[26rem] lg:overflow-y-auto lg:border-b-0 lg:border-r">
-              <div>
-                <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
-                  {t("expression")}
-                </Label>
-                <Textarea
-                  id="expr"
-                  value={s.expression}
-                  onChange={(e) => s.setExpression(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      s.generate();
-                    }
-                  }}
-                  rows={2}
-                  className="mt-1 font-mono text-sm"
-                  placeholder="F = XYZ+XY+X'Y'Z"
-                />
-                <div className="mt-2 flex gap-2">
-                  <Button size="sm" variant="destructive" className="flex-1 font-bold button-red" onClick={s.generate}>
-                    <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
-                  </Button>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    className="hidden"
-                    ref={fileInputRef}
-                    onChange={handleImageUpload}
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
+                    {t("expression")}
+                  </Label>
+                  <Textarea
+                    id="expr"
+                    value={s.expression}
+                    onChange={(e) => s.setExpression(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        s.generate();
+                      }
+                    }}
+                    rows={2}
+                    className="mt-1 font-mono text-sm"
+                    placeholder="F = XYZ+XY+X'Y'Z"
                   />
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    className="image-upload-button"
-                    onClick={() => fileInputRef.current?.click()}
-                    title={t("uploadCircuit")}
-                  >
-                    <Camera className="h-3.5 w-3.5 mr-1" />
-                    <Upload className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              </div>
-
-              {s.error && (
-                <div role="alert" className="mt-3 rounded-lg border-2 border-destructive/60 bg-destructive/10 p-2 text-sm">
-                  <div className="font-semibold text-destructive">{s.error.type}</div>
-                  <p>{s.error.message}</p>
-                </div>
-              )}
-
-              <div className="mt-4 flex-1">
-                <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("inputValues")}</h3>
-                <div className="-mx-3 inputs-panel-container">
-                  <InputsPanel />
-                </div>
-              </div>
-
-              {/* Analysis and stats removed as per request to simplify options */}
-              
-              <details className="mt-3">
-                <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground">
-                  {t("examples")}
-                </summary>
-                {EXAMPLES.map((g) => (
-                  <div key={g.label} className="mt-2">
-                    <div className="text-[11px] font-medium text-muted-foreground">{g.label}</div>
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {g.items.map((it) => (
-                        <button
-                          key={it.expr}
-                          onClick={() => {
-                            useCircuitStore.setState({ expression: it.expr, values: {} });
-                            s.generate();
-                            toast.success("Example loaded");
-                          }}
-                          className="rounded border border-border bg-background px-2 py-1 font-mono text-[11px] hover:bg-muted"
-                        >
-                          {it.expr.replace(/^F = /, "")}
-                        </button>
-                      ))}
-                    </div>
+                  <div className="mt-2 flex gap-2">
+                    <Button size="sm" variant="destructive" className="flex-1 font-bold button-red" onClick={s.generate}>
+                      <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
+                    </Button>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      className="hidden"
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                    />
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="image-upload-button"
+                      onClick={() => fileInputRef.current?.click()}
+                      title={t("uploadCircuit")}
+                    >
+                      <Camera className="h-3.5 w-3.5 mr-1" />
+                      <Upload className="h-3.5 w-3.5" />
+                    </Button>
                   </div>
-                ))}
-              </details>
+                </div>
+
+                {s.error && (
+                  <div role="alert" className="rounded-lg border-2 border-destructive/60 bg-destructive/10 p-2 text-sm">
+                    <div className="font-semibold text-destructive">{s.error.type}</div>
+                    <p>{s.error.message}</p>
+                  </div>
+                )}
+
+                <div>
+                  <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("inputValues")}</h3>
+                  <div className="-mx-3 mt-1 inputs-panel-container">
+                    <InputsPanel />
+                  </div>
+                </div>
+
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground hover:text-foreground transition-colors">
+                    {t("examples")}
+                  </summary>
+                  <div className="mt-2 grid grid-cols-1 gap-1.5">
+                    {EXAMPLES.map((g) => (
+                      <div key={g.label} className="rounded-md border border-border/40 bg-background/40 p-1.5">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 mb-1">{g.label}</div>
+                        <div className="flex flex-wrap gap-1">
+                          {g.items.map((it) => (
+                            <button
+                              key={it.expr}
+                              onClick={() => {
+                                useCircuitStore.setState({ expression: it.expr, values: {} });
+                                s.generate();
+                                toast.success("Example loaded");
+                              }}
+                              className="rounded-sm border border-border bg-card px-2 py-0.5 font-mono text-[10px] hover:bg-accent transition-colors shadow-sm"
+                            >
+                              {it.expr.replace(/^F = /, "")}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              </div>
             </section>
 
             {/* RIGHT: Canvas */}

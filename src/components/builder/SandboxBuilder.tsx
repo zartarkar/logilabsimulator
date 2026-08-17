@@ -216,9 +216,9 @@ function Inner() {
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-hidden lg:overflow-hidden touch-none lg:touch-auto">
-      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-52 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto no-scrollbar">
-        <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground lg:block sandbox-components-header">Components</h3>
+    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-hidden touch-none lg:touch-auto">
+      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-48 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto no-scrollbar">
+        <h3 className="hidden text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 lg:block mb-2">Components</h3>
         <button
           onClick={() => addNode("INPUT")}
           className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted bg-card text-foreground"
