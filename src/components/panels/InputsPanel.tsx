@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useLang } from "@/i18n";
 
 export function InputsPanel() {
-  const { parsed, values, setValue, randomize, setAll } = useCircuitStore();
+  const { parsed, values, setValue } = useCircuitStore();
   const { t } = useLang();
   if (!parsed) return <p className="p-4 text-sm text-muted-foreground">{t("parseFirst")}</p>;
 
