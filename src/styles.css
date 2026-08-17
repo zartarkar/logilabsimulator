@@ -226,3 +226,31 @@
   background-color: var(--destructive) !important;
   color: var(--destructive-foreground) !important;
 }
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Mobile-friendly touch scrolling for palette */
+.sandbox-container aside {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure ReactFlow doesn't overflow its container */
+.react-flow__pane {
+  cursor: crosshair;
+}
+
+/* Fix for mobile Safari height issues */
+.h-dvh {
+  height: 100dvh;
+}
+
+/* Compact input row for mobile */
+.inputs-panel-container ul {
+  -webkit-overflow-scrolling: touch;
+}
