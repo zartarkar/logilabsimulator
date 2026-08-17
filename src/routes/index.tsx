@@ -325,8 +325,8 @@ function App() {
           </div>
 
           {/* Row 2: Chapter Info and Tabs */}
-          <div className="flex flex-col gap-3 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-            <div className="leading-tight">
+          <div className="flex flex-col gap-3 px-4 py-2.5 items-center text-center">
+            <div className="flex flex-col items-center leading-tight">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-destructive">
                 {t("classLine")}
               </div>
@@ -335,7 +335,7 @@ function App() {
               </div>
             </div>
 
-            <nav className="flex justify-start gap-1 sm:justify-center">
+            <nav className="flex flex-wrap justify-center gap-1">
               {(
                 [
                   { id: "simulator", label: t("tabCircuit") },
