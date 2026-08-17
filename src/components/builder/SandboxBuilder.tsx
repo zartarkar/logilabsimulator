@@ -216,8 +216,8 @@ function Inner() {
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-y-auto lg:overflow-hidden touch-none lg:touch-auto">
-      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-52 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto">
+    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-hidden lg:overflow-hidden touch-none lg:touch-auto">
+      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-52 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto no-scrollbar">
         <h3 className="hidden text-xs font-semibold uppercase text-muted-foreground lg:block sandbox-components-header">Components</h3>
         <button
           onClick={() => addNode("INPUT")}
@@ -276,8 +276,8 @@ function Inner() {
           <Trash2 className="mr-1 h-3.5 w-3.5" /> Clear all
         </Button>
       </aside>
-      <div className="flex min-h-0 flex-1 flex-col lg:overflow-hidden">
-        <div className="min-h-[400px] lg:min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <div className="flex-1 relative">
           <ReactFlow
             nodes={rfNodes}
             edges={styledEdges}
@@ -295,6 +295,10 @@ function Inner() {
             panOnScroll
             selectionOnDrag
             panOnDrag={[1, 2]}
+            autoPanOnConnect
+            autoPanOnNodeDrag
+            zoomOnPinch
+            zoomOnDoubleClick={false}
           >
             <Background gap={18} size={1} color="var(--grid-dot)" />
             <Controls className="!bg-card !text-foreground" />
