@@ -148,7 +148,13 @@ function Inner({
         className="bg-transparent"
       >
         <Background gap={18} size={1} color="var(--grid-dot)" />
-        <Controls onFitView={() => fitView({ padding: 0.24 })} className="!bg-card !text-foreground" />
+        <Controls
+          position="top-right"
+          orientation="horizontal"
+          showInteractive={false}
+          onFitView={() => fitView({ padding: 0.24 })}
+          className="!bg-card !text-foreground !shadow-md !rounded-md !m-2"
+        />
         {minimap && (
           <MiniMap
             pannable
