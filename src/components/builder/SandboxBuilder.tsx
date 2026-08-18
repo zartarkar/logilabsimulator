@@ -298,17 +298,25 @@ function Inner() {
             deleteKeyCode={["Backspace", "Delete"]}
             proOptions={{ hideAttribution: true }}
             fitView
-            fitViewOptions={{ padding: 0.2 }}
-            panOnScroll
-            selectionOnDrag
-            panOnDrag={[1, 2]}
+            fitViewOptions={{ padding: 0.2, maxZoom: 1.2 }}
+            minZoom={0.2}
+            maxZoom={2.5}
+            panOnScroll={!isMobile}
+            selectionOnDrag={!isMobile}
+            panOnDrag={isMobile ? true : [1, 2]}
             autoPanOnConnect
             autoPanOnNodeDrag
             zoomOnPinch
             zoomOnDoubleClick={false}
+            nodeOrigin={[0.5, 0.5]}
           >
             <Background gap={18} size={1} color="var(--grid-dot)" />
-            <Controls className="!bg-card !text-foreground" />
+            <Controls
+              position="top-right"
+              orientation="horizontal"
+              showInteractive={false}
+              className="!bg-card !text-foreground !shadow-md !rounded-md !m-2"
+            />
           </ReactFlow>
         </div>
         
