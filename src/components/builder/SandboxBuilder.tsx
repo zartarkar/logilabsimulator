@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   ReactFlow,
@@ -7,7 +7,6 @@ import {
   Controls,
   addEdge,
   useReactFlow,
-  useNodesInitialized,
   type Connection,
   type Edge,
   type Node,
@@ -84,11 +83,9 @@ function Inner() {
   const [nodes, setNodes] = useState<SBNode[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const { screenToFlowPosition, fitView } = useReactFlow();
-  const nodesInitialized = useNodesInitialized();
+  const { screenToFlowPosition } = useReactFlow();
   const paneRef = useRef<HTMLDivElement>(null);
   const nextIdRef = useRef(0);
-  const pendingFitRef = useRef(false);
   const isMobile = useIsMobile();
   const { t } = useLang();
 
@@ -128,26 +125,20 @@ function Inner() {
       const label =
         kind === "INPUT" ? String.fromCharCode(65 + ((seq - 1) % 26)) : kind === "OUTPUT" ? "OUT" : kind;
 
+      // The node is placed at the current viewport's center, so it's already
+      // visible the moment it's added — no need to re-fit the view here.
+      // An auto fitView on every add previously raced React Flow's node
+      // measurement (timing that varies by browser/device) and could leave
+      // the viewport panned/zoomed away from the node it just placed. The
+      // "fit view" control in the canvas toolbar still lets users re-center
+      // manually.
       setNodes((ns) => [
         ...ns,
         { id, kind, label, x: center.x, y: center.y, inputValue: 0 },
       ]);
-
-      // Defer the fit until React Flow has actually measured the new node's
-      // dimensions (see effect below) instead of guessing with a timeout,
-      // which raced ahead of layout on slower mobile browsers and left the
-      // freshly-added node panned/zoomed out of view.
-      pendingFitRef.current = true;
     },
     [screenToFlowPosition],
   );
-
-  useEffect(() => {
-    if (pendingFitRef.current && nodesInitialized) {
-      pendingFitRef.current = false;
-      fitView({ padding: 0.2, duration: 250 });
-    }
-  }, [nodesInitialized, nodes, fitView]);
 
   const removeNode = useCallback((id: string) => {
     setNodes((ns) => ns.filter((n) => n.id !== id));
