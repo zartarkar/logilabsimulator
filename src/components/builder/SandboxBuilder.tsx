@@ -134,8 +134,10 @@ function Inner() {
         ...ns,
         { id, kind, label, x: spot.x, y: spot.y, inputValue: 0 },
       ]);
+      // keep every component in frame after adding (esp. on small screens)
+      window.setTimeout(() => fitView({ padding: 0.25, duration: 200, maxZoom: 1.2 }), 60);
     },
-    [counter, screenToFlowPosition],
+    [counter, screenToFlowPosition, fitView],
   );
 
   const removeNode = useCallback((id: string) => {
