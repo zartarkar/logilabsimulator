@@ -284,7 +284,7 @@ function Inner() {
         </Button>
       </aside>
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden relative">
-        <div className="flex-1 relative">
+        <div ref={paneRef} className="flex-1 relative">
           <ReactFlow
             nodes={rfNodes}
             edges={styledEdges}
