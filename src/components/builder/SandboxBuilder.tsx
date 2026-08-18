@@ -115,27 +115,24 @@ function Inner() {
       setCounter((c) => c + 1);
       
       const rect = paneRef.current?.getBoundingClientRect();
+      // Use center of the actual canvas container
       const center = screenToFlowPosition({
         x: rect ? rect.left + rect.width / 2 : window.innerWidth / 2,
         y: rect ? rect.top + rect.height / 2 : window.innerHeight / 2,
       });
-      
-      
-      const i = counter;
-      const spot = {
-        x: center.x - 100 + (i % 4) * 50,
-        y: center.y - 100 + Math.floor(i / 4) * 50,
-      };
       
       const label =
         kind === "INPUT" ? String.fromCharCode(65 + (counter % 26)) : kind === "OUTPUT" ? "OUT" : kind;
       
       setNodes((ns) => [
         ...ns,
-        { id, kind, label, x: spot.x, y: spot.y, inputValue: 0 },
+        { id, kind, label, x: center.x, y: center.y, inputValue: 0 },
       ]);
-      // keep every component in frame after adding (esp. on small screens)
-      window.setTimeout(() => fitView({ padding: 0.25, duration: 200, maxZoom: 1.2 }), 60);
+
+      // Small delay to ensure React Flow has registered the node before fitting
+      window.setTimeout(() => {
+        fitView({ padding: 0.2, duration: 250 });
+      }, 50);
     },
     [counter, screenToFlowPosition, fitView],
   );
