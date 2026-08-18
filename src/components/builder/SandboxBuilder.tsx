@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -83,7 +84,9 @@ function Inner() {
   const [edges, setEdges] = useState<Edge[]>([]);
   const [counter, setCounter] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, fitView } = useReactFlow();
+  const paneRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   const { t } = useLang();
 
   const values = useMemo(() => simulate(nodes, edges), [nodes, edges]);
@@ -111,10 +114,12 @@ function Inner() {
       const id = `sb${counter + 1}`;
       setCounter((c) => c + 1);
       
+      const rect = paneRef.current?.getBoundingClientRect();
       const center = screenToFlowPosition({
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
+        x: rect ? rect.left + rect.width / 2 : window.innerWidth / 2,
+        y: rect ? rect.top + rect.height / 2 : window.innerHeight / 2,
       });
+      
       
       const i = counter;
       const spot = {
@@ -129,8 +134,10 @@ function Inner() {
         ...ns,
         { id, kind, label, x: spot.x, y: spot.y, inputValue: 0 },
       ]);
+      // keep every component in frame after adding (esp. on small screens)
+      window.setTimeout(() => fitView({ padding: 0.25, duration: 200, maxZoom: 1.2 }), 60);
     },
-    [counter, screenToFlowPosition],
+    [counter, screenToFlowPosition, fitView],
   );
 
   const removeNode = useCallback((id: string) => {
@@ -277,7 +284,7 @@ function Inner() {
         </Button>
       </aside>
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden relative">
-        <div className="flex-1 relative">
+        <div ref={paneRef} className="flex-1 relative">
           <ReactFlow
             nodes={rfNodes}
             edges={styledEdges}
@@ -291,17 +298,25 @@ function Inner() {
             deleteKeyCode={["Backspace", "Delete"]}
             proOptions={{ hideAttribution: true }}
             fitView
-            fitViewOptions={{ padding: 0.2 }}
-            panOnScroll
-            selectionOnDrag
-            panOnDrag={[1, 2]}
+            fitViewOptions={{ padding: 0.2, maxZoom: 1.2 }}
+            minZoom={0.2}
+            maxZoom={2.5}
+            panOnScroll={!isMobile}
+            selectionOnDrag={!isMobile}
+            panOnDrag={isMobile ? true : [1, 2]}
             autoPanOnConnect
             autoPanOnNodeDrag
             zoomOnPinch
             zoomOnDoubleClick={false}
+            nodeOrigin={[0.5, 0.5]}
           >
             <Background gap={18} size={1} color="var(--grid-dot)" />
-            <Controls className="!bg-card !text-foreground" />
+            <Controls
+              position="top-right"
+              orientation="horizontal"
+              showInteractive={false}
+              className="!bg-card !text-foreground !shadow-md !rounded-md !m-2"
+            />
           </ReactFlow>
         </div>
         
