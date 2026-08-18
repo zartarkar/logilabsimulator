@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   ReactFlow,
@@ -7,6 +7,7 @@ import {
   Controls,
   addEdge,
   useReactFlow,
+  useNodesInitialized,
   type Connection,
   type Edge,
   type Node,
@@ -82,10 +83,12 @@ function simulate(nodes: SBNode[], edges: Edge[], override?: Record<string, 0 | 
 function Inner() {
   const [nodes, setNodes] = useState<SBNode[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
-  const [counter, setCounter] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { screenToFlowPosition, fitView } = useReactFlow();
+  const nodesInitialized = useNodesInitialized();
   const paneRef = useRef<HTMLDivElement>(null);
+  const nextIdRef = useRef(0);
+  const pendingFitRef = useRef(false);
   const isMobile = useIsMobile();
   const { t } = useLang();
 
@@ -111,31 +114,40 @@ function Inner() {
 
   const addNode = useCallback(
     (kind: CircuitNodeType) => {
-      const id = `sb${counter + 1}`;
-      setCounter((c) => c + 1);
-      
+      const seq = nextIdRef.current + 1;
+      nextIdRef.current = seq;
+      const id = `sb${seq}`;
+
       const rect = paneRef.current?.getBoundingClientRect();
       // Use center of the actual canvas container
       const center = screenToFlowPosition({
         x: rect ? rect.left + rect.width / 2 : window.innerWidth / 2,
         y: rect ? rect.top + rect.height / 2 : window.innerHeight / 2,
       });
-      
+
       const label =
-        kind === "INPUT" ? String.fromCharCode(65 + (counter % 26)) : kind === "OUTPUT" ? "OUT" : kind;
-      
+        kind === "INPUT" ? String.fromCharCode(65 + ((seq - 1) % 26)) : kind === "OUTPUT" ? "OUT" : kind;
+
       setNodes((ns) => [
         ...ns,
         { id, kind, label, x: center.x, y: center.y, inputValue: 0 },
       ]);
 
-      // Small delay to ensure React Flow has registered the node before fitting
-      window.setTimeout(() => {
-        fitView({ padding: 0.2, duration: 250 });
-      }, 50);
+      // Defer the fit until React Flow has actually measured the new node's
+      // dimensions (see effect below) instead of guessing with a timeout,
+      // which raced ahead of layout on slower mobile browsers and left the
+      // freshly-added node panned/zoomed out of view.
+      pendingFitRef.current = true;
     },
-    [counter, screenToFlowPosition, fitView],
+    [screenToFlowPosition],
   );
+
+  useEffect(() => {
+    if (pendingFitRef.current && nodesInitialized) {
+      pendingFitRef.current = false;
+      fitView({ padding: 0.2, duration: 250 });
+    }
+  }, [nodesInitialized, nodes, fitView]);
 
   const removeNode = useCallback((id: string) => {
     setNodes((ns) => ns.filter((n) => n.id !== id));
