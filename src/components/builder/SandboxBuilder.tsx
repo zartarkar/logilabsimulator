@@ -87,7 +87,6 @@ function Inner() {
   const paneRef = useRef<HTMLDivElement>(null);
   const nextIdRef = useRef(0);
   const isMobile = useIsMobile();
-  const { fitView } = useReactFlow();
   const { t } = useLang();
 
   const values = useMemo(() => simulate(nodes, edges), [nodes, edges]);
@@ -137,16 +136,8 @@ function Inner() {
         ...ns,
         { id, kind, label, x: center.x, y: center.y, inputValue: 0 },
       ]);
-
-      // iOS Safari rendering fix: trigger a slight viewport update to force a repaint
-      // after adding a node, ensuring it doesn't appear "invisible" until touched.
-      if (isMobile) {
-        setTimeout(() => {
-          fitView({ padding: 0.2, duration: 200 });
-        }, 50);
-      }
     },
-    [screenToFlowPosition, isMobile, fitView],
+    [screenToFlowPosition],
   );
 
   const removeNode = useCallback((id: string) => {
