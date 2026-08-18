@@ -206,10 +206,15 @@ function Inner() {
       for (const c of changes) {
         if (c.type === "position" && c.position) {
           const pos = c.position;
+          if (!Number.isFinite(pos.x) || !Number.isFinite(pos.y)) {
+            toast.error(`Debug: invalid position for ${c.id}: (${pos.x}, ${pos.y})`);
+            continue;
+          }
           next = next.map((n) => (n.id === c.id ? { ...n, x: pos.x, y: pos.y } : n));
         } else if (c.type === "select") {
           (c.selected ? selectedOn : selectedOff).push(c.id);
         } else if (c.type === "remove") {
+          toast.error(`Debug: ReactFlow requested removal of ${c.id}`);
           removed.push(c.id);
           next = next.filter((n) => n.id !== c.id);
         }
@@ -288,6 +293,14 @@ function Inner() {
       </aside>
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden relative">
         <div ref={paneRef} className="flex-1 relative">
+          {/* Temporary debug readout: watch this count while reproducing the
+              iOS vanishing-node bug. If it drops when a node disappears,
+              React Flow is actually removing it (see toasts). If it stays
+              the same, the node is still in state and this is a paint-only
+              bug. Remove once the iOS issue is confirmed fixed. */}
+          <div className="pointer-events-none absolute left-2 top-2 z-20 rounded-md border border-border bg-card/90 px-2 py-1 font-mono text-[10px] text-muted-foreground shadow">
+            nodes: {nodes.length}
+          </div>
           <ReactFlow
             nodes={rfNodes}
             edges={styledEdges}
