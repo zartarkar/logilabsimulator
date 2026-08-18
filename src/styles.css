@@ -245,6 +245,25 @@
   cursor: crosshair;
 }
 
+/*
+ * iOS Safari can fail to paint (or stop painting) content added inside an
+ * ancestor that has a CSS `transform` — which is exactly how React Flow
+ * pans/zooms (it transforms `.react-flow__viewport`). A freshly-added node
+ * can end up invisible a moment after mounting even though it's still in
+ * the DOM/state. Forcing each node onto its own compositing layer works
+ * around this WebKit rendering bug without affecting other browsers.
+ */
+.react-flow__node {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.react-flow__viewport {
+  -webkit-transform-style: preserve-3d;
+}
+
 /* Fix for mobile Safari height issues */
 .h-dvh {
   height: 100dvh;
