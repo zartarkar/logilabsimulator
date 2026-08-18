@@ -114,10 +114,12 @@ function Inner() {
       const id = `sb${counter + 1}`;
       setCounter((c) => c + 1);
       
+      const rect = paneRef.current?.getBoundingClientRect();
       const center = screenToFlowPosition({
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
+        x: rect ? rect.left + rect.width / 2 : window.innerWidth / 2,
+        y: rect ? rect.top + rect.height / 2 : window.innerHeight / 2,
       });
+      
       
       const i = counter;
       const spot = {
