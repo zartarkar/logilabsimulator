@@ -84,7 +84,9 @@ function Inner() {
   const [edges, setEdges] = useState<Edge[]>([]);
   const [counter, setCounter] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, fitView } = useReactFlow();
+  const paneRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   const { t } = useLang();
 
   const values = useMemo(() => simulate(nodes, edges), [nodes, edges]);
