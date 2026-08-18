@@ -312,4 +312,12 @@
   height: calc(100dvh - 120px); /* Adjust based on header height */
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* iOS Safari: Force hardware acceleration on the entire builder to prevent rendering freezes */
+.sandbox-container {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
