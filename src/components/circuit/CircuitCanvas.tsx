@@ -137,12 +137,12 @@ function Inner({
         minZoom={0.15}
         maxZoom={2.5}
         panOnScroll={false}
-        zoomOnPinch={false}
+        zoomOnPinch={true}
         nodesDraggable={false}
         nodesConnectable={false}
         elementsSelectable={true}
-        panOnDrag={false}
-        preventScrolling={false}
+        panOnDrag={true}
+        preventScrolling={true}
         zoomOnScroll={false}
         proOptions={{ hideAttribution: true }}
         className="bg-transparent"
