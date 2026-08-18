@@ -199,6 +199,8 @@ function Inner() {
 
   const onNodesChange = useCallback((changes: NodeChange[]) => {
     const removed: string[] = [];
+    const selectedOn: string[] = [];
+    const selectedOff: string[] = [];
     setNodes((ns) => {
       let next = ns;
       for (const c of changes) {
@@ -206,9 +208,7 @@ function Inner() {
           const pos = c.position;
           next = next.map((n) => (n.id === c.id ? { ...n, x: pos.x, y: pos.y } : n));
         } else if (c.type === "select") {
-          setSelectedIds((prev) =>
-            c.selected ? [...new Set([...prev, c.id])] : prev.filter((id) => id !== c.id),
-          );
+          (c.selected ? selectedOn : selectedOff).push(c.id);
         } else if (c.type === "remove") {
           removed.push(c.id);
           next = next.filter((n) => n.id !== c.id);
@@ -216,6 +216,9 @@ function Inner() {
       }
       return next;
     });
+    if (selectedOn.length || selectedOff.length) {
+      setSelectedIds((prev) => [...new Set([...prev, ...selectedOn])].filter((id) => !selectedOff.includes(id)));
+    }
     if (removed.length) {
       setSelectedIds((prev) => prev.filter((id) => !removed.includes(id)));
       setEdges((es) => es.filter((e) => !removed.includes(e.source) && !removed.includes(e.target)));
@@ -304,8 +307,8 @@ function Inner() {
             panOnScroll={!isMobile}
             selectionOnDrag={!isMobile}
             panOnDrag={isMobile ? true : [1, 2]}
-            autoPanOnConnect
-            autoPanOnNodeDrag
+            autoPanOnConnect={!isMobile}
+            autoPanOnNodeDrag={!isMobile}
             zoomOnPinch
             zoomOnDoubleClick={false}
             nodeOrigin={[0.5, 0.5]}
