@@ -158,40 +158,31 @@ function Inner() {
     setEdges((es) => es.filter((e) => e.source !== id && e.target !== id));
   }, []);
 
-  // Custom pointer-based drag for iOS, used instead of React Flow's own
-  // node dragging (nodesDraggable={false} there — see below). Touch pointer
-  // events implicitly capture to the element that received pointerdown, so
-  // move/up keep arriving here even as the finger leaves the node's bounds.
-  const dragRef = useRef<{ id: string; pointerId: number; offsetX: number; offsetY: number } | null>(null);
-
+  // iOS tap-to-place: continuous touch-and-move on a node — whether handled
+  // by React Flow's own drag or by a custom pointermove-driven equivalent —
+  // reliably made the node vanish on iOS Safari. Only a fully discrete
+  // interaction (a tap that ends, then a separate tap) has proven safe.
+  // Tapping a node selects it (and stops the touch from also starting a
+  // pane pan, via the "nopan" class in nodes.tsx); tapping empty canvas
+  // afterward (onPaneClick, below) relocates the selected node there.
   const handleNodePointerDown = useCallback(
     (id: string, e: ReactPointerEvent) => {
       if (!isIOS) return;
-      const node = nodes.find((n) => n.id === id);
-      if (!node) return;
       e.stopPropagation();
-      (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
-      const flowPos = screenToFlowPosition({ x: e.clientX, y: e.clientY });
-      dragRef.current = { id, pointerId: e.pointerId, offsetX: node.x - flowPos.x, offsetY: node.y - flowPos.y };
       setSelectedIds([id]);
     },
-    [isIOS, nodes, screenToFlowPosition],
+    [isIOS],
   );
 
-  const handleNodePointerMove = useCallback(
-    (e: ReactPointerEvent) => {
-      const drag = dragRef.current;
-      if (!drag || drag.pointerId !== e.pointerId) return;
-      const { id, offsetX, offsetY } = drag;
-      const flowPos = screenToFlowPosition({ x: e.clientX, y: e.clientY });
-      setNodes((ns) => ns.map((n) => (n.id === id ? { ...n, x: flowPos.x + offsetX, y: flowPos.y + offsetY } : n)));
+  const onPaneClick = useCallback(
+    (event: { clientX: number; clientY: number }) => {
+      if (!isIOS || selectedIds.length !== 1) return;
+      const id = selectedIds[0];
+      const pos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
+      setNodes((ns) => ns.map((n) => (n.id === id ? { ...n, x: pos.x, y: pos.y } : n)));
     },
-    [screenToFlowPosition],
+    [isIOS, selectedIds, screenToFlowPosition],
   );
-
-  const handleNodePointerUp = useCallback((e: ReactPointerEvent) => {
-    if (dragRef.current?.pointerId === e.pointerId) dragRef.current = null;
-  }, []);
 
   const rfNodes: Node[] = useMemo(
     () =>
@@ -217,11 +208,9 @@ function Inner() {
               : undefined,
           onDelete: () => removeNode(n.id),
           onNodePointerDown: isIOS ? (e: ReactPointerEvent) => handleNodePointerDown(n.id, e) : undefined,
-          onNodePointerMove: isIOS ? handleNodePointerMove : undefined,
-          onNodePointerUp: isIOS ? handleNodePointerUp : undefined,
         } satisfies GateNodeData,
       })),
-    [nodes, values, removeNode, selectedIds, isIOS, handleNodePointerDown, handleNodePointerMove, handleNodePointerUp],
+    [nodes, values, removeNode, selectedIds, isIOS, handleNodePointerDown],
   );
 
   const styledEdges = edges.map((e) => {
@@ -352,6 +341,11 @@ function Inner() {
           <div className="pointer-events-none absolute left-2 top-2 z-20 rounded-md border border-border bg-card/90 px-2 py-1 font-mono text-[10px] text-muted-foreground shadow">
             nodes: {nodes.length}
           </div>
+          {isIOS && (
+            <div className="pointer-events-none absolute bottom-2 left-1/2 z-20 -translate-x-1/2 rounded-md border border-border bg-card/90 px-2.5 py-1 text-[11px] text-muted-foreground shadow">
+              Tap a component, then tap the canvas to move it
+            </div>
+          )}
           <ReactFlow
             nodes={rfNodes}
             edges={styledEdges}
@@ -362,6 +356,7 @@ function Inner() {
               if (removed.length) setEdges((es) => es.filter((e) => !removed.includes(e.id)));
             }}
             onConnect={onConnect}
+            onPaneClick={onPaneClick}
             deleteKeyCode={["Backspace", "Delete"]}
             proOptions={{ hideAttribution: true }}
             fitView
