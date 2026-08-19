@@ -260,6 +260,14 @@
   -webkit-backface-visibility: hidden;
 }
 
+/* Same iOS Safari paint issue as above, but for wires: a newly-created
+   edge/connection line can fail to render inside the transformed viewport. */
+.react-flow__edges,
+svg.react-flow__connectionline {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
 /*
  * iOS Safari can trigger its own native "long press then move" drag-lift
  * gesture on any element (used for e.g. dragging images/links between apps).

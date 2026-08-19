@@ -168,6 +168,10 @@ function Inner() {
   const handleNodePointerDown = useCallback(
     (id: string, e: ReactPointerEvent) => {
       if (!isIOS) return;
+      // Don't hijack taps that land on a connection handle — React Flow's
+      // own click-to-connect (connectOnClick, on by default) needs those
+      // untouched so wiring still works on iOS.
+      if ((e.target as HTMLElement).closest?.(".react-flow__handle")) return;
       e.stopPropagation();
       setSelectedIds([id]);
     },

@@ -141,7 +141,7 @@ function Inner({
         nodesDraggable={false}
         nodesConnectable={false}
         elementsSelectable={true}
-        panOnDrag={true}
+        panOnDrag={false}
         preventScrolling={true}
         zoomOnScroll={false}
         proOptions={{ hideAttribution: true }}
