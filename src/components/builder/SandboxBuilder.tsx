@@ -343,7 +343,7 @@ function Inner() {
           </div>
           {isIOS && (
             <div className="pointer-events-none absolute bottom-2 left-1/2 z-20 -translate-x-1/2 rounded-md border border-border bg-card/90 px-2.5 py-1 text-[11px] text-muted-foreground shadow">
-              Tap a component, then tap the canvas to move it
+              Tap an element, then tap another spot to move it
             </div>
           )}
           <ReactFlow
