@@ -89,6 +89,19 @@ function Inner() {
   const isMobile = useIsMobile();
   const { t } = useLang();
 
+  // Dragging a node reliably makes it vanish on iOS Safari (a native
+  // gesture/rendering conflict that survived several targeted fixes).
+  // Rather than keep chasing that, disable node dragging on iOS and offer
+  // tap-to-place instead: select a node, then tap the canvas to move it
+  // there. Android/desktop keep normal drag-and-drop, which isn't affected.
+  const isIOS = useMemo(
+    () =>
+      typeof navigator !== "undefined" &&
+      (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)),
+    [],
+  );
+
   const values = useMemo(() => simulate(nodes, edges), [nodes, edges]);
 
   const truth = useMemo(() => {
@@ -230,6 +243,19 @@ function Inner() {
     }
   }, []);
 
+  // iOS tap-to-place: with dragging disabled there, tapping empty canvas
+  // while exactly one node is selected relocates that node to the tapped
+  // spot instead.
+  const onPaneClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (!isIOS || selectedIds.length !== 1) return;
+      const id = selectedIds[0];
+      const pos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
+      setNodes((ns) => ns.map((n) => (n.id === id ? { ...n, x: pos.x, y: pos.y } : n)));
+    },
+    [isIOS, selectedIds, screenToFlowPosition],
+  );
+
   return (
     <div className="flex h-full min-h-0 flex-col bg-transparent sandbox-container overflow-hidden touch-none lg:touch-auto">
       <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-48 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto no-scrollbar">
@@ -301,6 +327,11 @@ function Inner() {
           <div className="pointer-events-none absolute left-2 top-2 z-20 rounded-md border border-border bg-card/90 px-2 py-1 font-mono text-[10px] text-muted-foreground shadow">
             nodes: {nodes.length}
           </div>
+          {isIOS && (
+            <div className="pointer-events-none absolute bottom-2 left-1/2 z-20 -translate-x-1/2 rounded-md border border-border bg-card/90 px-2.5 py-1 text-[11px] text-muted-foreground shadow">
+              Tap a component, then tap the canvas to move it
+            </div>
+          )}
           <ReactFlow
             nodes={rfNodes}
             edges={styledEdges}
@@ -311,6 +342,7 @@ function Inner() {
               if (removed.length) setEdges((es) => es.filter((e) => !removed.includes(e.id)));
             }}
             onConnect={onConnect}
+            onPaneClick={onPaneClick}
             deleteKeyCode={["Backspace", "Delete"]}
             proOptions={{ hideAttribution: true }}
             fitView
@@ -322,6 +354,7 @@ function Inner() {
             panOnDrag={isMobile ? true : [1, 2]}
             autoPanOnConnect={!isMobile}
             autoPanOnNodeDrag={!isMobile}
+            nodesDraggable={!isIOS}
             zoomOnPinch
             zoomOnDoubleClick={false}
             nodeOrigin={[0.5, 0.5]}
