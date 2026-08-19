@@ -102,7 +102,20 @@ function Inner() {
     [],
   );
 
-  const values = useMemo(() => simulate(nodes, edges), [nodes, edges]);
+  // Dragging updates a node's x/y on nearly every frame, but neither the
+  // gate simulation nor the truth table depend on position — only on which
+  // nodes/edges exist and each INPUT's toggled value. Keying these memos off
+  // that instead of the raw `nodes` array (whose identity changes on every
+  // drag frame) avoids re-running simulate() and the whole truth-table loop
+  // on every position update, which was the source of visible jank while
+  // dragging a node around the canvas.
+  const logicSignature = nodes.map((n) => `${n.id}:${n.kind}:${n.inputValue}`).join("|");
+
+  const values = useMemo(
+    () => simulate(nodes, edges),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [logicSignature, edges],
+  );
 
   const truth = useMemo(() => {
     const inputs = nodes.filter((n) => n.kind === "INPUT");
@@ -120,7 +133,8 @@ function Inner() {
       rows.push({ env, out });
     }
     return { inputs, outputs, rows };
-  }, [nodes, edges]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [logicSignature, edges]);
 
   const addNode = useCallback(
     (kind: CircuitNodeType) => {
