@@ -260,6 +260,24 @@
   -webkit-backface-visibility: hidden;
 }
 
+/*
+ * iOS Safari can trigger its own native "long press then move" drag-lift
+ * gesture on any element (used for e.g. dragging images/links between apps).
+ * React Flow implements node dragging itself via custom touch handling, and
+ * the two can race: iOS starts lifting the element as a native drag while
+ * React Flow's JS also takes over the same touch sequence, and if iOS's
+ * native drag gets interrupted mid-gesture instead of completing a proper
+ * dragend, it can leave the original element hidden. React Flow's own
+ * stylesheet disables text selection on nodes but never disables the
+ * native drag/callout gesture itself — do that explicitly here.
+ */
+.react-flow__node,
+.react-flow__node * {
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  touch-action: none;
+}
+
 .react-flow__viewport {
   -webkit-transform-style: preserve-3d;
 }
@@ -312,12 +330,4 @@
   height: calc(100dvh - 120px); /* Adjust based on header height */
   display: flex;
   flex-direction: column;
-  position: relative;
-  overflow: hidden;
-}
-
-/* iOS Safari: Force hardware acceleration on the entire builder to prevent rendering freezes */
-.sandbox-container {
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
 }
