@@ -1,3 +1,4 @@
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { GateShape } from "./GateShape";
 import type { CircuitNodeType } from "@/logic/types";
@@ -14,6 +15,14 @@ export interface GateNodeData extends Record<string, unknown> {
   highlighted?: boolean;
   onToggle?: (() => void) | undefined;
   onDelete?: (() => void) | undefined;
+  /**
+   * iOS uses a custom pointer-based drag (see SandboxBuilder) instead of
+   * React Flow's built-in node dragging, which reliably made nodes vanish
+   * on iOS Safari. Undefined on platforms that use the built-in drag.
+   */
+  onNodePointerDown?: ((e: ReactPointerEvent) => void) | undefined;
+  onNodePointerMove?: ((e: ReactPointerEvent) => void) | undefined;
+  onNodePointerUp?: ((e: ReactPointerEvent) => void) | undefined;
 }
 
 function ValueBadge({ value }: { value: 0 | 1 }) {
@@ -62,6 +71,10 @@ export function GateNode({ data, selected }: NodeProps & { data: GateNodeData })
         selected && "text-primary drop-shadow-[0_0_6px_var(--signal-on)]",
       )}
       title={`${data.gateType} · ${data.expr}`}
+      onPointerDown={data.onNodePointerDown}
+      onPointerMove={data.onNodePointerMove}
+      onPointerUp={data.onNodePointerUp}
+      onPointerCancel={data.onNodePointerUp}
     >
       <InputHandles count={data.inputCount} />
       <GateShape type={data.gateType} active={active} />
@@ -94,7 +107,13 @@ export function GateNode({ data, selected }: NodeProps & { data: GateNodeData })
 export function InputNode({ data, selected }: NodeProps & { data: GateNodeData }) {
   const on = data.value === 1;
   return (
-    <div className={cn("group relative flex items-center gap-2", selected && "ring-2 ring-primary rounded-lg")}>
+    <div
+      className={cn("group relative flex items-center gap-2", selected && "ring-2 ring-primary rounded-lg")}
+      onPointerDown={data.onNodePointerDown}
+      onPointerMove={data.onNodePointerMove}
+      onPointerUp={data.onNodePointerUp}
+      onPointerCancel={data.onNodePointerUp}
+    >
       <button
         onClick={data.onToggle}
         aria-label={`Toggle input ${data.label}, currently ${data.value}`}
@@ -137,7 +156,13 @@ export function InputNode({ data, selected }: NodeProps & { data: GateNodeData }
 export function OutputNode({ data, selected }: NodeProps & { data: GateNodeData }) {
   const on = data.value === 1;
   return (
-    <div className={cn("group relative flex flex-col items-center gap-1", selected && "rounded-lg ring-2 ring-primary")}>
+    <div
+      className={cn("group relative flex flex-col items-center gap-1", selected && "rounded-lg ring-2 ring-primary")}
+      onPointerDown={data.onNodePointerDown}
+      onPointerMove={data.onNodePointerMove}
+      onPointerUp={data.onNodePointerUp}
+      onPointerCancel={data.onNodePointerUp}
+    >
       <InputHandles count={1} />
       <div
         className={cn(
@@ -178,7 +203,13 @@ export function OutputNode({ data, selected }: NodeProps & { data: GateNodeData 
 export function ConstNode({ data, selected }: NodeProps & { data: GateNodeData }) {
   const on = data.value === 1;
   return (
-    <div className={cn("group relative flex flex-col items-center", selected && "rounded-lg ring-2 ring-primary")}>
+    <div
+      className={cn("group relative flex flex-col items-center", selected && "rounded-lg ring-2 ring-primary")}
+      onPointerDown={data.onNodePointerDown}
+      onPointerMove={data.onNodePointerMove}
+      onPointerUp={data.onNodePointerUp}
+      onPointerCancel={data.onNodePointerUp}
+    >
       <div
         className={cn(
           "flex h-9 w-9 items-center justify-center rounded-md border-2 font-mono text-sm font-bold",
