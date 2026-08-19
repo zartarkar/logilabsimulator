@@ -271,7 +271,7 @@ function Inner() {
   }, []);
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-transparent sandbox-container overflow-hidden touch-none lg:touch-auto">
+    <div className="flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-hidden touch-none lg:touch-auto">
       <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-b border-border bg-card/60 backdrop-blur-sm p-3 lg:w-48 lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto no-scrollbar">
         <h3 className="hidden text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 lg:block mb-2">Components</h3>
         <button
