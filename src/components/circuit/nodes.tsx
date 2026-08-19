@@ -69,6 +69,7 @@ export function GateNode({ data, selected }: NodeProps & { data: GateNodeData })
         data.highlighted && "drop-shadow-[0_0_8px_var(--signal-on)]",
         data.critical && "text-[var(--signal-on)]",
         selected && "text-primary drop-shadow-[0_0_6px_var(--signal-on)]",
+        data.onNodePointerDown && "nopan",
       )}
       title={`${data.gateType} · ${data.expr}`}
       onPointerDown={data.onNodePointerDown}
@@ -108,7 +109,11 @@ export function InputNode({ data, selected }: NodeProps & { data: GateNodeData }
   const on = data.value === 1;
   return (
     <div
-      className={cn("group relative flex items-center gap-2", selected && "ring-2 ring-primary rounded-lg")}
+      className={cn(
+        "group relative flex items-center gap-2",
+        selected && "ring-2 ring-primary rounded-lg",
+        data.onNodePointerDown && "nopan",
+      )}
       onPointerDown={data.onNodePointerDown}
       onPointerMove={data.onNodePointerMove}
       onPointerUp={data.onNodePointerUp}
@@ -157,7 +162,11 @@ export function OutputNode({ data, selected }: NodeProps & { data: GateNodeData 
   const on = data.value === 1;
   return (
     <div
-      className={cn("group relative flex flex-col items-center gap-1", selected && "rounded-lg ring-2 ring-primary")}
+      className={cn(
+        "group relative flex flex-col items-center gap-1",
+        selected && "rounded-lg ring-2 ring-primary",
+        data.onNodePointerDown && "nopan",
+      )}
       onPointerDown={data.onNodePointerDown}
       onPointerMove={data.onNodePointerMove}
       onPointerUp={data.onNodePointerUp}
@@ -204,7 +213,11 @@ export function ConstNode({ data, selected }: NodeProps & { data: GateNodeData }
   const on = data.value === 1;
   return (
     <div
-      className={cn("group relative flex flex-col items-center", selected && "rounded-lg ring-2 ring-primary")}
+      className={cn(
+        "group relative flex flex-col items-center",
+        selected && "rounded-lg ring-2 ring-primary",
+        data.onNodePointerDown && "nopan",
+      )}
       onPointerDown={data.onNodePointerDown}
       onPointerMove={data.onNodePointerMove}
       onPointerUp={data.onNodePointerUp}
