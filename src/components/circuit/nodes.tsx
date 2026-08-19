@@ -53,7 +53,7 @@ function InputHandles({ count }: { count: number }) {
           type="target"
           position={Position.Left}
           style={{ top: `${((i + 1) / (Math.max(count, 1) + 1)) * 100}%` }}
-          className="!h-2 !w-2 !border-2 !border-border !bg-background"
+          className="!h-2 !w-2 !border-2 !border-border !bg-background pointer-coarse:!h-5 pointer-coarse:!w-5"
         />
       ))}
     </>
@@ -83,7 +83,7 @@ export function GateNode({ data, selected }: NodeProps & { data: GateNodeData })
         id="out"
         type="source"
         position={Position.Right}
-        className="!h-2 !w-2 !border-2 !border-border !bg-background"
+        className="!h-2 !w-2 !border-2 !border-border !bg-background pointer-coarse:!h-5 pointer-coarse:!w-5"
       />
       <div className="mt-0.5 flex items-center gap-1">
         <span className="text-[10px] font-semibold tracking-wide">{data.gateType}</span>
@@ -141,7 +141,7 @@ export function InputNode({ data, selected }: NodeProps & { data: GateNodeData }
         </span>
         <span className="tabular-nums">{data.value} · {on ? "ON" : "OFF"}</span>
       </button>
-      <Handle id="out" type="source" position={Position.Right} className="!h-2 !w-2 !border-2 !border-border !bg-background" />
+      <Handle id="out" type="source" position={Position.Right} className="!h-2 !w-2 !border-2 !border-border !bg-background pointer-coarse:!h-5 pointer-coarse:!w-5" />
       {data.onDelete && (
         <button
           onClick={(e) => {
@@ -231,7 +231,7 @@ export function ConstNode({ data, selected }: NodeProps & { data: GateNodeData }
       >
         {data.value}
       </div>
-      <Handle id="out" type="source" position={Position.Right} className="!h-2 !w-2 !border-2 !border-border !bg-background" />
+      <Handle id="out" type="source" position={Position.Right} className="!h-2 !w-2 !border-2 !border-border !bg-background pointer-coarse:!h-5 pointer-coarse:!w-5" />
       <span className="mt-0.5 text-[10px] text-muted-foreground">{data.value === 1 ? "ON" : "OFF"}</span>
       {data.onDelete && (
         <button
