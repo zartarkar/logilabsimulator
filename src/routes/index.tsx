@@ -108,7 +108,8 @@ function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognizeFn = useServerFn(recognizeCircuitFromImage);
   const [recognitionError, setRecognitionError] = useState<string | null>(null);
-  // removed canvasSidebarOpen state as requested to expand canvas space
+  const [showTruthTable, setShowTruthTable] = useState(false);
+  const [showSimplification, setShowSimplification] = useState(false);
 
   // Sync state with query param on initial load or URL change
   useEffect(() => {
