@@ -268,39 +268,9 @@ function App() {
     <div className="flex h-dvh flex-col bg-transparent text-foreground">
       <Toaster />
       <header className="sticky top-0 z-50 shrink-0 border-b border-border bg-card/90 shadow-sm backdrop-blur-md">
-        <div className="flex flex-col">
-          {/* Row 1: Logo and Controls */}
-          <div className="flex items-center justify-end border-b border-border/50 px-4 py-2">
-            <div className="flex items-center gap-4">
-              {/* Logo removed as requested */}
-            </div>
-
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">
-                <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
-                {(["en", "bn"] as const).map((l) => (
-                  <button
-                    key={l}
-                    onClick={() => setLang(l)}
-                    aria-pressed={lang === l}
-                    className={`px-2.5 py-1 text-[10px] font-bold transition-colors sm:px-3 sm:text-xs ${
-                      lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {l === "en" ? "EN" : "বাং"}
-                  </button>
-                ))}
-              </div>
-              <div className="flex items-center gap-1.5">
-                <TutorialDialog />
-                {/* Dark theme toggle removed as requested */}
-              </div>
-            </div>
-          </div>
-
-          {/* Row 2: Chapter Info and Tabs */}
-          <div className="flex flex-col gap-2 px-4 py-2 items-center text-center">
-            <div className="flex flex-col items-center justify-center">
+        <div className="flex items-center justify-between gap-3 px-4 py-2">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-start gap-2 sm:gap-4">
+            <div className="flex shrink-0 flex-col items-start justify-center text-left">
               <div className="text-[10px] font-bold uppercase tracking-wider text-destructive">
                 {t("classLine")}
               </div>
@@ -309,7 +279,7 @@ function App() {
               </div>
             </div>
 
-            <nav className="flex flex-wrap justify-center gap-1">
+            <nav className="flex flex-wrap justify-start gap-1">
               {(
                 [
                   { id: "simulator", label: t("tabCircuit") },
@@ -334,6 +304,25 @@ function App() {
                 </button>
               ))}
             </nav>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <TutorialDialog />
+            <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">
+              <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
+              {(["en", "bn"] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  aria-pressed={lang === l}
+                  className={`px-2.5 py-1 text-[10px] font-bold transition-colors sm:px-3 sm:text-xs ${
+                    lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  {l === "en" ? "EN" : "বাং"}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </header>
