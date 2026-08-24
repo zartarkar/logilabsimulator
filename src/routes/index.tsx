@@ -306,15 +306,7 @@ function App() {
               </div>
               <div className="flex items-center gap-1.5">
                 <TutorialDialog />
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="h-8 w-8 p-0 sm:h-9 sm:w-9"
-                  onClick={toggle}
-                  aria-label="Toggle theme"
-                >
-                  {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                </Button>
+                {/* Dark theme toggle removed as requested */}
               </div>
             </div>
           </div>
