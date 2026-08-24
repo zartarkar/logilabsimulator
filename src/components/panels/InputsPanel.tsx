@@ -27,21 +27,21 @@ export function InputsPanel() {
                 aria-pressed={on}
                 aria-label={`Variable ${v} is ${on ? 1 : 0}, click to toggle`}
                 className={cn(
-                  "h-9 gap-2 border-2 px-2.5 text-left",
+                  "h-7 gap-1 border px-1.5 text-left",
                   on ? "border-[var(--signal-on)] bg-[var(--signal-on)]/10" : "border-border bg-card",
                 )}
               >
-                <span className="font-mono text-sm font-semibold">{v}</span>
-                <span className="flex items-center gap-1.5">
+                <span className="font-mono text-xs font-semibold">{v}</span>
+                <span className="flex items-center gap-1">
                   <span
                     className={cn(
-                      "flex h-5 w-9 items-center rounded-full p-0.5 transition-all",
+                      "flex h-3.5 w-6 items-center rounded-full p-0.5 transition-all",
                       on ? "justify-end bg-[var(--signal-on)]" : "justify-start bg-muted",
                     )}
                   >
-                    <span className="h-4 w-4 rounded-full bg-background shadow" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-background shadow" />
                   </span>
-                  <span className="w-3 font-mono text-xs font-bold tabular-nums">{on ? 1 : 0}</span>
+                  <span className="w-2 font-mono text-[10px] font-bold tabular-nums">{on ? 1 : 0}</span>
                 </span>
               </Button>
             </li>
