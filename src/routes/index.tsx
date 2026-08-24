@@ -283,13 +283,9 @@ function App() {
       <header className="sticky top-0 z-50 shrink-0 border-b border-border bg-card/90 shadow-sm backdrop-blur-md">
         <div className="flex flex-col">
           {/* Row 1: Logo and Controls */}
-          <div className="flex items-center justify-between border-b border-border/50 px-4 py-2">
+          <div className="flex items-center justify-end border-b border-border/50 px-4 py-2">
             <div className="flex items-center gap-4">
-              <img
-                src="https://cdn.10minuteschool.com/images/svg/Origin%20Labs%20Black.svg"
-                alt="Origin Labs"
-                className="h-7 w-auto sm:h-8"
-              />
+              {/* Logo removed as requested */}
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
