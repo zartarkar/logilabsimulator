@@ -68,25 +68,13 @@ export const Route = createFileRoute("/")({
 });
 
 function useTheme() {
-  const [dark, setDark] = useState(false);
-
+  // Dark mode disabled as requested
   useEffect(() => {
-    const stored = localStorage.getItem("logiclab-theme");
-    const isDark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setDark(isDark);
-    document.documentElement.classList.toggle("dark", isDark);
+    document.documentElement.classList.remove("dark");
+    localStorage.removeItem("logiclab-theme");
   }, []);
 
-  const toggle = () => {
-    setDark((d) => {
-      const next = !d;
-      document.documentElement.classList.toggle("dark", next);
-      localStorage.setItem("logiclab-theme", next ? "dark" : "light");
-      return next;
-    });
-  };
-
-  return { dark, toggle };
+  return { dark: false, toggle: () => {} };
 }
 
 function Page() {
