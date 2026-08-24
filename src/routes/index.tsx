@@ -359,147 +359,149 @@ function App() {
           <SandboxBuilder />
         </main>
       ) : (
-        <main className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:overflow-hidden no-scrollbar">
-          <div className="flex flex-none flex-col lg:min-h-0 lg:flex-1 lg:flex-row lg:overflow-hidden">
-            {/* LEFT: Controls & Input */}
-            <section className="flex w-full shrink-0 flex-col border-b border-border bg-card/60 p-3 backdrop-blur-sm lg:w-[26rem] lg:overflow-y-auto lg:border-b-0 lg:border-r">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
-                    {t("expression")}
-                  </Label>
-                  <Textarea
-                    id="expr"
-                    value={s.expression}
-                    onChange={(e) => s.setExpression(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        s.generate();
-                      }
-                    }}
-                    rows={2}
-                    className="mt-1 font-mono text-sm"
-                    placeholder="F = XYZ+XY+X'Y'Z"
-                  />
-                  <div className="mt-2 flex flex-col gap-2">
-                    <Button size="sm" variant="destructive" className="w-full font-bold button-red" onClick={s.generate}>
-                      <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
+        <main className="flex min-h-0 flex-1 flex-col lg:flex-row overflow-hidden no-scrollbar">
+          {/* LEFT: Controls & Input */}
+          <section className="flex w-full shrink-0 flex-col border-b border-border bg-card/60 backdrop-blur-sm lg:w-[26rem] lg:overflow-y-auto lg:border-b-0 lg:border-r no-scrollbar">
+            <div className="p-3 space-y-4">
+              <div>
+                <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
+                  {t("expression")}
+                </Label>
+                <Textarea
+                  id="expr"
+                  value={s.expression}
+                  onChange={(e) => s.setExpression(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      s.generate();
+                    }
+                  }}
+                  rows={2}
+                  className="mt-1 font-mono text-sm"
+                  placeholder="F = XYZ+XY+X'Y'Z"
+                />
+                <div className="mt-2 flex flex-col gap-2">
+                  <Button size="sm" variant="destructive" className="w-full font-bold button-red" onClick={s.generate}>
+                    <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
+                  </Button>
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm" 
+                      variant={showTruthTable ? "destructive" : "outline"} 
+                      className={`flex-1 text-[10px] h-8 ${showTruthTable ? "button-red" : ""}`}
+                      onClick={() => setShowTruthTable(!showTruthTable)}
+                    >
+                      {t("truthTable")}
                     </Button>
-                    
-                    <div className="flex gap-2">
-                      <Button 
-                        size="sm" 
-                        variant={showTruthTable ? "destructive" : "outline"} 
-                        className={`flex-1 text-[10px] h-8 ${showTruthTable ? "button-red" : ""}`}
-                        onClick={() => setShowTruthTable(!showTruthTable)}
-                      >
-                        {t("truthTable")}
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant={showSimplification ? "destructive" : "outline"} 
-                        className={`flex-1 text-[10px] h-8 ${showSimplification ? "button-red" : ""}`}
-                        onClick={() => setShowSimplification(!showSimplification)}
-                      >
-                        {t("simplification")}
-                      </Button>
-                    </div>
+                    <Button 
+                      size="sm" 
+                      variant={showSimplification ? "destructive" : "outline"} 
+                      className={`flex-1 text-[10px] h-8 ${showSimplification ? "button-red" : ""}`}
+                      onClick={() => setShowSimplification(!showSimplification)}
+                    >
+                      {t("simplification")}
+                    </Button>
                   </div>
                 </div>
+              </div>
 
-                {s.error && (
-                  <div role="alert" className="rounded-lg border-2 border-destructive/60 bg-destructive/10 p-2 text-sm">
-                    <div className="font-semibold text-destructive">{s.error.type}</div>
-                    <p>{s.error.message}</p>
+              {s.error && (
+                <div role="alert" className="rounded-lg border-2 border-destructive/60 bg-destructive/10 p-2 text-sm">
+                  <div className="font-semibold text-destructive">{s.error.type}</div>
+                  <p>{s.error.message}</p>
+                </div>
+              )}
+
+              <div>
+                <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("inputValues")}</h3>
+                <div className="-mx-3 mt-1 inputs-panel-container">
+                  <InputsPanel />
+                </div>
+              </div>
+
+              {showTruthTable && (
+                <div className="rounded-lg border border-border bg-background/50 overflow-hidden flex flex-col h-[20rem]">
+                  <div className="bg-muted/50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider border-b border-border flex justify-between items-center">
+                    {t("truthTable")}
+                    <Button variant="ghost" size="icon" className="h-4 w-4" onClick={() => setShowTruthTable(false)}>×</Button>
                   </div>
-                )}
-
-                <div>
-                  <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("inputValues")}</h3>
-                  <div className="-mx-3 mt-1 inputs-panel-container">
-                    <InputsPanel />
+                  <div className="flex-1 overflow-hidden">
+                    <TruthTablePanel />
                   </div>
                 </div>
+              )}
 
-                <details className="mt-2">
-                  <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground hover:text-foreground transition-colors">
-                    {t("examples")}
-                  </summary>
-                  <div className="mt-2 grid grid-cols-1 gap-1.5">
-                    {EXAMPLES.map((g) => (
-                      <div key={g.label} className="rounded-md border border-border/40 bg-background/40 p-1.5">
-                        <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 mb-1">{g.label}</div>
-                        <div className="flex flex-wrap gap-1">
-                          {g.items.map((it) => (
-                            <button
-                              key={it.expr}
-                              onClick={() => {
-                                useCircuitStore.setState({ expression: it.expr, values: {} });
-                                s.generate();
-                                toast.success("Example loaded");
-                              }}
-                              className="rounded-sm border border-border bg-card px-2 py-0.5 font-mono text-[10px] hover:bg-accent transition-colors shadow-sm"
-                            >
-                              {it.expr.replace(/^F = /, "")}
-                            </button>
-                          ))}
-                        </div>
+              {showSimplification && (
+                <div className="rounded-lg border border-border bg-background/50 overflow-hidden flex flex-col">
+                  <div className="bg-muted/50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider border-b border-border flex justify-between items-center">
+                    {t("simplification")}
+                    <Button variant="ghost" size="icon" className="h-4 w-4" onClick={() => setShowSimplification(false)}>×</Button>
+                  </div>
+                  <div className="p-3">
+                    <SimplifyPanel />
+                  </div>
+                </div>
+              )}
+
+              <details className="mt-2">
+                <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground hover:text-foreground transition-colors">
+                  {t("examples")}
+                </summary>
+                <div className="mt-2 grid grid-cols-1 gap-1.5">
+                  {EXAMPLES.map((g) => (
+                    <div key={g.label} className="rounded-md border border-border/40 bg-background/40 p-1.5">
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 mb-1">{g.label}</div>
+                      <div className="flex flex-wrap gap-1">
+                        {g.items.map((it) => (
+                          <button
+                            key={it.expr}
+                            onClick={() => {
+                              useCircuitStore.setState({ expression: it.expr, values: {} });
+                              s.generate();
+                              toast.success("Example loaded");
+                            }}
+                            className="rounded-sm border border-border bg-card px-2 py-0.5 font-mono text-[10px] hover:bg-accent transition-colors shadow-sm"
+                          >
+                            {it.expr.replace(/^F = /, "")}
+                          </button>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </details>
-              </div>
-            </section>
-
-            {/* RIGHT: Canvas */}
-            <section className="flex aspect-[4/3] w-full flex-none flex-col bg-transparent md:aspect-auto md:flex-row lg:h-auto lg:min-h-0 lg:flex-1 overflow-hidden">
-              <div className="relative h-full min-w-0 flex-1 canvas-container overflow-hidden lg:min-h-0">
-                {s.graph && (
-                  <div className="absolute bottom-2 right-2 z-10 rounded border border-border bg-card/90 px-2 py-1 font-mono text-[10px] backdrop-blur-sm">
-                    {s.parsed?.name ?? "F"} = {s.nodeValues[s.graph.outputId] ?? 0} · {(s.nodeValues[s.graph.outputId] ?? 0) === 1 ? "ON" : "OFF"}
-                  </div>
-                )}
-                <div className="absolute inset-0">
-                  {s.graph ? (
-                    <CircuitCanvas
-                      graph={s.graph}
-                      nodeValues={s.nodeValues}
-                      edgeValues={s.edgeValues}
-                      showLabels={s.showLabels}
-                      animate={s.animate}
-                      criticalPath={stats?.criticalPath}
-                      selectedId={s.selectedId}
-                      onSelect={s.select}
-                      onToggleInput={(name) => s.setValue(name, s.values[name] === 1 ? 0 : 1)}
-                      minimap={false}
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center p-6 text-center text-sm text-muted-foreground">
-                      {t("emptyCanvas")}
                     </div>
-                  )}
+                  ))}
                 </div>
-              </div>
-            </section>
-          </div>
+              </details>
+            </div>
+          </section>
 
-          {/* BOTTOM: Truth Table & Simplification */}
-          <section className="h-[22rem] min-h-[18rem] shrink-0 border-t border-border bg-card/80 backdrop-blur-md overflow-hidden flex flex-col lg:h-[24rem] lg:min-h-0">
-            <Tabs defaultValue="truth" className="flex flex-col h-full">
-              <TabsList className="w-full justify-start rounded-none border-b bg-transparent px-2 h-10 shrink-0">
-                <TabsTrigger value="truth" className="data-[state=active]:button-red h-8">{t("truthTable")}</TabsTrigger>
-                <TabsTrigger value="simplify" className="data-[state=active]:button-red h-8">{t("simplification")}</TabsTrigger>
-              </TabsList>
-              <div className="flex-1 overflow-auto">
-                <TabsContent value="truth" className="m-0 h-full">
-                  <TruthTablePanel />
-                </TabsContent>
-                <TabsContent value="simplify" className="m-0 h-full p-4">
-                  <SimplifyPanel />
-                </TabsContent>
+          {/* RIGHT: Canvas (Full Height) */}
+          <section className="flex flex-1 min-h-0 bg-transparent overflow-hidden relative">
+            {s.graph && (
+              <div className="absolute bottom-2 right-2 z-10 rounded border border-border bg-card/90 px-2 py-1 font-mono text-[10px] backdrop-blur-sm">
+                {s.parsed?.name ?? "F"} = {s.nodeValues[s.graph.outputId] ?? 0} · {(s.nodeValues[s.graph.outputId] ?? 0) === 1 ? "ON" : "OFF"}
               </div>
-            </Tabs>
+            )}
+            <div className="absolute inset-0">
+              {s.graph ? (
+                <CircuitCanvas
+                  graph={s.graph}
+                  nodeValues={s.nodeValues}
+                  edgeValues={s.edgeValues}
+                  showLabels={s.showLabels}
+                  animate={s.animate}
+                  criticalPath={stats?.criticalPath}
+                  selectedId={s.selectedId}
+                  onSelect={s.select}
+                  onToggleInput={(name) => s.setValue(name, s.values[name] === 1 ? 0 : 1)}
+                  minimap={false}
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center p-6 text-center text-sm text-muted-foreground">
+                  {t("emptyCanvas")}
+                </div>
+              )}
+            </div>
           </section>
         </main>
       )}
