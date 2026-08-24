@@ -311,12 +311,12 @@ function App() {
           </div>
 
           {/* Row 2: Chapter Info and Tabs */}
-          <div className="flex flex-col gap-3 px-4 py-2.5 items-center text-center">
-            <div className="flex flex-col items-center leading-tight">
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-destructive">
+          <div className="flex flex-col gap-2 px-4 py-2 items-center text-center">
+            <div className="flex flex-col items-center justify-center">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-destructive">
                 {t("classLine")}
               </div>
-              <div className="font-display text-xs font-extrabold leading-none sm:text-sm">
+              <div className="font-display text-xs font-black tracking-tight sm:text-sm">
                 {t("chapterLine")}
               </div>
             </div>
