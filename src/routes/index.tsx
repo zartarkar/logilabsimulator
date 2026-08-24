@@ -383,28 +383,29 @@ function App() {
                     className="mt-1 font-mono text-sm"
                     placeholder="F = XYZ+XY+X'Y'Z"
                   />
-                  <div className="mt-2 flex gap-2">
-                    <Button size="sm" variant="destructive" className="flex-1 font-bold button-red" onClick={s.generate}>
+                  <div className="mt-2 flex flex-col gap-2">
+                    <Button size="sm" variant="destructive" className="w-full font-bold button-red" onClick={s.generate}>
                       <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
                     </Button>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      capture="environment"
-                      className="hidden"
-                      ref={fileInputRef}
-                      onChange={handleImageUpload}
-                    />
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="image-upload-button"
-                      onClick={() => fileInputRef.current?.click()}
-                      title={t("uploadCircuit")}
-                    >
-                      <Camera className="h-3.5 w-3.5 mr-1" />
-                      <Upload className="h-3.5 w-3.5" />
-                    </Button>
+                    
+                    <div className="flex gap-2">
+                      <Button 
+                        size="sm" 
+                        variant={showTruthTable ? "destructive" : "outline"} 
+                        className={`flex-1 text-[10px] h-8 ${showTruthTable ? "button-red" : ""}`}
+                        onClick={() => setShowTruthTable(!showTruthTable)}
+                      >
+                        {t("truthTable")}
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant={showSimplification ? "destructive" : "outline"} 
+                        className={`flex-1 text-[10px] h-8 ${showSimplification ? "button-red" : ""}`}
+                        onClick={() => setShowSimplification(!showSimplification)}
+                      >
+                        {t("simplification")}
+                      </Button>
+                    </div>
                   </div>
                 </div>
 
