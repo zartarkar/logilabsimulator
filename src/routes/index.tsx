@@ -14,8 +14,7 @@ import {
   Play,
   Zap,
   Languages,
-  Camera,
-  Upload,
+
 
 } from "lucide-react";
 import { z } from "zod";
