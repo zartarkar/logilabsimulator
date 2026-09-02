@@ -1236,7 +1236,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             nodeExtent={canvasExtent}
             panOnScroll={!isMobile}
             selectionOnDrag={!isMobile}
-            panOnDrag={isMobile ? !isPracticeMode : [1, 2]}
+            panOnDrag={isMobile ? true : [1, 2]}
             autoPanOnConnect={!isMobile}
             autoPanOnNodeDrag={!isMobile}
             nodesDraggable={false}

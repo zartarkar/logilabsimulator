@@ -8,6 +8,11 @@ export interface SimplifyResult {
   steps: string[];
   verified: boolean;
   note?: string;
+  derivation?: {
+    canonicalExpression: string;
+    primeTerms: string[];
+    selectedTerms: string[];
+  };
 }
 
 /** Quine–McCluskey minimisation producing a minimal sum-of-products. */
@@ -56,6 +61,11 @@ export function simplify(ast: AstNode, vars: string[]): SimplifyResult {
     ast: verified ? simplifiedAst : null,
     steps,
     verified,
+    derivation: {
+      canonicalExpression: minterms.map((m) => implicantToAst({ bits: m, mask: 0, covers: [m] }, vars).expr).join(" + "),
+      primeTerms: primes.map((p) => implicantToAst(p, vars).expr),
+      selectedTerms: chosen.map((p) => implicantToAst(p, vars).expr),
+    },
   };
 }
 

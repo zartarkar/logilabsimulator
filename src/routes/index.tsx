@@ -326,10 +326,10 @@ function App() {
     <div className="flex h-dvh flex-col bg-transparent text-foreground">
       <MobileLandscapeGate />
       <Toaster />
-      <header className="relative z-50 shrink-0 border-b border-border bg-card sm:sticky sm:top-0 sm:bg-card/90 sm:shadow-sm sm:backdrop-blur-md">
-        <div className="flex flex-col gap-2 px-3 py-2 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-center sm:px-4">
+      <header className="app-header relative z-50 shrink-0 border-b border-border bg-card sm:sticky sm:top-0 sm:bg-card/90 sm:shadow-sm sm:backdrop-blur-md">
+        <div className="app-header-inner flex flex-col gap-2 px-3 py-2 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-center sm:px-4">
           <div className="flex items-start justify-between gap-2 sm:contents">
-            <div className="min-w-0 flex-1 sm:col-start-1 sm:row-start-1 sm:min-w-0 sm:justify-self-start">
+            <div className="app-header-title min-w-0 flex-1 sm:col-start-1 sm:row-start-1 sm:min-w-0 sm:justify-self-start">
               <div data-tour="header-title" className="flex min-w-0 flex-col items-start text-left">
                 <div className="text-xs font-extrabold uppercase tracking-wider text-destructive sm:text-sm">
                   {t("classLine")}
@@ -340,7 +340,7 @@ function App() {
               </div>
             </div>
 
-            <div className="flex shrink-0 items-center gap-0.5 sm:col-start-3 sm:row-start-1 sm:static sm:justify-self-end sm:gap-3">
+            <div className="app-header-actions flex shrink-0 items-center gap-0.5 sm:col-start-3 sm:row-start-1 sm:static sm:justify-self-end sm:gap-3">
               <TutorialDialog onOpenOnboarding={() => setShowOnboarding(true)} className="h-6 w-6 gap-0 px-0 text-[0px] sm:h-8 sm:w-auto sm:gap-1 sm:px-3 sm:text-xs" />
               <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">
                 <Languages className="ml-1 h-2.5 w-2.5 text-muted-foreground sm:mx-1.5 sm:h-3.5 sm:w-3.5" />
@@ -360,7 +360,7 @@ function App() {
             </div>
           </div>
 
-          <nav data-tour="navigation" className="flex min-w-0 max-w-full justify-center gap-1.5 overflow-x-auto no-scrollbar sm:col-start-2 sm:row-start-1 sm:justify-center sm:gap-1 sm:overflow-visible" aria-label="Primary navigation">
+          <nav data-tour="navigation" className="app-header-nav flex min-w-0 max-w-full justify-center gap-1.5 overflow-x-auto no-scrollbar sm:col-start-2 sm:row-start-1 sm:justify-center sm:gap-1 sm:overflow-visible" aria-label="Primary navigation">
               {(
                 [
                   { id: "learn", label: t("tabLearn") },
@@ -397,9 +397,9 @@ function App() {
           <SandboxBuilder isPracticeMode={s.tab === "practice"} />
         </main>
       ) : (
-        <main className="mobile-scroll-container flex min-h-0 flex-1 flex-col overflow-y-auto no-scrollbar lg:flex-row lg:overflow-hidden">
+        <main className="simulator-layout mobile-scroll-container flex min-h-0 flex-1 flex-col overflow-y-auto no-scrollbar lg:flex-row lg:overflow-hidden">
           {/* LEFT: Controls & Input */}
-          <section className="flex w-full shrink-0 flex-col border-b border-border bg-card/60 backdrop-blur-sm lg:w-[26rem] lg:overflow-y-auto lg:border-b-0 lg:border-r no-scrollbar">
+          <section className="simulator-sidebar flex w-full shrink-0 flex-col border-b border-border bg-card/60 backdrop-blur-sm lg:w-[26rem] lg:overflow-y-auto lg:border-b-0 lg:border-r no-scrollbar">
             <div className="p-3 space-y-4">
               <div data-tour="expression-editor">
                 <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
@@ -513,7 +513,7 @@ function App() {
           </section>
 
           {/* RIGHT: Canvas (Full Height) */}
-          <section data-tour="simulator-canvas" className="relative flex min-h-[28rem] flex-none flex-1 overflow-hidden bg-transparent lg:min-h-0 lg:flex-1">
+          <section data-tour="simulator-canvas" className="simulator-canvas relative flex min-h-[28rem] flex-none flex-1 overflow-hidden bg-transparent lg:min-h-0 lg:flex-1">
             {s.graph && (
               <div className="absolute bottom-2 right-2 z-10 rounded border border-border bg-card/90 px-2 py-1 font-mono text-[10px] backdrop-blur-sm">
                 {s.parsed?.name ?? "F"} = {s.nodeValues[s.graph.outputId] ?? 0} · {(s.nodeValues[s.graph.outputId] ?? 0) === 1 ? "ON" : "OFF"}

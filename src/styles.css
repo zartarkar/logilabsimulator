@@ -432,3 +432,83 @@ svg.react-flow__connectionline {
     transform-origin: bottom right;
   }
 }
+
+/* Phones are used in landscape for the circuit workspaces. Keep controls in a
+   compact left rail and reserve the rest of the viewport for the canvas. */
+@media (orientation: landscape) and (max-height: 600px) and (pointer: coarse) {
+  .app-header-inner {
+    display: grid !important;
+    grid-template-columns: minmax(9rem, 1fr) auto minmax(5rem, 1fr);
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .app-header-inner > div:first-child { display: contents; }
+  .app-header-title { grid-column: 1; grid-row: 1; }
+  .app-header-title > div > div:first-child { font-size: 0.6rem; }
+  .app-header-title > div > div:last-child {
+    max-width: 15rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.65rem;
+  }
+  .app-header-nav {
+    grid-column: 2;
+    grid-row: 1;
+    overflow: visible;
+    gap: 0.25rem;
+  }
+  .app-header-nav button { padding: 0.3rem 0.65rem; font-size: 0.62rem; }
+  .app-header-actions { grid-column: 3; grid-row: 1; justify-self: end; }
+  .app-header-actions > button:first-child {
+    width: 1.8rem;
+    height: 1.8rem;
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+    font-size: 0;
+  }
+
+  .sandbox-container {
+    flex-direction: row !important;
+    overflow: hidden;
+  }
+  .sandbox-container aside {
+    width: 15rem;
+    height: 100%;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    border-right: 1px solid var(--border);
+    border-bottom: 0;
+  }
+  .sandbox-container .component-palette {
+    flex-direction: column;
+    overflow: visible;
+  }
+  .sandbox-container .component-palette > button { min-height: 2.35rem; }
+  .practice-builder .practice-panel { position: relative; top: auto; }
+
+  .simulator-layout {
+    flex-direction: row !important;
+    overflow: hidden !important;
+  }
+  .simulator-sidebar {
+    width: 17rem !important;
+    height: 100%;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+    border-bottom: 0;
+  }
+  .simulator-sidebar > div { padding: 0.6rem; }
+  .simulator-canvas {
+    min-height: 0 !important;
+    height: 100%;
+    flex: 1 1 0% !important;
+  }
+
+  .react-flow__pane { cursor: grab; }
+  .react-flow__pane:active { cursor: grabbing; }
+}

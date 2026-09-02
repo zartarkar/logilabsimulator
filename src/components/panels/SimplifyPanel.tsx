@@ -1,59 +1,36 @@
-import { useCircuitStore } from "@/store/useCircuitStore";
-import { analyze } from "@/logic/analysis";
-import { CircuitCanvas } from "@/components/circuit/CircuitCanvas";
 import { useLang } from "@/i18n";
+import { useCircuitStore } from "@/store/useCircuitStore";
 
 export function SimplifyPanel() {
-  const { parsed, simplified, simplifiedGraph, graph, showLabels, animate } = useCircuitStore();
+  const { parsed, simplified } = useCircuitStore();
   const { lang, t } = useLang();
-  if (!parsed) return <p className="p-4 text-sm text-muted-foreground">{lang === "bn" ? "প্রথমে একটি এক্সপ্রেশন পার্স করো।" : "Parse an expression first."}</p>;
 
-  const before = graph ? analyze(graph) : null;
-  const after = simplifiedGraph ? analyze(simplifiedGraph) : null;
+  if (!parsed) return <p className="p-4 text-sm text-muted-foreground">{lang === "bn" ? "প্রথমে একটি রাশি তৈরি করো।" : "Generate an expression first."}</p>;
 
   return (
-    <div className="space-y-3 p-4">
+    <div className="p-4">
       {!simplified && <p className="text-sm text-muted-foreground">{t("preparingSimplification")}</p>}
       {simplified && (
-        <div className="space-y-3">
-          <div className="rounded-lg border border-border bg-card p-3 font-mono text-sm">
-            <div className="text-muted-foreground">{t("original")}: {parsed.normalized}</div>
-            <div className="mt-1 font-bold">{t("simplified")}: {simplified.expression}</div>
-            <div className="mt-1 text-xs">
-              {simplified.verified ? `✔ ${t("equivalenceVerified")}` : `⚠ ${simplified.note ?? t("notVerified")}`}
-            </div>
-          </div>
-          <ol className="list-decimal space-y-1 pl-5 text-sm text-muted-foreground">
-            {simplified.steps.map((s, i) => (
-              <li key={i}>{s}</li>
-            ))}
-          </ol>
-          {before && after && (
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div className="rounded border border-border p-2">
-                <div className="text-xs uppercase text-muted-foreground">{t("original")}</div>
-                <div className="font-mono">{before.gateCount} {t("gates")} · {t("depth")} {before.depth} · {before.delay} ns</div>
-              </div>
-              <div className="rounded border border-border p-2">
-                <div className="text-xs uppercase text-muted-foreground">{t("simplified")}</div>
-                <div className="font-mono">{after.gateCount} {t("gates")} · {t("depth")} {after.depth} · {after.delay} ns</div>
-              </div>
-            </div>
-          )}
-          {simplifiedGraph && (
-            <div className="h-[280px] overflow-hidden rounded-lg border border-border">
-              <CircuitCanvas
-                graph={simplifiedGraph}
-                nodeValues={Object.fromEntries(simplifiedGraph.nodes.map((n) => [n.id, n.value]))}
-                edgeValues={Object.fromEntries(simplifiedGraph.edges.map((e) => [e.id, e.value]))}
-                showLabels={showLabels}
-                animate={animate}
-                minimap={false}
-              />
-            </div>
-          )}
+        <div className="overflow-hidden rounded-xl border border-border bg-card">
+          <Step number={1} title={lang === "bn" ? "মূল রাশি" : "Original expression"} expression={parsed.normalized} />
+          {simplified.derivation?.canonicalExpression && <Step number={2} title={lang === "bn" ? "যেসব ইনপুটে ফল ১, সেসব গুণফল পদ লিখি" : "Write the product terms whose output is 1"} expression={simplified.derivation.canonicalExpression} />}
+          {simplified.derivation?.primeTerms.length ? <Step number={3} title={lang === "bn" ? "পাশাপাশি পদগুলো একত্র করি" : "Combine adjacent terms"} law={lang === "bn" ? "ব্যবহৃত সূত্র: বণ্টন সূত্র, পরিপূরক সূত্র ও অভেদ সূত্র" : "Laws used: Distributive, Complement and Identity laws"} expression={simplified.derivation.primeTerms.join(" + ")} /> : null}
+          <Step number={simplified.derivation?.primeTerms.length ? 4 : 2} title={lang === "bn" ? "চূড়ান্ত সরল রূপ" : "Final simplified form"} law={lang === "bn" ? "অপ্রয়োজনীয় পুনরাবৃত্ত পদ বাদ দেওয়া হয়েছে" : "Redundant repeated terms have been removed"} expression={simplified.expression} final />
         </div>
       )}
+    </div>
+  );
+}
+
+function Step({ number, title, expression, law, final = false }: { number: number; title: string; expression: string; law?: string; final?: boolean }) {
+  return (
+    <div className={`flex gap-3 border-b border-border p-4 last:border-b-0 ${final ? "bg-emerald-50/70" : ""}`}>
+      <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold ${final ? "bg-emerald-600 text-white" : "bg-muted text-foreground"}`}>{number}</div>
+      <div className="min-w-0 flex-1">
+        <div className="font-semibold text-foreground">{title}</div>
+        {law && <div className="mt-1 text-sm text-muted-foreground">{law}</div>}
+        <div className={`mt-2 overflow-x-auto rounded-md px-3 py-2 font-mono ${final ? "bg-white font-bold text-emerald-700" : "bg-muted/60 text-foreground"}`}>F = {expression}</div>
+      </div>
     </div>
   );
 }
