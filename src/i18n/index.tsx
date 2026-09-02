@@ -13,7 +13,8 @@ export const DICT: Dict = {
   appTitle: { en: "Boolean Logic Simulator", bn: "বুলিয়ান লজিক সিমুলেটর" },
   tabCircuit: { en: "Expression Simulator", bn: "এক্সপ্রেশন সিমুলেটর" },
   tabBuild: { en: "Build Your Own Circuit", bn: "নিজের সার্কিট বানাও" },
-  tabLearn: { en: "Learn", bn: "শেখো" },
+  tabLearn: { en: "Learn the Basics", bn: "নিজে শিখি" },
+  tabPractice: { en: "Practice", bn: "প্র্যাকটিস" },
   tutorial: { en: "Tutorial", bn: "টিউটোরিয়াল" },
   tutorialTitle: { en: "How to use this app", bn: "অ্যাপটি কীভাবে ব্যবহার করবে" },
   tutorialIntro: {
@@ -60,6 +61,13 @@ export const DICT: Dict = {
   settings: { en: "Settings", bn: "সেটিংস" },
   truthTable: { en: "Truth table", bn: "ট্রুথ টেবিল" },
   simplification: { en: "Simplification", bn: "সরলীকরণ" },
+  original: { en: "Original", bn: "মূল এক্সপ্রেশন" },
+  simplified: { en: "Simplified", bn: "সরলীকৃত" },
+  preparingSimplification: { en: "Preparing simplified expression...", bn: "সরলীকৃত এক্সপ্রেশন তৈরি হচ্ছে..." },
+  equivalenceVerified: { en: "Equivalence verified on every input combination", bn: "প্রতিটি ইনপুট সমন্বয়ের জন্য সমতা যাচাই করা হয়েছে" },
+  notVerified: { en: "Not verified. Original kept.", bn: "যাচাই করা যায়নি। মূল এক্সপ্রেশন রাখা হয়েছে।" },
+  gates: { en: "gates", bn: "গেট" },
+  depth: { en: "depth", bn: "গভীরতা" },
   ast: { en: "AST & validation", bn: "AST ও যাচাই" },
   gate: { en: "Gate", bn: "গেট" },
   analysis: { en: "Analysis", bn: "বিশ্লেষণ" },
@@ -69,6 +77,10 @@ export const DICT: Dict = {
     bn: "একটি বুলিয়ান এক্সপ্রেশন লিখে Generate চাপলে সার্কিট তৈরি হবে।",
   },
   components: { en: "Components", bn: "কম্পোনেন্ট" },
+  mobileMoveInstruction: {
+    en: "Tap an element, then tap an empty canvas spot to move it",
+    bn: "একটি element-এ tap করে canvas-এর খালি জায়গায় tap করলে সেটি সরবে",
+  },
   builderTruth: { en: "Truth table of your circuit", bn: "তোমার সার্কিটের ট্রুথ টেবিল" },
   builderTruthEmpty: {
     en: "Add input switches and an output LED to see the truth table.",
@@ -82,6 +94,152 @@ export const DICT: Dict = {
   processingImage: { en: "Processing image...", bn: "ছবি প্রসেস করা হচ্ছে..." },
   imageSuccess: { en: "Circuit recognized!", bn: "সার্কিট শনাক্ত করা হয়েছে!" },
   imageError: { en: "Failed to recognize circuit.", bn: "সার্কিট শনাক্ত করা যায়নি।" },
+  // Practice Challenge 1: AND Gate
+  practiceAnd1Title: { en: "Practice 1: Build an AND gate", bn: "প্রাকটিস ১: AND গেট তৈরি করো" },
+  practiceAnd1Summary: {
+    en: "Create a circuit that outputs 1 only when both inputs are 1.",
+    bn: "এমন সার্কিট বানাও যা শুধুমাত্র যখন দুটি ইনপুট ১ হয় তখনই আউটপুট ১ দেয়।",
+  },
+  practiceAnd1Hint: {
+    en: "The output should be 1 only when both A and B are 1.",
+    bn: "আউটপুট শুধুমাত্র তখনই ১ হবে যখন A এবং B দুটোই ১ হয়।",
+  },
+  practiceAnd1Inst0: {
+    en: "Add two input switches labeled A and B.",
+    bn: "A এবং B নামের দুটি ইনপুট সুইচ যোগ করো।",
+  },
+  practiceAnd1Inst1: {
+    en: "Add one AND gate and one output LED.",
+    bn: "একটি AND গেট এবং একটি আউটপুট LED যোগ করো।",
+  },
+  practiceAnd1Inst2: {
+    en: "Connect A and B to the AND gate, then connect the gate output to the LED.",
+    bn: "A এবং B কে AND গেটের সাথে সংযুক্ত করো, তারপর গেটের আউটপুট LED তে সংযুক্ত করো।",
+  },
+  practiceAnd1Guide0Msg: { en: "Choose this element: AND gate.", bn: "এই উপাদান বেছে নাও: AND গেট।" },
+  practiceAnd1Guide0Detail: {
+    en: "Select the AND gate from the component section first.",
+    bn: "প্রথমে কম্পোনেন্ট সেকশন থেকে AND গেট নির্বাচন করো।",
+  },
+  practiceAnd1Guide1Msg: { en: "Now choose this element: Input switch.", bn: "এখন এই উপাদান বেছে নাও: ইনপুট সুইচ।" },
+  practiceAnd1Guide1Detail: {
+    en: "Add the first signal source that represents input A.",
+    bn: "প্রথম সিগন্যাল সোর্স যোগ করো যা ইনপুট A প্রতিনিধিত্ব করে।",
+  },
+  practiceAnd1Guide2Msg: { en: "Add another input switch for B.", bn: "B এর জন্য আরেকটি ইনপুট সুইচ যোগ করো।" },
+  practiceAnd1Guide2Detail: {
+    en: "You need two input switches for A and B.",
+    bn: "তোমার A এবং B এর জন্য দুটি ইনপুট সুইচ প্রয়োজন।",
+  },
+  practiceAnd1Guide3Msg: { en: "Choose this element: Output LED.", bn: "এই উপাদান বেছে নাও: আউটপুট LED।" },
+  practiceAnd1Guide3Detail: {
+    en: "Add the output LED that will show the final result.",
+    bn: "আউটপুট LED যোগ করো যা চূড়ান্ত ফলাফল দেখাবে।",
+  },
+  practiceAnd1Guide4Msg: { en: "Complete all three wire connections.", bn: "তিনটি তারের সংযোগ সম্পূর্ণ করো।" },
+  practiceAnd1Guide4Detail: {
+    en: "Connect A and B to the AND gate, then connect the AND gate to the output LED.",
+    bn: "A ও B থেকে AND গেটে তার দাও, তারপর AND গেট থেকে আউটপুট LED-তে তার দাও।",
+  },
+  practiceAnd1Guide5Msg: { en: "Toggle the input values and check the result.", bn: "ইনপুট মান টগল করো এবং ফলাফল দেখো।" },
+  practiceAnd1Guide5Detail: {
+    en: "Set inputs to 1 and 1 to see the LED turn on.",
+    bn: "ইনপুট ১ এবং ১ করো LED চালু হতে দেখার জন্য।",
+  },
+  // Practice Challenge 2: OR Gate
+  practiceOr2Title: { en: "Practice 2: Build an OR gate", bn: "প্রাকটিস ২: OR গেট তৈরি করো" },
+  practiceOr2Summary: {
+    en: "Create a circuit that outputs 1 when either input is 1.",
+    bn: "এমন সার্কিট বানাও যা যেকোনো ইনপুট ১ হলে আউটপুট ১ দেয়।",
+  },
+  practiceOr2Hint: {
+    en: "The output should be 0 only when both inputs are 0.",
+    bn: "আউটপুট শুধুমাত্র তখনই ০ হবে যখন উভয় ইনপুট ০ হয়।",
+  },
+  practiceOr2Inst0: {
+    en: "Place two input switches and one OR gate.",
+    bn: "দুটি ইনপুট সুইচ এবং একটি OR গেট রাখো।",
+  },
+  practiceOr2Inst1: {
+    en: "Wire both inputs to the OR gate.",
+    bn: "উভয় ইনপুট OR গেটে তার সংযুক্ত করো।",
+  },
+  practiceOr2Inst2: {
+    en: "Connect the OR output to the output LED.",
+    bn: "OR গেটের আউটপুট আউটপুট LED তে সংযুক্ত করো।",
+  },
+  practiceOr2Guide0Msg: { en: "Choose this element: OR gate.", bn: "এই উপাদান বেছে নাও: OR গেট।" },
+  practiceOr2Guide0Detail: {
+    en: "Select the OR gate from the component section.",
+    bn: "কম্পোনেন্ট সেকশন থেকে OR গেট নির্বাচন করো।",
+  },
+  practiceOr2Guide1Msg: { en: "Add input switch A.", bn: "ইনপুট সুইচ A যোগ করো।" },
+  practiceOr2Guide1Detail: {
+    en: "The OR gate needs both inputs connected.",
+    bn: "OR গেটের উভয় ইনপুট সংযুক্ত দরকার।",
+  },
+  practiceOr2Guide2Msg: { en: "Add input switch B.", bn: "ইনপুট সুইচ B যোগ করো।" },
+  practiceOr2Guide2Detail: {
+    en: "The OR gate needs both inputs connected.",
+    bn: "OR গেটের উভয় ইনপুট সংযুক্ত দরকার।",
+  },
+  practiceOr2Guide3Msg: { en: "Choose this element: Output LED.", bn: "এই উপাদান বেছে নাও: আউটপুট LED।" },
+  practiceOr2Guide3Detail: {
+    en: "Attach the LED to the OR output to read the final value.",
+    bn: "চূড়ান্ত মান পড়ার জন্য LED কে OR আউটপুটে সংযুক্ত করো।",
+  },
+  practiceOr2Guide4Msg: { en: "Complete all three wire connections.", bn: "তিনটি তারের সংযোগ সম্পূর্ণ করো।" },
+  practiceOr2Guide4Detail: {
+    en: "Connect A and B to the OR gate, then connect the OR gate to the output LED.",
+    bn: "A ও B থেকে OR গেটে তার দাও, তারপর OR গেট থেকে আউটপুট LED-তে তার দাও।",
+  },
+  // Practice Challenge 3: XOR Gate
+  practiceXor3Title: { en: "Practice 3: Build an XOR gate", bn: "প্রাকটিস ৩: XOR গেট তৈরি করো" },
+  practiceXor3Summary: {
+    en: "Create a circuit that outputs 1 when exactly one input is on.",
+    bn: "এমন সার্কিট বানাও যা ঠিক একটি ইনপুট ১ হলে আউটপুট ১ দেয়।",
+  },
+  practiceXor3Hint: {
+    en: "XOR is true when the two inputs differ.",
+    bn: "XOR সত্য তখনই যখন দুটি ইনপুট আলাদা হয়।",
+  },
+  practiceXor3Inst0: {
+    en: "Use two input switches and one XOR gate.",
+    bn: "দুটি ইনপুট সুইচ এবং একটি XOR গেট ব্যবহার করো।",
+  },
+  practiceXor3Inst1: {
+    en: "Connect each input to the XOR gate.",
+    bn: "প্রতিটি ইনপুট XOR গেটে সংযুক্ত করো।",
+  },
+  practiceXor3Inst2: {
+    en: "Route the XOR result to the output LED.",
+    bn: "XOR ফলাফল আউটপুট LED তে পাঠাও।",
+  },
+  practiceXor3Guide0Msg: { en: "Choose this element: XOR gate.", bn: "এই উপাদান বেছে নাও: XOR গেট।" },
+  practiceXor3Guide0Detail: {
+    en: "This gate outputs 1 only when the two inputs differ.",
+    bn: "এই গেট শুধুমাত্র তখনই ১ দেয় যখন দুটি ইনপুট আলাদা হয়।",
+  },
+  practiceXor3Guide1Msg: { en: "Add input switch A.", bn: "ইনপুট সুইচ A যোগ করো।" },
+  practiceXor3Guide1Detail: {
+    en: "You need one signal for A and one for B.",
+    bn: "তোমার A এর জন্য একটি এবং B এর জন্য একটি সিগন্যাল দরকার।",
+  },
+  practiceXor3Guide2Msg: { en: "Add input switch B.", bn: "ইনপুট সুইচ B যোগ করো।" },
+  practiceXor3Guide2Detail: {
+    en: "You need one signal for A and one for B.",
+    bn: "তোমার A এর জন্য একটি এবং B এর জন্য একটি সিগন্যাল দরকার।",
+  },
+  practiceXor3Guide3Msg: { en: "Choose this element: Output LED.", bn: "এই উপাদান বেছে নাও: আউটপুট LED।" },
+  practiceXor3Guide3Detail: {
+    en: "This will show whether exactly one input is on.",
+    bn: "এটি দেখাবে যে ঠিক একটি ইনপুট চালু আছে কিনা।",
+  },
+  practiceXor3Guide4Msg: { en: "Complete all three wire connections.", bn: "তিনটি তারের সংযোগ সম্পূর্ণ করো।" },
+  practiceXor3Guide4Detail: {
+    en: "Connect A and B to the XOR gate, then connect the XOR gate to the output LED.",
+    bn: "A ও B থেকে XOR গেটে তার দাও, তারপর XOR গেট থেকে আউটপুট LED-তে তার দাও।",
+  },
 };
 
 interface Ctx {

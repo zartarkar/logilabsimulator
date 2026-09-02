@@ -4,14 +4,14 @@ import { traceAst } from "@/logic/evaluator";
 import { Button } from "@/components/ui/button";
 
 const WORD: Record<string, string> = {
-  AND: "AND — output is 1 only when every input is 1",
-  OR: "OR — output is 1 when at least one input is 1",
-  NOT: "NOT — output is the inverse of the input",
-  XOR: "XOR — output is 1 when an odd number of inputs are 1",
-  XNOR: "XNOR — output is 1 when an even number of inputs are 1",
-  NAND: "NAND — inverse of AND",
-  NOR: "NOR — inverse of OR",
-  BUFFER: "BUFFER — output equals input",
+  AND: "AND: output is 1 only when every input is 1",
+  OR: "OR: output is 1 when at least one input is 1",
+  NOT: "NOT: output is the inverse of the input",
+  XOR: "XOR: output is 1 when an odd number of inputs are 1",
+  XNOR: "XNOR: output is 1 when an even number of inputs are 1",
+  NAND: "NAND: inverse of AND",
+  NOR: "NOR: inverse of OR",
+  BUFFER: "BUFFER: output equals input",
 };
 
 const SYM: Record<string, string> = { AND: " × ", OR: " + ", XOR: " ⊕ ", XNOR: " ⊙ ", NAND: " NAND ", NOR: " NOR " };

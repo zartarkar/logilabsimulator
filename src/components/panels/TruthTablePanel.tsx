@@ -47,7 +47,7 @@ export function TruthTablePanel() {
     return (
       <div className="space-y-3 p-4 text-sm">
         <p>
-          This expression has {vars.length} variables — {2 ** vars.length} rows. Combinations grow as 2ⁿ, so the table
+          This expression has {vars.length} variables and {2 ** vars.length} rows. Combinations grow as 2ⁿ, so the table
           may be slow to render.
         </p>
         <Button size="sm" variant="outline" onClick={() => setConfirmed(true)}>

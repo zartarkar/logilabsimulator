@@ -14,8 +14,6 @@ import {
   Play,
   Zap,
   Languages,
-
-
 } from "lucide-react";
 import { z } from "zod";
 import { useCircuitStore } from "@/store/useCircuitStore";
@@ -28,6 +26,8 @@ import { SimplifyPanel } from "@/components/panels/SimplifyPanel";
 import { AstPanel } from "@/components/panels/AstPanel";
 import { SandboxBuilder } from "@/components/builder/SandboxBuilder";
 import { LearnPanel } from "@/components/panels/LearnPanel";
+import { MobileLandscapeGate } from "@/components/MobileLandscapeGate";
+import { OnboardingLanding, type Familiarity } from "@/components/OnboardingLanding";
 import { TutorialDialog } from "@/components/TutorialDialog";
 import { LanguageProvider, useLang } from "@/i18n";
 import { recognizeCircuitFromImage } from "@/services/circuit-recognition.functions";
@@ -40,7 +40,7 @@ import bgAsset from "@/assets/background.jpg.asset.json";
 
 const searchSchema = z.object({
   q: z.string().catch("").optional(),
-  tab: z.enum(["simulator", "builder", "learn", "circuit"]).catch("simulator").optional(),
+  tab: z.enum(["simulator", "builder", "learn", "practice", "circuit"]).catch("simulator").optional(),
   v: z.string().catch("").optional(),
 });
 
@@ -48,13 +48,13 @@ export const Route = createFileRoute("/")({
   validateSearch: (search) => searchSchema.parse(search),
   head: () => ({
     meta: [
-      { title: "LogicLab — Boolean Expression to Logic Circuit Simulator" },
+      { title: "LogicLab: Boolean Expression to Logic Circuit Simulator" },
       {
         name: "description",
         content:
           "Turn any Boolean expression into an interactive logic-gate circuit. Live simulation, truth tables, Quine–McCluskey simplification and a free-build gate sandbox.",
       },
-      { property: "og:title", content: "LogicLab — Boolean Logic Circuit Simulator" },
+      { property: "og:title", content: "LogicLab: Boolean Logic Circuit Simulator" },
       {
         property: "og:description",
         content:
@@ -97,6 +97,26 @@ function App() {
   const [recognitionError, setRecognitionError] = useState<string | null>(null);
   const [showTruthTable, setShowTruthTable] = useState(false);
   const [showSimplification, setShowSimplification] = useState(false);
+  const [showExamples, setShowExamples] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setShowOnboarding(localStorage.getItem("logiclab-onboarding-complete") !== "true");
+  }, []);
+
+  const enterApp = (destination: "learn" | "simulator", familiarity: Familiarity) => {
+    localStorage.setItem("logiclab-onboarding-complete", "true");
+    localStorage.setItem("logiclab-familiarity", familiarity);
+    s.setTab(destination);
+    navigate({ search: { tab: destination }, replace: true });
+    setShowOnboarding(false);
+  };
+
+  useEffect(() => {
+    if (showSimplification && s.parsed && !s.simplified) {
+      s.runSimplify();
+    }
+  }, [showSimplification, s.parsed, s.simplified, s.runSimplify]);
 
   // Sync state with query param on initial load or URL change
   useEffect(() => {
@@ -264,27 +284,88 @@ function App() {
   const stats = s.graph ? analyze(s.graph) : null;
   const outputValue = s.graph ? (s.nodeValues[s.graph.outputId] ?? 0) : 0;
 
+  const examplesContent = (
+    <div className="mt-2 grid grid-cols-1 gap-1.5">
+      {EXAMPLES.map((g) => (
+        <div key={g.label} className="rounded-md border border-border/40 bg-background/40 p-1.5">
+          <div className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">{g.label}</div>
+          <div className="flex flex-wrap gap-1">
+            {g.items.map((it) => (
+              <button
+                key={it.expr}
+                onClick={() => {
+                  useCircuitStore.setState({ expression: it.expr, values: {} });
+                  s.generate();
+                  toast.success("Example loaded");
+                }}
+                className="rounded-sm border border-border bg-card px-2 py-0.5 font-mono text-[10px] shadow-sm transition-colors hover:bg-accent"
+              >
+                {it.expr.replace(/^F = /, "")}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  if (showOnboarding === null) {
+    return <div className="h-dvh bg-background" aria-label="Loading LogicLab" />;
+  }
+
+  if (showOnboarding) {
+    return (
+      <>
+        <Toaster />
+        <OnboardingLanding onEnter={enterApp} />
+      </>
+    );
+  }
+
   return (
     <div className="flex h-dvh flex-col bg-transparent text-foreground">
+      <MobileLandscapeGate />
       <Toaster />
-      <header className="sticky top-0 z-50 shrink-0 border-b border-border bg-card/90 shadow-sm backdrop-blur-md">
-        <div className="relative flex items-center justify-center gap-3 px-4 py-2">
-          <div className="flex min-w-0 flex-wrap items-center justify-center gap-3 sm:gap-5">
-            <div className="flex shrink-0 flex-col items-center justify-center text-center">
-              <div className="text-xs font-extrabold uppercase tracking-wider text-destructive sm:text-sm">
-                {t("classLine")}
-              </div>
-              <div className="font-display text-sm font-black tracking-tight sm:text-base">
-                {t("chapterLine")}
+      <header className="relative z-50 shrink-0 border-b border-border bg-card sm:sticky sm:top-0 sm:bg-card/90 sm:shadow-sm sm:backdrop-blur-md">
+        <div className="flex flex-col gap-2 px-3 py-2 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-center sm:px-4">
+          <div className="flex items-start justify-between gap-2 sm:contents">
+            <div className="min-w-0 flex-1 sm:col-start-1 sm:row-start-1 sm:min-w-0 sm:justify-self-start">
+              <div data-tour="header-title" className="flex min-w-0 flex-col items-start text-left">
+                <div className="text-xs font-extrabold uppercase tracking-wider text-destructive sm:text-sm">
+                  {t("classLine")}
+                </div>
+                <div className="font-display text-[11px] font-black leading-tight tracking-tight sm:truncate sm:text-base">
+                  {t("chapterLine")}
+                </div>
               </div>
             </div>
 
-            <nav className="flex flex-wrap justify-center gap-1">
+            <div className="flex shrink-0 items-center gap-0.5 sm:col-start-3 sm:row-start-1 sm:static sm:justify-self-end sm:gap-3">
+              <TutorialDialog onOpenOnboarding={() => setShowOnboarding(true)} className="h-6 w-6 gap-0 px-0 text-[0px] sm:h-8 sm:w-auto sm:gap-1 sm:px-3 sm:text-xs" />
+              <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">
+                <Languages className="ml-1 h-2.5 w-2.5 text-muted-foreground sm:mx-1.5 sm:h-3.5 sm:w-3.5" />
+                {(["en", "bn"] as const).map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => setLang(l)}
+                    aria-pressed={lang === l}
+                    className={`px-1 py-0.5 text-[8px] font-bold transition-colors sm:px-3 sm:py-1 sm:text-xs ${
+                      lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {l === "en" ? "EN" : "বাং"}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <nav data-tour="navigation" className="flex min-w-0 max-w-full justify-center gap-1.5 overflow-x-auto no-scrollbar sm:col-start-2 sm:row-start-1 sm:justify-center sm:gap-1 sm:overflow-visible" aria-label="Primary navigation">
               {(
                 [
+                  { id: "learn", label: t("tabLearn") },
                   { id: "simulator", label: t("tabCircuit") },
                   { id: "builder", label: t("tabBuild") },
-                  { id: "learn", label: t("tabLearn") },
                 ] as const
               ).map((x) => (
                 <button
@@ -294,8 +375,8 @@ function App() {
                     s.setTab(targetTab as any);
                     navigate({ search: { ...qSearch, tab: targetTab }, replace: true });
                   }}
-                  className={`rounded-full px-2.5 py-1 text-[10px] font-semibold transition-colors sm:px-4 sm:py-1.5 sm:text-xs nav-tab-${x.id} ${
-                    s.tab === x.id
+                  className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] font-semibold transition-colors sm:px-4 sm:py-1.5 sm:text-xs nav-tab-${x.id} ${
+                    s.tab === x.id || (x.id === "builder" && s.tab === "practice")
                       ? "bg-destructive text-destructive-foreground shadow-sm"
                       : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                   }`}
@@ -303,44 +384,24 @@ function App() {
                   {x.label}
                 </button>
               ))}
-            </nav>
-          </div>
-
-          <div className="absolute right-4 flex shrink-0 items-center gap-2 sm:gap-3">
-            <TutorialDialog />
-            <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">
-              <Languages className="mx-1.5 h-3.5 w-3.5 text-muted-foreground" />
-              {(["en", "bn"] as const).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  aria-pressed={lang === l}
-                  className={`px-2.5 py-1 text-[10px] font-bold transition-colors sm:px-3 sm:text-xs ${
-                    lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
-                  }`}
-                >
-                  {l === "en" ? "EN" : "বাং"}
-                </button>
-              ))}
-            </div>
-          </div>
+          </nav>
         </div>
       </header>
 
       {s.tab === "learn" ? (
-        <main className="min-h-0 flex-1 overflow-y-auto learn-panel-container bg-transparent">
+        <main data-tour="learn-panel" className="mobile-scroll-container min-h-0 flex-1 overflow-y-auto learn-panel-container bg-transparent">
           <LearnPanel />
         </main>
-      ) : s.tab === "builder" ? (
+      ) : s.tab === "builder" || s.tab === "practice" ? (
         <main className="min-h-0 flex-1 overflow-hidden bg-transparent flex flex-col builder-layout">
-          <SandboxBuilder />
+          <SandboxBuilder isPracticeMode={s.tab === "practice"} />
         </main>
       ) : (
-        <main className="flex min-h-0 flex-1 flex-col lg:flex-row overflow-hidden no-scrollbar">
+        <main className="mobile-scroll-container flex min-h-0 flex-1 flex-col overflow-y-auto no-scrollbar lg:flex-row lg:overflow-hidden">
           {/* LEFT: Controls & Input */}
           <section className="flex w-full shrink-0 flex-col border-b border-border bg-card/60 backdrop-blur-sm lg:w-[26rem] lg:overflow-y-auto lg:border-b-0 lg:border-r no-scrollbar">
             <div className="p-3 space-y-4">
-              <div>
+              <div data-tour="expression-editor">
                 <Label htmlFor="expr" className="text-xs font-semibold uppercase text-muted-foreground">
                   {t("expression")}
                 </Label>
@@ -359,7 +420,7 @@ function App() {
                   placeholder="F = XYZ+XY+X'Y'Z"
                 />
                 <div className="mt-2 flex flex-col gap-2">
-                  <Button size="sm" variant="destructive" className="w-full font-bold button-red" onClick={s.generate}>
+                  <Button data-tour="generate-button" size="sm" variant="destructive" className="w-full font-bold button-red" onClick={s.generate}>
                     <Play className="mr-1 h-3.5 w-3.5" /> {t("generate")}
                   </Button>
                   
@@ -368,7 +429,13 @@ function App() {
                       size="sm" 
                       variant={showTruthTable ? "destructive" : "outline"} 
                       className={`flex-1 text-[10px] h-8 ${showTruthTable ? "button-red" : ""}`}
-                      onClick={() => setShowTruthTable(!showTruthTable)}
+                      onClick={() => {
+                        setShowTruthTable((open) => {
+                          setShowExamples(open);
+                          return !open;
+                        });
+                        setShowSimplification(false);
+                      }}
                     >
                       {t("truthTable")}
                     </Button>
@@ -376,7 +443,13 @@ function App() {
                       size="sm" 
                       variant={showSimplification ? "destructive" : "outline"} 
                       className={`flex-1 text-[10px] h-8 ${showSimplification ? "button-red" : ""}`}
-                      onClick={() => setShowSimplification(!showSimplification)}
+                      onClick={() => {
+                        setShowSimplification((open) => {
+                          setShowExamples(open);
+                          return !open;
+                        });
+                        setShowTruthTable(false);
+                      }}
                     >
                       {t("simplification")}
                     </Button>
@@ -391,9 +464,9 @@ function App() {
                 </div>
               )}
 
-              <div>
+              <div className="lg:hidden">
                 <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("inputValues")}</h3>
-                <div className="-mx-3 mt-1 inputs-panel-container">
+                <div data-tour="input-controls" className="-mx-3 mt-1 inputs-panel-container">
                   <InputsPanel />
                 </div>
               </div>
@@ -422,38 +495,25 @@ function App() {
                 </div>
               )}
 
-              <details className="mt-2">
-                <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground hover:text-foreground transition-colors">
-                  {t("examples")}
-                </summary>
-                <div className="mt-2 grid grid-cols-1 gap-1.5">
-                  {EXAMPLES.map((g) => (
-                    <div key={g.label} className="rounded-md border border-border/40 bg-background/40 p-1.5">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 mb-1">{g.label}</div>
-                      <div className="flex flex-wrap gap-1">
-                        {g.items.map((it) => (
-                          <button
-                            key={it.expr}
-                            onClick={() => {
-                              useCircuitStore.setState({ expression: it.expr, values: {} });
-                              s.generate();
-                              toast.success("Example loaded");
-                            }}
-                            className="rounded-sm border border-border bg-card px-2 py-0.5 font-mono text-[10px] hover:bg-accent transition-colors shadow-sm"
-                          >
-                            {it.expr.replace(/^F = /, "")}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </details>
+              {showExamples && (
+                <>
+                  <div className="mt-2 hidden lg:block">
+                    <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("examples")}</h3>
+                    {examplesContent}
+                  </div>
+                  <details className="mt-2 lg:hidden">
+                    <summary className="cursor-pointer text-xs font-semibold uppercase text-muted-foreground hover:text-foreground transition-colors">
+                      {t("examples")}
+                    </summary>
+                    {examplesContent}
+                  </details>
+                </>
+              )}
             </div>
           </section>
 
           {/* RIGHT: Canvas (Full Height) */}
-          <section className="flex flex-1 min-h-0 bg-transparent overflow-hidden relative">
+          <section data-tour="simulator-canvas" className="relative flex min-h-[28rem] flex-none flex-1 overflow-hidden bg-transparent lg:min-h-0 lg:flex-1">
             {s.graph && (
               <div className="absolute bottom-2 right-2 z-10 rounded border border-border bg-card/90 px-2 py-1 font-mono text-[10px] backdrop-blur-sm">
                 {s.parsed?.name ?? "F"} = {s.nodeValues[s.graph.outputId] ?? 0} · {(s.nodeValues[s.graph.outputId] ?? 0) === 1 ? "ON" : "OFF"}

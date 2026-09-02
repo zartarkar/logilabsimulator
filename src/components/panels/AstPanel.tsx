@@ -23,7 +23,7 @@ export function AstPanel() {
         <div className="rounded-lg border border-border bg-card p-3 text-xs">
           <div>Nodes: {graph.nodes.length} · Edges: {graph.edges.length}</div>
           <div>Acyclic: {validation.acyclic ? "yes" : "no"} · Structure: {validation.ok ? "valid" : validation.issues.join("; ")}</div>
-          <div>AST output equals circuit output: {validation.equivalent ? "yes" : "NO — mismatch"}</div>
+          <div>AST output equals circuit output: {validation.equivalent ? "yes" : "NO, mismatch"}</div>
         </div>
       )}
       <Tree node={parsed.ast} />

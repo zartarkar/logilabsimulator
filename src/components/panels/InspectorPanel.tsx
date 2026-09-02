@@ -23,7 +23,7 @@ export function InspectorPanel() {
     <div className="p-4">
       <Row k="Gate type" v={node.type} />
       <Row k="Subexpression" v={node.expr} />
-      <Row k="Inputs" v={inputVals.length ? inputVals.join(", ") : "—"} />
+      <Row k="Inputs" v={inputVals.length ? inputVals.join(", ") : "None"} />
       <Row
         k="Calculation"
         v={
@@ -31,15 +31,15 @@ export function InspectorPanel() {
             ? `NOT ${inputVals[0] ?? 0}`
             : inputVals.length
               ? inputVals.join(opSymbol[node.type] ?? ", ")
-              : "—"
+              : "None"
         }
       />
       <Row k="Output" v={nodeValues[node.id] ?? 0} />
       <Row k="State" v={(nodeValues[node.id] ?? 0) === 1 ? "ON" : "OFF"} />
       <Row k="Logic level" v={node.level} />
       <Row k="Gate delay" v={`${GATE_DELAYS[node.type] ?? 0} ns`} />
-      <Row k="Source gates" v={sources.map((s) => s.label).join(", ") || "—"} />
-      <Row k="Drives" v={targets.map((t) => t.label).join(", ") || "—"} />
+      <Row k="Source gates" v={sources.map((s) => s.label).join(", ") || "None"} />
+      <Row k="Drives" v={targets.map((t) => t.label).join(", ") || "None"} />
     </div>
   );
 }

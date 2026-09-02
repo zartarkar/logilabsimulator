@@ -110,7 +110,7 @@ function Inner({
           labelStyle: { fontSize: 10, fontFamily: "ui-monospace, monospace", fill: "var(--foreground)" },
           labelBgStyle: { fill: "var(--background)", fillOpacity: 0.85 },
           style: {
-            stroke: on ? "var(--signal-on)" : "var(--signal-off)",
+            stroke: on ? "var(--wire-on)" : "var(--wire-off)",
             strokeWidth: on ? 2.4 : 1.4,
             strokeDasharray: on ? undefined : "4 3",
           },

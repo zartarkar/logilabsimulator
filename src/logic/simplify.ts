@@ -49,7 +49,7 @@ export function simplify(ast: AstNode, vars: string[]): SimplifyResult {
   const terms = chosen.map((p) => implicantToAst(p, vars));
   const simplifiedAst = terms.length === 1 ? terms[0]! : makeOp("OR", terms);
   const verified = equivalent(ast, simplifiedAst, vars);
-  steps.push(verified ? "Equivalence verified against every input combination." : "Equivalence check FAILED — keeping original expression.");
+  steps.push(verified ? "Equivalence verified against every input combination." : "Equivalence check FAILED. Keeping original expression.");
 
   return {
     expression: verified ? simplifiedAst.expr : ast.expr,

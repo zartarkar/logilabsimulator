@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { BookOpen, Lightbulb, Sigma, CircuitBoard, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { GateShape } from "@/components/circuit/GateShape";
+import type { CircuitNodeType } from "@/logic/types";
+import { useLang } from "@/i18n";
+import { ArrowRight, Binary, BookOpen, CircuitBoard, Lightbulb, MousePointerClick, Sigma } from "lucide-react";
 
 interface Law {
   name: string;
@@ -97,178 +100,101 @@ const LAWS: Law[] = [
   },
 ];
 
-const GATES: { gate: string; bn: string; expr: string; rule: string; ruleBn: string }[] = [
-  { gate: "AND", bn: "এবং গেট", expr: "F = A · B", rule: "Output 1 only when all inputs are 1.", ruleBn: "সব ইনপুট 1 হলেই আউটপুট 1 (ON)।" },
-  { gate: "OR", bn: "অথবা গেট", expr: "F = A + B", rule: "Output 1 when any input is 1.", ruleBn: "যেকোনো একটি ইনপুট 1 হলেই আউটপুট 1।" },
-  { gate: "NOT", bn: "নট বা পূরক গেট", expr: "F = A'", rule: "Inverts the input.", ruleBn: "ইনপুটের বিপরীত মান দেয়।" },
-  { gate: "NAND", bn: "ন্যান্ড গেট", expr: "F = (A · B)'", rule: "Universal gate — AND followed by NOT.", ruleBn: "সার্বজনীন গেট — AND-এর পর NOT।" },
-  { gate: "NOR", bn: "নর গেট", expr: "F = (A + B)'", rule: "Universal gate — OR followed by NOT.", ruleBn: "সার্বজনীন গেট — OR-এর পর NOT।" },
-  { gate: "XOR", bn: "এক্সঅর গেট", expr: "F = A ⊕ B = A'B + AB'", rule: "Output 1 when inputs differ.", ruleBn: "ইনপুট দুটি ভিন্ন হলে আউটপুট 1।" },
-  { gate: "XNOR", bn: "এক্সনর গেট", expr: "F = (A ⊕ B)' = AB + A'B'", rule: "Output 1 when inputs are equal.", ruleBn: "ইনপুট দুটি সমান হলে আউটপুট 1।" },
+const GATES: { gate: CircuitNodeType; bn: string; en: string; expr: string; simpleBn: string; simpleEn: string }[] = [
+  { gate: "AND", bn: "এবং", en: "all inputs", expr: "F = A · B", simpleBn: "A ও B দুটিই 1 হলে ফল 1", simpleEn: "The result is 1 only when both A and B are 1." },
+  { gate: "OR", bn: "অথবা", en: "any input", expr: "F = A + B", simpleBn: "অন্তত একটি input 1 হলে ফল 1", simpleEn: "The result is 1 when at least one input is 1." },
+  { gate: "NOT", bn: "বিপরীত", en: "opposite", expr: "F = A'", simpleBn: "Input উল্টে দেয়: 0→1, 1→0", simpleEn: "It reverses the input: 0→1 and 1→0." },
+  { gate: "NAND", bn: "AND-এর বিপরীত", en: "opposite of AND", expr: "F = (A · B)'", simpleBn: "AND-এর ফল উল্টে দেয়", simpleEn: "It reverses the result of AND." },
+  { gate: "NOR", bn: "OR-এর বিপরীত", en: "opposite of OR", expr: "F = (A + B)'", simpleBn: "OR-এর ফল উল্টে দেয়", simpleEn: "It reverses the result of OR." },
+  { gate: "XOR", bn: "ভিন্ন কি না", en: "inputs differ", expr: "F = A ⊕ B", simpleBn: "দুটি input ভিন্ন হলে ফল 1", simpleEn: "The result is 1 when the two inputs are different." },
+  { gate: "XNOR", bn: "একই কি না", en: "inputs match", expr: "F = (A ⊕ B)'", simpleBn: "দুটি input একই হলে ফল 1", simpleEn: "The result is 1 when the two inputs are equal." },
 ];
 
-const POINTERS: { en: string; bn: string }[] = [
-  {
-    en: "NAND and NOR are universal gates — any circuit can be built using only NAND or only NOR.",
-    bn: "NAND ও NOR সার্বজনীন গেট — শুধু NAND অথবা শুধু NOR দিয়েই যেকোনো বর্তনী তৈরি করা যায়।",
-  },
-  {
-    en: "A truth table with n variables has 2ⁿ rows.",
-    bn: "n সংখ্যক চলকের সত্যক সারণিতে (truth table) 2ⁿ টি সারি থাকে।",
-  },
-  {
-    en: "SOP (Sum of Products) is built from the rows where output = 1; POS (Product of Sums) from rows where output = 0.",
-    bn: "SOP (গুণফলের যোগ) নেওয়া হয় আউটপুট 1 এর সারি থেকে; POS (যোগফলের গুণ) নেওয়া হয় আউটপুট 0 এর সারি থেকে।",
-  },
-  {
-    en: "Minterm = product term for a 1-row; Maxterm = sum term for a 0-row.",
-    bn: "মিনটার্ম = আউটপুট 1 সারির গুণফল পদ; ম্যাক্সটার্ম = আউটপুট 0 সারির যোগফল পদ।",
-  },
-  {
-    en: "Apply De Morgan by breaking the bar and changing the sign: break the line, change the sign.",
-    bn: "ডি মরগ্যান প্রয়োগের নিয়ম — দাগ ভাঙো, চিহ্ন বদলাও (break the line, change the sign)।",
-  },
-  {
-    en: "Precedence: NOT → AND → XOR → OR. Use brackets whenever you are unsure.",
-    bn: "অগ্রাধিকার ক্রম: NOT → AND → XOR → OR। সন্দেহ হলে বন্ধনী ব্যবহার করো।",
-  },
-  {
-    en: "Simplifying reduces gate count, cost and propagation delay of the circuit.",
-    bn: "সরলীকরণ করলে গেট সংখ্যা, খরচ ও বিলম্ব (propagation delay) কমে যায়।",
-  },
-  {
-    en: "Half adder: Sum = A ⊕ B, Carry = A · B. Full adder: Sum = A ⊕ B ⊕ Cin.",
-    bn: "হাফ অ্যাডার: যোগফল = A ⊕ B, ক্যারি = A · B। ফুল অ্যাডার: যোগফল = A ⊕ B ⊕ Cin।",
-  },
-];
-
-const GLOSSARY: { en: string; bn: string }[] = [
-  { en: "Boolean Algebra", bn: "বুলিয়ান বীজগণিত" },
-  { en: "Logic Gate", bn: "লজিক গেট / যুক্তি দ্বার" },
-  { en: "Truth Table", bn: "সত্যক সারণি" },
-  { en: "Complement / Inversion", bn: "পূরক / বিপরীতকরণ" },
-  { en: "Variable", bn: "চলক" },
-  { en: "Expression", bn: "রাশি" },
-  { en: "Sum of Products (SOP)", bn: "গুণফলের যোগ" },
-  { en: "Product of Sums (POS)", bn: "যোগফলের গুণ" },
-  { en: "Minterm / Maxterm", bn: "মিনটার্ম / ম্যাক্সটার্ম" },
-  { en: "Universal Gate", bn: "সার্বজনীন গেট" },
-  { en: "Simplification", bn: "সরলীকরণ" },
-  { en: "Karnaugh Map", bn: "কার্নো ম্যাপ" },
-  { en: "Adder", bn: "যোগকারী বর্তনী" },
-  { en: "Encoder / Decoder", bn: "এনকোডার / ডিকোডার" },
-];
+function gateOutput(gate: CircuitNodeType, a: 0 | 1, b: 0 | 1): 0 | 1 {
+  if (gate === "NOT") return a ? 0 : 1;
+  if (gate === "AND") return a && b ? 1 : 0;
+  if (gate === "OR") return a || b ? 1 : 0;
+  if (gate === "NAND") return a && b ? 0 : 1;
+  if (gate === "NOR") return a || b ? 0 : 1;
+  if (gate === "XOR") return a !== b ? 1 : 0;
+  return a === b ? 1 : 0;
+}
 
 export function LearnPanel() {
-  const [q, setQ] = useState("");
-  const needle = q.trim().toLowerCase();
-  const match = (...parts: string[]) => !needle || parts.join(" ").toLowerCase().includes(needle);
-
-  const laws = LAWS.filter((l) => match(l.name, l.bn, l.forms.join(" "), l.note, l.noteBn));
-  const gates = GATES.filter((g) => match(g.gate, g.bn, g.expr, g.rule, g.ruleBn));
-  const pointers = POINTERS.filter((p) => match(p.en, p.bn));
-  const glossary = GLOSSARY.filter((g) => match(g.en, g.bn));
+  const { lang } = useLang();
+  const bn = lang === "bn";
+  const [selectedGate, setSelectedGate] = useState<CircuitNodeType>("AND");
+  const [a, setA] = useState<0 | 1>(0);
+  const [b, setB] = useState<0 | 1>(0);
+  const gate = GATES.find((item) => item.gate === selectedGate) ?? GATES[0];
+  const output = gateOutput(selectedGate, a, b);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-6">
-      <div className="mb-5 flex flex-wrap items-center gap-3">
-        <div>
-          <h2 className="font-display text-2xl font-bold tracking-tight">Learn Boolean Logic</h2>
-          <p className="text-sm text-muted-foreground">
-            বুলিয়ান যুক্তি শিখো — laws, gates and key pointers in English &amp; বাংলা.
-          </p>
+    <div className="mx-auto max-w-5xl space-y-8 px-4 py-6">
+      <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 sm:p-7">
+        <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+          <BookOpen className="h-3.5 w-3.5" /> {bn ? "একদম শুরু থেকে" : "Start from zero"}
         </div>
-        <div className="relative ml-auto w-full sm:w-64">
-          <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search / খুঁজুন…"
-            className="pl-8"
-          />
-        </div>
+        <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">{bn ? "ডিজিটাল লজিক আসলে কী?" : "What is digital logic?"}</h2>
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+          {bn ? <>কম্পিউটার বিদ্যুৎ আছে বা নেই, এই দুই অবস্থা দিয়ে সিদ্ধান্ত নেয়। আমরা এগুলোকে <strong className="text-foreground">1 (ON/সত্য)</strong> এবং <strong className="text-foreground">0 (OFF/মিথ্যা)</strong> বলি। Logic gate হলো ছোট একটি সিদ্ধান্ত যন্ত্র। এটি input নেয়, একটি নিয়ম প্রয়োগ করে, তারপর output দেয়।</> : <>A computer makes decisions using two electrical states: on and off. We call them <strong className="text-foreground">1 (ON/true)</strong> and <strong className="text-foreground">0 (OFF/false)</strong>. A logic gate is a tiny decision-making device. It receives inputs, applies a rule, and produces an output.</>}
+        </p>
       </div>
 
-      <section className="mb-8">
-        <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
-          <Sigma className="h-4 w-4 text-primary" /> Boolean Laws · বুলিয়ান সূত্রাবলি
-        </h3>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
-          {laws.map((l) => (
-            <article key={l.name} className="rounded-xl border border-border bg-card p-3 shadow-sm">
-              <div className="font-semibold">{l.name}</div>
-              <div className="text-sm text-primary">{l.bn}</div>
-              <div className="mt-2 space-y-1">
-                {l.forms.map((f) => (
-                  <div key={f} className="rounded-md bg-muted px-2 py-1 font-mono text-sm">
-                    {f}
-                  </div>
-                ))}
-              </div>
-              <p className="mt-2 text-xs text-muted-foreground">{l.note}</p>
-              <p className="text-xs text-muted-foreground">{l.noteBn}</p>
+      <section>
+        <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold"><Binary className="h-5 w-5 text-primary" /> {bn ? "চারটি ধারণায় পুরো অধ্যায়" : "The chapter in four ideas"}</h3>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ["1", "Input", bn ? "A, B, C হলো switch-এর মতো input variable" : "A, B, and C are input variables that behave like switches."],
+            ["2", "Gate", bn ? "AND, OR, NOT input-এর উপর নিয়ম চালায়" : "AND, OR, and NOT apply rules to the inputs."],
+            ["3", "Expression", bn ? "A·B বা A+B হলো circuit লেখার সংক্ষিপ্ত ভাষা" : "A·B and A+B are short ways to describe a circuit."],
+            ["4", "Output", bn ? "সব gate পেরিয়ে শেষ ফল F = 0 অথবা 1" : "After passing through the gates, the final output F is 0 or 1."],
+          ].map(([n, title, text]) => (
+            <article key={n} className="rounded-xl border border-border bg-card p-4 shadow-sm">
+              <span className="mb-3 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">{n}</span>
+              <h4 className="font-semibold">{title}</h4><p className="mt-1 text-xs leading-relaxed text-muted-foreground">{text}</p>
             </article>
           ))}
-          {laws.length === 0 && <p className="text-sm text-muted-foreground">No matching law.</p>}
         </div>
       </section>
 
-      <section className="mb-8">
+      <section>
         <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
-          <CircuitBoard className="h-4 w-4 text-primary" /> Gates at a glance · গেট পরিচিতি
+          <MousePointerClick className="h-5 w-5 text-primary" /> {bn ? "নিজে চাপ দিয়ে Gate বোঝো" : "Try the gates yourself"}
         </h3>
-        <div className="overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-muted/60 text-xs uppercase text-muted-foreground">
-              <tr>
-                <th className="p-2">Gate · গেট</th>
-                <th className="p-2">Expression</th>
-                <th className="p-2">Rule · নিয়ম</th>
-              </tr>
-            </thead>
-            <tbody>
-              {gates.map((g) => (
-                <tr key={g.gate} className="border-t border-border">
-                  <td className="p-2 font-semibold">
-                    {g.gate}
-                    <div className="text-xs font-normal text-muted-foreground">{g.bn}</div>
-                  </td>
-                  <td className="p-2 font-mono text-xs">{g.expr}</td>
-                  <td className="p-2 text-xs">
-                    {g.rule}
-                    <div className="text-muted-foreground">{g.ruleBn}</div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section className="mb-8">
-        <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
-          <Lightbulb className="h-4 w-4 text-primary" /> Key pointers · গুরুত্বপূর্ণ পয়েন্ট
-        </h3>
-        <ul className="space-y-2">
-          {pointers.map((p) => (
-            <li key={p.en} className="rounded-xl border border-border bg-card p-3 text-sm shadow-sm">
-              {p.en}
-              <div className="text-muted-foreground">{p.bn}</div>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mb-4">
-        <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
-          <BookOpen className="h-4 w-4 text-primary" /> Glossary · পরিভাষা
-        </h3>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {glossary.map((g) => (
-            <div key={g.en} className="rounded-lg border border-border bg-card px-3 py-2 text-sm">
-              <span className="font-medium">{g.en}</span>
-              <span className="text-muted-foreground"> — {g.bn}</span>
+        <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+          <div className="mb-5 flex flex-wrap gap-2">
+            {GATES.map((item) => <Button key={item.gate} size="sm" variant={selectedGate === item.gate ? "default" : "outline"} onClick={() => setSelectedGate(item.gate)}>{item.gate}</Button>)}
+          </div>
+          <div className="grid items-center gap-5 md:grid-cols-[1fr_auto_1fr]">
+            <div className="flex justify-center gap-3">
+              <button onClick={() => setA(a ? 0 : 1)} className={`rounded-xl border px-6 py-4 font-mono font-bold transition ${a ? "border-primary bg-primary text-primary-foreground" : "bg-muted"}`}>A = {a}</button>
+              {selectedGate !== "NOT" && <button onClick={() => setB(b ? 0 : 1)} className={`rounded-xl border px-6 py-4 font-mono font-bold transition ${b ? "border-primary bg-primary text-primary-foreground" : "bg-muted"}`}>B = {b}</button>}
             </div>
+            <div className="flex items-center justify-center gap-3"><ArrowRight className="h-5 w-5 text-muted-foreground" /><GateShape type={selectedGate} active={output === 1} /><ArrowRight className="h-5 w-5 text-muted-foreground" /></div>
+            <div className={`mx-auto flex h-20 w-20 items-center justify-center rounded-full border-4 text-2xl font-black transition ${output ? "border-emerald-500 bg-emerald-500/15 text-emerald-600" : "border-muted bg-muted text-muted-foreground"}`}>F={output}</div>
+          </div>
+          <div className="mt-5 rounded-xl bg-muted/60 p-3 text-center"><strong>{gate.gate} ({bn ? gate.bn : gate.en})</strong><div className="font-mono text-sm text-primary">{gate.expr}</div><p className="text-xs text-muted-foreground">{bn ? gate.simpleBn : gate.simpleEn}</p></div>
+        </div>
+      </section>
+
+      <section className="grid gap-3 md:grid-cols-2">
+        <article className="rounded-xl border border-border bg-card p-4"><h3 className="mb-2 flex items-center gap-2 font-bold"><CircuitBoard className="h-4 w-4 text-primary" /> {bn ? "Expression কীভাবে পড়বে?" : "How do you read an expression?"}</h3><div className="space-y-2 text-sm"><p><code className="rounded bg-muted px-1">A'</code> = {bn ? "A নয়" : "NOT A"}</p><p><code className="rounded bg-muted px-1">A·B</code> {bn ? "বা" : "or"} <code className="rounded bg-muted px-1">AB</code> = A AND B</p><p><code className="rounded bg-muted px-1">A+B</code> = A OR B</p><p className="text-xs text-muted-foreground">{bn ? "ক্রম: প্রথমে বন্ধনী → NOT → AND → XOR → OR" : "Order: brackets → NOT → AND → XOR → OR"}</p></div></article>
+        <article className="rounded-xl border border-border bg-card p-4"><h3 className="mb-2 flex items-center gap-2 font-bold"><Lightbulb className="h-4 w-4 text-primary" /> {bn ? "Truth table কী?" : "What is a truth table?"}</h3><p className="text-sm leading-relaxed text-muted-foreground">{bn ? "Input-এর সম্ভাব্য সব combination এবং প্রতিটির output একসাথে দেখানো table। দুইটি input হলে combination: 00, 01, 10, 11। অর্থাৎ 2² = 4টি row। তিনটি input হলে 2³ = 8টি row।" : "A truth table lists every possible input combination and its output. Two inputs produce 00, 01, 10, and 11, so 2² = 4 rows. Three inputs produce 2³ = 8 rows."}</p></article>
+      </section>
+
+      <section>
+        <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
+          <Sigma className="h-5 w-5 text-primary" /> {bn ? "প্রয়োজনীয় Boolean Laws" : "Essential Boolean laws"}
+        </h3>
+        <p className="mb-3 text-sm text-muted-foreground">{bn ? "একসাথে সব মুখস্থ নয়। নাম চাপলে সূত্র ও সহজ ব্যাখ্যা দেখো।" : "Do not memorize everything at once. Select a law to see its formula and explanation."}</p>
+        <div className="grid items-start gap-2 sm:grid-cols-2">
+          {LAWS.map((law) => (
+            <details key={law.name} className="group self-start rounded-xl border border-border bg-card p-3 shadow-sm open:border-primary/30">
+              <summary className="cursor-pointer select-none caret-transparent font-semibold outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-sm">{bn ? law.bn : law.name}{bn && <span className="ml-2 text-xs font-normal text-muted-foreground">{law.name}</span>}</summary>
+              <div className="mt-3 space-y-1">{law.forms.map((form) => <div key={form} className="rounded-md bg-muted px-2 py-1 font-mono text-sm">{form}</div>)}</div>
+              <p className="mt-2 text-xs text-muted-foreground">{bn ? law.noteBn : law.note}</p>
+            </details>
           ))}
         </div>
       </section>
