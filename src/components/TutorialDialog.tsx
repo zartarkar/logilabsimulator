@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { driver, type DriveStep } from "driver.js";
 import { useLang } from "@/i18n";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { GraduationCap } from "lucide-react";
 
 type TourTab = "learn" | "simulator" | "builder";
 
-export function TutorialDialog({ className = "", onSelectTab }: { className?: string; onSelectTab: (tab: TourTab) => void }) {
+export function TutorialDialog({ className = "", onSelectTab, autoStart = false }: { className?: string; onSelectTab: (tab: TourTab) => void; autoStart?: boolean }) {
   const { t, lang } = useLang();
   const bn = lang === "bn";
 
@@ -43,23 +43,38 @@ export function TutorialDialog({ className = "", onSelectTab }: { className?: st
         { popover: { title: bn ? "তুমি প্রস্তুত" : "You are ready", description: bn ? "ধারণা শেখা, রাশি পরীক্ষা, সার্কিট তৈরি এবং ভুল শনাক্ত করা সবই এখন এক জায়গায় করতে পারবে। প্রয়োজন হলে Tutorial চাপলে এই সম্পূর্ণ গাইড আবার শুরু হবে।" : "You can now learn concepts, test expressions, build circuits, and diagnose mistakes in one place. Press Tutorial any time to replay this complete guide." } },
       ];
 
-      driver({
+      const tutorial = driver({
         steps, showProgress: true, animate: true, smoothScroll: true, allowClose: true,
         overlayClickBehavior: "close", stagePadding: 8, stageRadius: 12,
         popoverClass: "app-tutorial-popover",
         nextBtnText: bn ? "পরবর্তী" : "Next", prevBtnText: bn ? "পূর্ববর্তী" : "Previous",
         doneBtnText: bn ? "শুরু করি" : "Start exploring",
         progressText: bn ? "{{current}} / {{total}}" : "{{current}} of {{total}}",
-      }).drive();
+      });
+      tutorial.drive();
+      localStorage.setItem("logiclab-auto-tutorial-complete-v1", "true");
     }, 300);
   }, [bn, onSelectTab]);
 
+  const latestStartTour = useRef(startTour);
+  const autoStarted = useRef(false);
+  latestStartTour.current = startTour;
+
   useEffect(() => {
-    if (sessionStorage.getItem("logiclab-start-tour") !== "true") return;
-    sessionStorage.removeItem("logiclab-start-tour");
-    const timer = window.setTimeout(startTour, 450);
+    if (!autoStart || autoStarted.current) return;
+    autoStarted.current = true;
+    let timer: number;
+    const startWhenVisible = () => {
+      const landscapePrompt = document.querySelector('[aria-labelledby="landscape-title"]');
+      if (landscapePrompt) {
+        timer = window.setTimeout(startWhenVisible, 350);
+        return;
+      }
+      timer = window.setTimeout(() => latestStartTour.current(), 250);
+    };
+    startWhenVisible();
     return () => window.clearTimeout(timer);
-  }, [startTour]);
+  }, [autoStart]);
 
   return <Button size="sm" variant="outline" className={`gap-1 ${className}`} onClick={startTour} aria-label={t("tutorial")} title={t("tutorial")}><GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> {t("tutorial")}</Button>;
 }

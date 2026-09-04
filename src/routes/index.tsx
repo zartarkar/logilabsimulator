@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useCallback, useEffect, useState, useMemo, useRef } from "react";
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
@@ -99,19 +99,29 @@ function App() {
   const [showSimplification, setShowSimplification] = useState(false);
   const [showExamples, setShowExamples] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
+  const [autoTourRequested, setAutoTourRequested] = useState(false);
 
   useEffect(() => {
-    setShowOnboarding(localStorage.getItem("logiclab-onboarding-complete") !== "true");
-  }, []);
+    // The bare site URL is the public landing page. URLs that explicitly name
+    // an app tab remain shareable deep links and open the workspace directly.
+    setShowOnboarding(qTab === undefined);
+  }, [qTab]);
 
   const enterApp = (destination: "learn" | "simulator", familiarity: Familiarity) => {
     localStorage.setItem("logiclab-onboarding-complete", "true");
     localStorage.setItem("logiclab-familiarity", familiarity);
-    sessionStorage.setItem("logiclab-start-tour", "true");
+    if (localStorage.getItem("logiclab-auto-tutorial-complete-v1") !== "true") {
+      setAutoTourRequested(true);
+    }
     s.setTab(destination);
     navigate({ search: { tab: destination }, replace: true });
     setShowOnboarding(false);
   };
+
+  const selectTourTab = useCallback((tab: "learn" | "simulator" | "builder") => {
+    useCircuitStore.getState().setTab(tab);
+    navigate({ search: { tab }, replace: true });
+  }, [navigate]);
 
   useEffect(() => {
     if (showSimplification && s.parsed && !s.simplified) {
@@ -343,10 +353,8 @@ function App() {
 
             <div className="app-header-actions flex shrink-0 items-center gap-0.5 sm:col-start-3 sm:row-start-1 sm:static sm:justify-self-end sm:gap-3">
               <TutorialDialog
-                onSelectTab={(tab) => {
-                  s.setTab(tab);
-                  navigate({ search: { tab }, replace: true });
-                }}
+                onSelectTab={selectTourTab}
+                autoStart={autoTourRequested}
                 className="h-6 w-6 gap-0 px-0 text-[0px] sm:h-8 sm:w-auto sm:gap-1 sm:px-3 sm:text-xs"
               />
               <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">

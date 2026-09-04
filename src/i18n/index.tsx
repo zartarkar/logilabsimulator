@@ -248,10 +248,10 @@ interface Ctx {
   t: (key: keyof typeof DICT) => string;
 }
 
-const LangContext = createContext<Ctx>({ lang: "en", setLang: () => {}, t: (k) => DICT[k]?.en ?? String(k) });
+const LangContext = createContext<Ctx>({ lang: "bn", setLang: () => {}, t: (k) => DICT[k]?.bn ?? String(k) });
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("en");
+  const [lang, setLangState] = useState<Lang>("bn");
 
   useEffect(() => {
     const stored = localStorage.getItem("logiclab-lang");
