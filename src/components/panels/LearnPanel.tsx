@@ -131,7 +131,7 @@ export function LearnPanel() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-8 px-4 py-6">
-      <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 sm:p-7">
+      <div data-tour="learn-intro" className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 sm:p-7">
         <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
           <BookOpen className="h-3.5 w-3.5" /> {bn ? "একদম শুরু থেকে" : "Start from zero"}
         </div>
@@ -141,7 +141,7 @@ export function LearnPanel() {
         </p>
       </div>
 
-      <section>
+      <section data-tour="learn-overview">
         <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold"><Binary className="h-5 w-5 text-primary" /> {bn ? "চারটি ধারণায় পুরো অধ্যায়" : "The chapter in four ideas"}</h3>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -158,7 +158,7 @@ export function LearnPanel() {
         </div>
       </section>
 
-      <section>
+      <section data-tour="learn-gates">
         <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
           <MousePointerClick className="h-5 w-5 text-primary" /> {bn ? "নিজে চাপ দিয়ে Gate বোঝো" : "Try the gates yourself"}
         </h3>
@@ -183,7 +183,7 @@ export function LearnPanel() {
         <article className="rounded-xl border border-border bg-card p-4"><h3 className="mb-2 flex items-center gap-2 font-bold"><Lightbulb className="h-4 w-4 text-primary" /> {bn ? "Truth table কী?" : "What is a truth table?"}</h3><p className="text-sm leading-relaxed text-muted-foreground">{bn ? "Input-এর সম্ভাব্য সব combination এবং প্রতিটির output একসাথে দেখানো table। দুইটি input হলে combination: 00, 01, 10, 11। অর্থাৎ 2² = 4টি row। তিনটি input হলে 2³ = 8টি row।" : "A truth table lists every possible input combination and its output. Two inputs produce 00, 01, 10, and 11, so 2² = 4 rows. Three inputs produce 2³ = 8 rows."}</p></article>
       </section>
 
-      <section>
+      <section data-tour="learn-laws">
         <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
           <Sigma className="h-5 w-5 text-primary" /> {bn ? "প্রয়োজনীয় Boolean Laws" : "Essential Boolean laws"}
         </h3>

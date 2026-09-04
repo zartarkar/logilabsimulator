@@ -107,6 +107,7 @@ function App() {
   const enterApp = (destination: "learn" | "simulator", familiarity: Familiarity) => {
     localStorage.setItem("logiclab-onboarding-complete", "true");
     localStorage.setItem("logiclab-familiarity", familiarity);
+    sessionStorage.setItem("logiclab-start-tour", "true");
     s.setTab(destination);
     navigate({ search: { tab: destination }, replace: true });
     setShowOnboarding(false);
@@ -341,7 +342,13 @@ function App() {
             </div>
 
             <div className="app-header-actions flex shrink-0 items-center gap-0.5 sm:col-start-3 sm:row-start-1 sm:static sm:justify-self-end sm:gap-3">
-              <TutorialDialog onOpenOnboarding={() => setShowOnboarding(true)} className="h-6 w-6 gap-0 px-0 text-[0px] sm:h-8 sm:w-auto sm:gap-1 sm:px-3 sm:text-xs" />
+              <TutorialDialog
+                onSelectTab={(tab) => {
+                  s.setTab(tab);
+                  navigate({ search: { tab }, replace: true });
+                }}
+                className="h-6 w-6 gap-0 px-0 text-[0px] sm:h-8 sm:w-auto sm:gap-1 sm:px-3 sm:text-xs"
+              />
               <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">
                 <Languages className="ml-1 h-2.5 w-2.5 text-muted-foreground sm:mx-1.5 sm:h-3.5 sm:w-3.5" />
                 {(["en", "bn"] as const).map((l) => (
@@ -425,7 +432,7 @@ function App() {
                   </Button>
                   
                   <div className="flex gap-2">
-                    <Button 
+                    <Button data-tour="truth-table-button"
                       size="sm" 
                       variant={showTruthTable ? "destructive" : "outline"} 
                       className={`flex-1 text-[10px] h-8 ${showTruthTable ? "button-red" : ""}`}
@@ -439,7 +446,7 @@ function App() {
                     >
                       {t("truthTable")}
                     </Button>
-                    <Button 
+                    <Button data-tour="simplification-button"
                       size="sm" 
                       variant={showSimplification ? "destructive" : "outline"} 
                       className={`flex-1 text-[10px] h-8 ${showSimplification ? "button-red" : ""}`}
@@ -497,7 +504,7 @@ function App() {
 
               {showExamples && (
                 <>
-                  <div className="mt-2 hidden lg:block">
+                  <div data-tour="examples" className="mt-2 hidden lg:block">
                     <h3 className="text-xs font-semibold uppercase text-muted-foreground">{t("examples")}</h3>
                     {examplesContent}
                   </div>

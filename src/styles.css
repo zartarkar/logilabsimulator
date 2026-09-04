@@ -24,6 +24,41 @@
   line-height: 1.5;
 }
 
+.app-tutorial-popover {
+  max-width: 23rem;
+  border: 1px solid color-mix(in srgb, var(--destructive) 28%, var(--border));
+  border-radius: 1rem;
+  box-shadow: 0 22px 60px rgb(15 23 42 / 0.24);
+}
+
+.app-tutorial-popover .driver-popover-title {
+  color: var(--destructive);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.app-tutorial-popover .driver-popover-description {
+  color: var(--foreground);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.app-tutorial-popover .driver-popover-next-btn {
+  border-color: var(--destructive);
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+  text-shadow: none;
+}
+
+.app-tutorial-popover .driver-popover-prev-btn {
+  color: var(--foreground);
+  text-shadow: none;
+}
+
+.app-tutorial-popover .driver-popover-progress-text {
+  color: var(--muted-foreground);
+}
+
 /* The practice controls must remain usable while Driver.js spotlights the
    required component. Driver disables pointer events on every other element
    by default, so explicitly lift the step bar above its overlay. */

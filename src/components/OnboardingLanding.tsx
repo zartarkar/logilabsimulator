@@ -6,7 +6,6 @@ import {
   Gauge,
   GraduationCap,
   Languages,
-  PlayCircle,
   Rocket,
   Route,
   Wrench,
@@ -24,6 +23,7 @@ export function OnboardingLanding({
   const { lang, setLang } = useLang();
   const bn = lang === "bn";
   const [choice, setChoice] = useState<Familiarity | null>(null);
+  const [showIntroVideo, setShowIntroVideo] = useState(true);
 
   const features = [
     {
@@ -112,15 +112,37 @@ export function OnboardingLanding({
                 ))}
               </div>
             ) : choice === "new" ? (
-              <div className="mt-5">
-                <div className="aspect-video overflow-hidden border border-border bg-black">
-                  <iframe className="h-full w-full" src="https://www.youtube-nocookie.com/embed/j0K2GilD06A" title="Boolean expressions and logic gates introduction" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
+              <div className="mt-5 space-y-5">
+                <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+                  <div className="px-4 py-3">
+                    <h3 className="text-sm font-semibold">{bn ? "চাইলে আগে সংক্ষিপ্ত পরিচিতিটি দেখে নাও" : "Watch a short introduction if you would like"}</h3>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{bn ? "ভিডিওটিতে লজিক গেট, AND, OR, NOT এবং সত্যক সারণির প্রাথমিক ধারণা দেওয়া হয়েছে।" : "This video introduces logic gates, AND, OR, NOT, and truth tables."}</p>
+                  </div>
+                  {showIntroVideo ? (
+                    <>
+                      <div className="aspect-video overflow-hidden border-y border-border bg-black">
+                        <iframe className="h-full w-full" src="https://www.youtube-nocookie.com/embed/j0K2GilD06A" title="Boolean expressions and logic gates introduction" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
+                      </div>
+                      <button type="button" onClick={() => setShowIntroVideo(false)} className="w-full px-4 py-3 text-center text-xs font-semibold text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
+                        {bn ? "ভিডিওটি পরে দেখব" : "I will watch the video later"}
+                      </button>
+                    </>
+                  ) : (
+                    <button type="button" onClick={() => setShowIntroVideo(true)} className="w-full border-t border-border px-4 py-3 text-center text-xs font-semibold text-destructive hover:bg-destructive/[0.04]">
+                      {bn ? "ভিডিওটি এখন দেখো" : "Watch the video now"}
+                    </button>
+                  )}
                 </div>
-                <h3 className="mt-4 text-sm font-semibold">{bn ? "শুরু করার আগে সংক্ষিপ্ত পরিচিতিটি দেখে নাও" : "Watch this short introduction before starting"}</h3>
-                <p className="mt-1 text-xs leading-5 text-muted-foreground">{bn ? "Logic gate, AND, OR, NOT এবং truth table এর ভিত্তি ১০ মিনিটের মধ্যে।" : "The basics of logic gates, AND, OR, NOT, and truth tables in under ten minutes."}</p>
-                <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                  <Button variant="outline" onClick={() => onEnter("learn", "new")}>{bn ? "পরে দেখব" : "Watch later"}</Button>
-                  <Button variant="destructive" onClick={() => onEnter("learn", "new")}><PlayCircle className="mr-2 h-4 w-4" />{bn ? "এবার শুরু করি" : "Continue"}</Button>
+
+                <div className="rounded-xl border-2 border-destructive/20 bg-destructive/[0.04] p-4 shadow-sm sm:flex sm:items-center sm:justify-between sm:gap-4">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-destructive">{bn ? "পরবর্তী ধাপ" : "Next step"}</p>
+                    <h3 className="mt-1 text-sm font-bold">{bn ? "মূল ধারণাগুলো শেখা শুরু করো" : "Start learning the core concepts"}</h3>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{bn ? "এই বোতামটি তোমাকে সরাসরি ‘নিজে শিখি’ পাতায় নিয়ে যাবে।" : "This button takes you directly to the Learn section."}</p>
+                  </div>
+                  <Button className="mt-3 w-full shrink-0 sm:mt-0 sm:w-auto" variant="destructive" onClick={() => onEnter("learn", "new")}>
+                    <BookOpenCheck className="mr-2 h-4 w-4" />{bn ? "নিজে শিখি পাতায় যাও" : "Go to Learn"}
+                  </Button>
                 </div>
               </div>
             ) : (

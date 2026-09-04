@@ -971,7 +971,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         </AlertDialogContent>
       </AlertDialog>
       <aside className="flex shrink-0 flex-col gap-2 border-b border-border bg-card/60 backdrop-blur-sm p-2.5 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto no-scrollbar">
-        <div className="practice-panel order-1 relative w-full shrink-0 overflow-hidden rounded-xl border-2 border-primary/45 bg-gradient-to-br from-primary/15 via-card to-card p-3 shadow-md ring-1 ring-primary/10 flex flex-col gap-2.5 lg:sticky lg:top-0 lg:z-20">
+        <div data-tour="practice-panel" className="practice-panel order-1 relative w-full shrink-0 overflow-hidden rounded-xl border-2 border-primary/45 bg-gradient-to-br from-primary/15 via-card to-card p-3 shadow-md ring-1 ring-primary/10 flex flex-col gap-2.5 lg:sticky lg:top-0 lg:z-20">
             {/* Header */}
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-primary">
@@ -1190,6 +1190,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             variant="outline"
             size="sm"
             className="absolute right-2 top-2 z-30 h-8 bg-card/95 px-2.5 shadow-md"
+            data-tour="builder-fit"
             onClick={() => fitView({ padding: isMobile ? 0.3 : 0.2, maxZoom: 1.15, duration: 250 })}
             title="Fit circuit to screen"
           >

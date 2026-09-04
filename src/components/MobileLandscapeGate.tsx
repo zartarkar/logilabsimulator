@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, RotateCw, Smartphone } from "lucide-react";
-import { useLang } from "@/i18n";
 
 type LockableOrientation = ScreenOrientation & {
   lock?: (orientation: "landscape") => Promise<void>;
 };
 
 export function MobileLandscapeGate() {
-  const { lang } = useLang();
-  const bn = lang === "bn";
   const [needsLandscape, setNeedsLandscape] = useState(false);
   const [message, setMessage] = useState("");
   const [canAutoLock, setCanAutoLock] = useState<boolean | null>(null);
@@ -51,9 +48,7 @@ export function MobileLandscapeGate() {
       if (!orientation.lock) throw new Error("unsupported");
       await orientation.lock("landscape");
     } catch {
-      setMessage(bn
-        ? `${fullscreenFailed ? "Fullscreen permission পাওয়া যায়নি। " : ""}এই browser automatic landscape lock করতে দেয় না। Orientation lock বন্ধ করে ফোনটি পাশে ঘোরাও।`
-        : `${fullscreenFailed ? "Fullscreen permission was denied. " : ""}This browser does not allow automatic landscape lock. Turn off orientation lock and rotate your phone sideways.`);
+      setMessage(`${fullscreenFailed ? "Fullscreen চালু করা যায়নি। " : ""}এই browser স্বয়ংক্রিয়ভাবে Landscape Mode চালু করতে দেয় না। Auto Rotation চালু করে মোবাইলটি ঘুরিয়ে নিন।\n${fullscreenFailed ? "Fullscreen could not be enabled. " : ""}This browser cannot switch to Landscape Mode automatically. Turn on Auto Rotation and rotate your phone.`);
     }
   };
 
@@ -66,28 +61,30 @@ export function MobileLandscapeGate() {
           <Smartphone className="h-10 w-10" />
           <RotateCw className="absolute -right-1 top-0 h-7 w-7 animate-pulse" />
         </div>
-        <h2 id="landscape-title" className="text-xl font-bold">
-          {canAutoLock
-            ? (bn ? "Device landscape mode-এ নাও" : "Turn your device to landscape")
-            : (bn ? "ফোনটি পাশে ঘোরাও" : "Rotate your phone sideways")}
+        <h2 id="landscape-title" className="text-xl font-bold leading-snug">
+          আপনার মোবাইলের Auto Rotation চালু করে Landscape Mode-এ নিন
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          {canAutoLock
-            ? (bn ? "Button চাপলে supported browser স্বয়ংক্রিয়ভাবে landscape mode চালু করবে।" : "Tap the button and supported browsers will switch to landscape automatically.")
-            : (bn ? "এই browser automatic rotation support করে না। Phone orientation lock বন্ধ করে device ঘোরালেই simulator খুলবে।" : "This browser does not support automatic rotation. Turn off phone orientation lock and rotate the device to open the simulator.")}
+        <p className="mt-2 text-sm font-medium leading-relaxed text-foreground/75">
+          Turn on Auto Rotation and rotate your phone to Landscape Mode
         </p>
+        <div className="mx-auto mt-4 h-px w-16 bg-border" />
+        <div className="mt-4 space-y-1.5 text-sm leading-relaxed text-muted-foreground">
+          <p>{canAutoLock ? "নিচের button চাপলে supported browser স্বয়ংক্রিয়ভাবে Landscape Mode চালু করার চেষ্টা করবে।" : "Auto Rotation চালু করে মোবাইলটি ঘুরিয়ে নিলেই simulator খুলবে।"}</p>
+          <p className="text-xs">{canAutoLock ? "Tap the button below to let supported browsers switch automatically." : "Turn on Auto Rotation, then rotate your phone to open the simulator."}</p>
+        </div>
         {canAutoLock ? (
           <Button className="mt-5 w-full" onClick={enterLandscape}>
-            <RotateCw className="mr-2 h-4 w-4" /> {bn ? "Landscape mode চালু করো" : "Enter landscape mode"}
+            <RotateCw className="mr-2 h-4 w-4" /> Landscape Mode-এ নিন · Enter Landscape Mode
           </Button>
         ) : (
           <div className="mt-5 rounded-xl border border-amber-300 bg-amber-50 p-3 text-left text-xs leading-relaxed text-amber-900">
-            <strong className="block">{bn ? "যেভাবে খুলবে" : "How to continue"}</strong>
-            <span>{bn ? "Control Center থেকে rotation lock বন্ধ করো, তারপর ফোনটি পাশে ঘোরাও।" : "Turn off rotation lock in Control Center, then rotate your phone sideways."}</span>
-            {isEmbeddedBrowser && <span className="mt-2 flex items-start gap-1.5"><ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0" />{bn ? "Messenger menu থেকে Open in Browser ব্যবহার করলে layout আরও ভালো কাজ করবে।" : "For a better layout, use Open in Browser from the Messenger menu."}</span>}
+            <strong className="block">যেভাবে খুলবেন · How to continue</strong>
+            <span className="mt-1 block">Control Center থেকে Rotation Lock বন্ধ করে মোবাইলটি পাশে ঘুরিয়ে নিন।</span>
+            <span className="mt-1 block">Turn off Rotation Lock in Control Center, then rotate your phone sideways.</span>
+            {isEmbeddedBrowser && <span className="mt-2 flex items-start gap-1.5"><ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0" /><span>Messenger menu থেকে Open in Browser নির্বাচন করলে layout আরও ভালো কাজ করবে।<br />For a better layout, select Open in Browser from the Messenger menu.</span></span>}
           </div>
         )}
-        {message && <p className="mt-3 rounded-lg bg-muted p-2 text-xs text-muted-foreground">{message}</p>}
+        {message && <p className="mt-3 whitespace-pre-line rounded-lg bg-muted p-2 text-xs text-muted-foreground">{message}</p>}
       </div>
     </div>
   );
