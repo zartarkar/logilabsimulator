@@ -149,7 +149,7 @@ export function OnboardingLanding({
               <div className="mt-6 rounded-xl border border-destructive/15 bg-destructive/[0.04] p-5 shadow-sm">
                 <h3 className="text-base font-semibold">{choice === "some" ? (bn ? "মূল conceptগুলো দ্রুত ঝালিয়ে নিই" : "Review the core concepts first") : (bn ? "তোমার শেখার journey শুরু করো" : "Start your learning journey")}</h3>
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">{choice === "some" ? (bn ? "তোমাকে Concept বুঝি section-এ নিয়ে যাওয়া হবে।" : "You’ll begin in the concept overview.") : (bn ? "তোমাকে সরাসরি Expression Simulator-এ নিয়ে যাওয়া হবে।" : "You’ll go directly to the Expression Simulator.")}</p>
-                <Button variant="destructive" className="mt-4" onClick={() => onEnter(choice === "some" ? "learn" : "simulator", choice)}>{bn ? "Journey শুরু করি" : "Start journey"}</Button>
+                <Button variant="destructive" className="mt-4" onClick={() => onEnter("simulator", choice)}>{bn ? "Journey শুরু করি" : "Start journey"}</Button>
               </div>
             )}
 

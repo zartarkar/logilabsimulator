@@ -28,7 +28,7 @@ import { SandboxBuilder } from "@/components/builder/SandboxBuilder";
 import { LearnPanel } from "@/components/panels/LearnPanel";
 import { MobileLandscapeGate } from "@/components/MobileLandscapeGate";
 import { OnboardingLanding, type Familiarity } from "@/components/OnboardingLanding";
-import { TutorialDialog } from "@/components/TutorialDialog";
+import { TutorialDialog, type TutorialHandle } from "@/components/TutorialDialog";
 import { LanguageProvider, useLang } from "@/i18n";
 import { recognizeCircuitFromImage } from "@/services/circuit-recognition.functions";
 import { performClientOCR } from "@/services/ocr-client";
@@ -93,6 +93,7 @@ function App() {
   const { q, tab: qTab, v: qValues } = qSearch;
   const navigate = useNavigate({ from: "/" });
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const tutorialRef = useRef<TutorialHandle>(null);
   const recognizeFn = useServerFn(recognizeCircuitFromImage);
   const [recognitionError, setRecognitionError] = useState<string | null>(null);
   const [showTruthTable, setShowTruthTable] = useState(false);
@@ -100,6 +101,7 @@ function App() {
   const [showExamples, setShowExamples] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
   const [autoTourRequested, setAutoTourRequested] = useState(false);
+  const [autoTourEndTab, setAutoTourEndTab] = useState<"learn" | "simulator">("learn");
 
   useEffect(() => {
     // The bare site URL is the public landing page. URLs that explicitly name
@@ -110,7 +112,8 @@ function App() {
   const enterApp = (destination: "learn" | "simulator", familiarity: Familiarity) => {
     localStorage.setItem("logiclab-onboarding-complete", "true");
     localStorage.setItem("logiclab-familiarity", familiarity);
-    if (localStorage.getItem("logiclab-auto-tutorial-complete-v1") !== "true") {
+    setAutoTourEndTab(familiarity === "new" ? "learn" : "simulator");
+    if (localStorage.getItem("logiclab-auto-tutorial-shown-v3") !== "true") {
       setAutoTourRequested(true);
     }
     s.setTab(destination);
@@ -122,6 +125,15 @@ function App() {
     useCircuitStore.getState().setTab(tab);
     navigate({ search: { tab }, replace: true });
   }, [navigate]);
+
+  useEffect(() => {
+    if (showOnboarding !== false || !autoTourRequested) return;
+    const timer = window.setTimeout(() => {
+      tutorialRef.current?.startAutomatically(autoTourEndTab);
+      setAutoTourRequested(false);
+    }, 150);
+    return () => window.clearTimeout(timer);
+  }, [showOnboarding, autoTourRequested, autoTourEndTab]);
 
   useEffect(() => {
     if (showSimplification && s.parsed && !s.simplified) {
@@ -172,6 +184,10 @@ function App() {
   }, [q, qTab, qValues]);
 
   useEffect(() => {
+    // Keep the public root URL untouched while the landing page is visible.
+    // Otherwise this effect adds ?tab=simulator and immediately dismisses it.
+    if (showOnboarding !== false) return;
+
     const relevantVars = s.parsed?.variables || [];
     const valuesStr = Object.entries(s.values)
       .filter(([k]) => relevantVars.includes(k))
@@ -204,7 +220,7 @@ function App() {
         replace: true
       });
     }
-  }, [s.expression, s.tab, s.values, s.parsed, q, qTab, qValues]);
+  }, [showOnboarding, s.expression, s.tab, s.values, s.parsed, q, qTab, qValues]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -353,8 +369,8 @@ function App() {
 
             <div className="app-header-actions flex shrink-0 items-center gap-0.5 sm:col-start-3 sm:row-start-1 sm:static sm:justify-self-end sm:gap-3">
               <TutorialDialog
+                ref={tutorialRef}
                 onSelectTab={selectTourTab}
-                autoStart={autoTourRequested}
                 className="h-6 w-6 gap-0 px-0 text-[0px] sm:h-8 sm:w-auto sm:gap-1 sm:px-3 sm:text-xs"
               />
               <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { forwardRef, useCallback, useImperativeHandle } from "react";
 import { driver, type DriveStep } from "driver.js";
 import { useLang } from "@/i18n";
 import { Button } from "@/components/ui/button";
@@ -6,11 +6,15 @@ import { GraduationCap } from "lucide-react";
 
 type TourTab = "learn" | "simulator" | "builder";
 
-export function TutorialDialog({ className = "", onSelectTab, autoStart = false }: { className?: string; onSelectTab: (tab: TourTab) => void; autoStart?: boolean }) {
+export interface TutorialHandle {
+  startAutomatically: (finishTab: "learn" | "simulator") => void;
+}
+
+export const TutorialDialog = forwardRef<TutorialHandle, { className?: string; onSelectTab: (tab: TourTab) => void }>(function TutorialDialog({ className = "", onSelectTab }, ref) {
   const { t, lang } = useLang();
   const bn = lang === "bn";
 
-  const startTour = useCallback(() => {
+  const startTour = useCallback((finishTab?: "learn" | "simulator") => {
     onSelectTab("learn");
 
     window.setTimeout(() => {
@@ -40,7 +44,14 @@ export function TutorialDialog({ className = "", onSelectTab, autoStart = false 
         { element: '[data-tour="builder-palette"]', popover: { title: bn ? "উপাদান যোগ ও মুছে ফেলো" : "Add and remove components", description: bn ? "ইনপুট, আউটপুট বা গেট চাপলে তা কাজের জায়গায় যোগ হবে। কোনো উপাদান বেছে মুছতেও পারবে।" : "Tap an input, output, or gate to add it. Select a component when you need to remove it.", side: "right", align: "center" } },
         { element: '[data-tour="builder-canvas"]', popover: { title: bn ? "তার দিয়ে সার্কিট সম্পূর্ণ করো" : "Wire the circuit", description: bn ? "এক উপাদানের সংযোগবিন্দু থেকে অন্যটির সংযোগবিন্দুতে টেনে তার দাও। ভুল তার একবার চাপলেই মুছে যাবে। ফাঁকা জায়গা টেনে পুরো সার্কিট সরাতে পারবে।" : "Drag from one connection point to another to create a wire. Tap an incorrect wire to remove it, and drag empty space to pan.", side: "left", align: "center" } },
         { element: '[data-tour="builder-fit"]', popover: { title: bn ? "পুরো সার্কিট পর্দায় আনো" : "Fit the complete circuit", description: bn ? "সার্কিট পর্দার বাইরে চলে গেলে এই বোতাম চাপলে সব উপাদান আবার দৃশ্যমান হবে।" : "If parts move off screen, use this button to bring the complete circuit back into view.", side: "bottom", align: "end" } },
-        { popover: { title: bn ? "তুমি প্রস্তুত" : "You are ready", description: bn ? "ধারণা শেখা, রাশি পরীক্ষা, সার্কিট তৈরি এবং ভুল শনাক্ত করা সবই এখন এক জায়গায় করতে পারবে। প্রয়োজন হলে Tutorial চাপলে এই সম্পূর্ণ গাইড আবার শুরু হবে।" : "You can now learn concepts, test expressions, build circuits, and diagnose mistakes in one place. Press Tutorial any time to replay this complete guide." } },
+        { popover: {
+          title: bn ? "তুমি প্রস্তুত" : "You are ready",
+          description: bn ? "ধারণা শেখা, রাশি পরীক্ষা, সার্কিট তৈরি এবং ভুল শনাক্ত করা সবই এখন এক জায়গায় করতে পারবে। প্রয়োজন হলে Tutorial চাপলে এই সম্পূর্ণ গাইড আবার শুরু হবে।" : "You can now learn concepts, test expressions, build circuits, and diagnose mistakes in one place. Press Tutorial any time to replay this complete guide.",
+          ...(finishTab ? { onNextClick: (_element: Element | undefined, _step: DriveStep, options: { driver: { destroy: () => void } }) => {
+            onSelectTab(finishTab);
+            options.driver.destroy();
+          }} : {}),
+        } },
       ];
 
       const tutorial = driver({
@@ -52,17 +63,13 @@ export function TutorialDialog({ className = "", onSelectTab, autoStart = false 
         progressText: bn ? "{{current}} / {{total}}" : "{{current}} of {{total}}",
       });
       tutorial.drive();
-      localStorage.setItem("logiclab-auto-tutorial-complete-v1", "true");
+      // Replaying the tutorial from the header must not consume the one-time
+      // automatic tutorial intended for a user's first landing-page entry.
+      if (finishTab) localStorage.setItem("logiclab-auto-tutorial-shown-v3", "true");
     }, 300);
   }, [bn, onSelectTab]);
 
-  const latestStartTour = useRef(startTour);
-  const autoStarted = useRef(false);
-  latestStartTour.current = startTour;
-
-  useEffect(() => {
-    if (!autoStart || autoStarted.current) return;
-    autoStarted.current = true;
+  const startAutomatically = useCallback((finishTab: "learn" | "simulator") => {
     let timer: number;
     const startWhenVisible = () => {
       const landscapePrompt = document.querySelector('[aria-labelledby="landscape-title"]');
@@ -70,11 +77,12 @@ export function TutorialDialog({ className = "", onSelectTab, autoStart = false 
         timer = window.setTimeout(startWhenVisible, 350);
         return;
       }
-      timer = window.setTimeout(() => latestStartTour.current(), 250);
+      timer = window.setTimeout(() => startTour(finishTab), 250);
     };
     startWhenVisible();
-    return () => window.clearTimeout(timer);
-  }, [autoStart]);
+  }, [startTour]);
 
-  return <Button size="sm" variant="outline" className={`gap-1 ${className}`} onClick={startTour} aria-label={t("tutorial")} title={t("tutorial")}><GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> {t("tutorial")}</Button>;
-}
+  useImperativeHandle(ref, () => ({ startAutomatically }), [startAutomatically]);
+
+  return <Button size="sm" variant="outline" className={`gap-1 ${className}`} onClick={() => startTour()} aria-label={t("tutorial")} title={t("tutorial")}><GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> {t("tutorial")}</Button>;
+});
