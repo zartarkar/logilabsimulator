@@ -1,3 +1,4 @@
+import { browserStorage } from "@/lib/browserStorage";
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 
 export type Lang = "en" | "bn";
@@ -254,13 +255,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("bn");
 
   useEffect(() => {
-    const stored = localStorage.getItem("logiclab-lang");
+    const stored = browserStorage.getItem("logiclab-lang");
     if (stored === "bn" || stored === "en") setLangState(stored);
   }, []);
 
   const setLang = useCallback((l: Lang) => {
     setLangState(l);
-    localStorage.setItem("logiclab-lang", l);
+    browserStorage.setItem("logiclab-lang", l);
     document.documentElement.lang = l;
   }, []);
 

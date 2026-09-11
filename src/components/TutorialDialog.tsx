@@ -1,3 +1,4 @@
+import { browserStorage } from "@/lib/browserStorage";
 import { forwardRef, useCallback, useImperativeHandle } from "react";
 import { driver, type DriveStep } from "driver.js";
 import { useLang } from "@/i18n";
@@ -65,7 +66,7 @@ export const TutorialDialog = forwardRef<TutorialHandle, { className?: string; o
       tutorial.drive();
       // Replaying the tutorial from the header must not consume the one-time
       // automatic tutorial intended for a user's first landing-page entry.
-      if (finishTab) localStorage.setItem("logiclab-auto-tutorial-shown-v3", "true");
+      if (finishTab) browserStorage.setItem("logiclab-auto-tutorial-shown-v3", "true");
     }, 300);
   }, [bn, onSelectTab]);
 

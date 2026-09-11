@@ -16,14 +16,15 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import { useLang } from "@/i18n";
 import {
   INTRO_LESSONS,
-  QUESTIONS_PER_LESSON,
+  QUESTION_COUNTS,
+  questionOffset,
   checkIntroAnswer,
   makeIntroQuestion,
   suggestFamiliarity,
   type Familiarity,
 } from "@/logic/introLearning";
 
-const TOTAL = INTRO_LESSONS.length * QUESTIONS_PER_LESSON;
+const TOTAL = questionOffset(INTRO_LESSONS.length);
 
 export function IntroLearning({
   onComplete,
@@ -46,7 +47,11 @@ export function IntroLearning({
   const current = INTRO_LESSONS[displayLesson]!;
   const score = answers.filter(Boolean).length;
   const result = suggestFamiliarity(score, TOTAL);
-  const completed = Math.floor(answers.length / QUESTIONS_PER_LESSON);
+  const lessonCount = QUESTION_COUNTS[lesson]!;
+  const answeredInLesson = answers.length - questionOffset(lesson);
+  const completed = QUESTION_COUNTS.filter(
+    (_, i) => answers.length >= questionOffset(i + 1),
+  ).length;
   const labels = {
     new: bn ? "একদম নতুন" : "Fresh start",
     some: bn ? "কিছুটা পরিচিত" : "Somewhat familiar",
@@ -73,15 +78,10 @@ export function IntroLearning({
     setSubmitted(true);
   }
   function next() {
-    if (answers.length % QUESTIONS_PER_LESSON !== 0) {
+    if (answeredInLesson < lessonCount) {
       // Cover each taught skill, using the previous answer to select a variant.
       setQuestion(
-        makeIntroQuestion(
-          lesson,
-          answers[answers.length - 1]!,
-          Math.random,
-          answers.length % QUESTIONS_PER_LESSON,
-        ),
+        makeIntroQuestion(lesson, answers[answers.length - 1]!, Math.random, answeredInLesson),
       );
       setValue("");
       setSubmitted(false);
@@ -101,7 +101,7 @@ export function IntroLearning({
       aria-label={bn ? "তোমার উত্তর" : "Your answer"}
       autoComplete="off"
       required
-      pattern={table ? "[01০১]" : "[0-9০-৯]+"}
+      pattern={table ? "[01০১]" : "[0-9০ ৯]+"}
       inputMode="numeric"
       value={value}
       disabled={submitted}
@@ -112,7 +112,7 @@ export function IntroLearning({
   );
 
   return (
-    <div className="relative min-h-dvh overflow-x-hidden bg-[#f7f8fa] text-foreground">
+    <div className="lesson-controls relative min-h-dvh overflow-x-hidden bg-[#f7f8fa] text-foreground">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-24 top-24 h-72 w-72 rounded-full bg-destructive/10 blur-3xl"
@@ -191,8 +191,8 @@ export function IntroLearning({
                 [
                   bn ? "০২ · শিখি ও চেষ্টা করি" : "02 · Learn and practise",
                   bn
-                    ? "৪টি পাঠ · বিষয়ভিত্তিক ১৬টি প্রশ্ন"
-                    : "4 lessons · 16 lesson-based questions",
+                    ? "৪টি পাঠ · বিষয়ভিত্তিক ২০টি প্রশ্ন"
+                    : "4 lessons · 20 lesson-based questions",
                 ],
                 [
                   bn ? "০৩ · নিজের পথে এগোই" : "03 · Find your starting point",
@@ -290,7 +290,7 @@ export function IntroLearning({
             }}
           >
             <DialogContent
-              className="max-h-[92dvh] w-[calc(100%-1.5rem)] max-w-4xl overflow-y-auto rounded-2xl border-white/80 bg-background p-5 shadow-2xl sm:rounded-2xl sm:p-8 motion-reduce:animate-none"
+              className="lesson-controls max-h-[92dvh] w-[calc(100%-1.5rem)] max-w-4xl overflow-y-auto rounded-2xl border-white/80 bg-background p-5 shadow-2xl sm:rounded-2xl sm:p-8 motion-reduce:animate-none"
               onCloseAutoFocus={(event) => {
                 event.preventDefault();
                 heading.current?.focus();
@@ -347,8 +347,8 @@ export function IntroLearning({
                       <span>{current.practice[lang]}</span>
                       <span>
                         {bn
-                          ? `এই পাঠের প্রশ্ন ${submitted ? ((answers.length - 1) % QUESTIONS_PER_LESSON) + 1 : (answers.length % QUESTIONS_PER_LESSON) + 1}/${QUESTIONS_PER_LESSON}`
-                          : `Lesson question ${submitted ? ((answers.length - 1) % QUESTIONS_PER_LESSON) + 1 : (answers.length % QUESTIONS_PER_LESSON) + 1} of ${QUESTIONS_PER_LESSON}`}
+                          ? `এই পাঠের প্রশ্ন ${submitted ? answeredInLesson : answeredInLesson + 1}/${lessonCount}`
+                          : `Lesson question ${submitted ? answeredInLesson : answeredInLesson + 1} of ${lessonCount}`}
                       </span>
                     </div>
                     <h2 className="text-xl font-semibold leading-8">{question.prompt[lang]}</h2>
@@ -427,10 +427,10 @@ export function IntroLearning({
                         <p className="font-semibold">
                           {checkIntroAnswer(question, value)
                             ? bn
-                              ? "ঠিক ধরেছো!"
-                              : "You’ve got it!"
+                              ? "অভিনন্দন! 🎉"
+                              : "Congratulations! 🎉"
                             : bn
-                              ? "চেষ্টা করেছো—এবার নিয়মটা মিলিয়ে দেখি।"
+                              ? "চেষ্টা করেছো, এবার নিয়মটা মিলিয়ে দেখি।"
                               : "Thanks for giving it a try. Let’s work through the rule."}
                         </p>
                         <p className="mt-2 text-sm leading-7">{question.explanation[lang]}</p>
@@ -452,13 +452,13 @@ export function IntroLearning({
                           ? bn
                             ? "আমার শেখার পথ দেখি"
                             : "Find my starting point"
-                          : answers.length % QUESTIONS_PER_LESSON === 0
+                          : answeredInLesson === lessonCount
                             ? bn
                               ? "পরের পাঠে যাই"
                               : "Next lesson"
                             : bn
-                              ? "আরেকবার প্রয়োগ করি"
-                              : "Try another application"}
+                              ? "পরবর্তী প্রশ্ন"
+                              : "Next question"}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     )}
@@ -494,7 +494,7 @@ export function IntroLearning({
                     <div className="divide-y rounded-xl border px-4">
                       {INTRO_LESSONS.map((item, i) => {
                         const count = answers
-                          .slice(i * QUESTIONS_PER_LESSON, (i + 1) * QUESTIONS_PER_LESSON)
+                          .slice(questionOffset(i), questionOffset(i + 1))
                           .filter(Boolean).length;
                         return (
                           <div
@@ -503,8 +503,8 @@ export function IntroLearning({
                           >
                             <span>{item.title[lang]}</span>
                             <span className="text-xs text-muted-foreground">
-                              {count}/{QUESTIONS_PER_LESSON} ·{" "}
-                              {count === QUESTIONS_PER_LESSON
+                              {count}/{QUESTION_COUNTS[i]} ·{" "}
+                              {count === QUESTION_COUNTS[i]
                                 ? bn
                                   ? "সুন্দরভাবে বুঝেছো"
                                   : "Looking good"

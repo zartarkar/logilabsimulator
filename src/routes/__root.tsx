@@ -39,6 +39,17 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   const router = useRouter();
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    if (import.meta.env.DEV) {
+      void fetch("/__logiclab/dev-error", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: error.message,
+          stack: error.stack,
+          path: window.location.pathname,
+        }),
+      }).catch(() => {});
+    }
   }, [error]);
 
   return (
@@ -67,6 +78,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             Go home
           </a>
         </div>
+        {import.meta.env.DEV && (
+          <pre className="mt-5 max-h-48 overflow-auto whitespace-pre-wrap rounded-lg border p-3 text-left text-xs">
+            {error.message}
+          </pre>
+        )}
       </div>
     </div>
   );
@@ -78,10 +94,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "LogicLab: Boolean Logic Circuit Simulator" },
-      { name: "description", content: "Interactive Boolean expression to logic-gate circuit simulator." },
+      {
+        name: "description",
+        content: "Interactive Boolean expression to logic-gate circuit simulator.",
+      },
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "LogicLab" },
-      { property: "og:description", content: "Interactive Boolean expression to logic-gate circuit simulator." },
+      {
+        property: "og:description",
+        content: "Interactive Boolean expression to logic-gate circuit simulator.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
@@ -98,7 +120,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap",
       },
-
     ],
   }),
   shellComponent: RootShell,

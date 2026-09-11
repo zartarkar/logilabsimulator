@@ -1,7 +1,8 @@
-﻿import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   INTRO_LESSONS,
-  QUESTIONS_PER_LESSON,
+  QUESTION_COUNTS,
+  questionOffset,
   checkIntroAnswer,
   makeIntroQuestion,
   suggestFamiliarity,
@@ -9,9 +10,14 @@ import {
 import { BOOLEAN_LAWS, gateValue, inputRows, universalNetwork } from "../logic/lessonCurriculum";
 
 describe("guided curriculum", () => {
+  it("keeps the five-question algebra lesson separate from the following lessons", () => {
+    expect(QUESTION_COUNTS).toEqual([5, 5, 5, 5]);
+    expect([0, 1, 2, 3, 4].map(questionOffset)).toEqual([0, 5, 10, 15, 20]);
+    expect(makeIntroQuestion(0, false, () => 0, 4).answer).toBe("A");
+  });
   it("scores the four-topic assessment at the boundaries", () => {
     expect(INTRO_LESSONS).toHaveLength(4);
-    expect([0, 7, 8, 13, 14, 16].map((score) => suggestFamiliarity(score, 16))).toEqual([
+    expect([0, 9, 10, 17, 18, 20].map((score) => suggestFamiliarity(score, 20))).toEqual([
       "new",
       "new",
       "some",
@@ -20,9 +26,18 @@ describe("guided curriculum", () => {
       "confident",
     ]);
   });
+  it("replaces the proof-count question with both De Morgan output calculations", () => {
+    for (const step of [3, 4]) for (const [a, b] of inputRows(2)) {
+      let call = 0;
+      const q = makeIntroQuestion(1, false, () => (++call === 1 ? a! : b!) / 2, step);
+      expect(Number(q.answer)).toBe(step === 3 ? Number(!(a! | b!)) : Number(!(a! & b!)));
+      expect(q.kind).toBe("number");
+      expect(q.prompt.en).not.toContain("must both sides agree");
+    }
+  });
   it("generates valid bilingual questions for every taught step", () => {
     for (let lesson = 0; lesson < 4; lesson++)
-      for (let step = 0; step < QUESTIONS_PER_LESSON; step++)
+      for (let step = 0; step < QUESTION_COUNTS[lesson]!; step++)
         for (const challenge of [false, true])
           for (let seed = 0; seed < 30; seed++) {
             const q = makeIntroQuestion(lesson, challenge, () => seed / 30, step);
@@ -82,11 +97,7 @@ describe("guided curriculum", () => {
             values[step.name] = step.value;
           }
           expect(steps.at(-1)!.value).toBe(gateValue(target, a!, b!));
-          expect(steps).toHaveLength(
-            (family === "NAND" && target === "XOR") || (family === "NOR" && target === "XNOR")
-              ? 4
-              : 5,
-          );
+          expect(steps).toHaveLength(5);
         }
   });
   it("includes every requested Boolean law with worked examples", () => {

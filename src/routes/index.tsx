@@ -1,3 +1,4 @@
+import { browserStorage } from "@/lib/browserStorage";
 import { useCallback, useEffect, useState, useMemo, useRef } from "react";
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
@@ -71,7 +72,7 @@ function useTheme() {
   // Dark mode disabled as requested
   useEffect(() => {
     document.documentElement.classList.remove("dark");
-    localStorage.removeItem("logiclab-theme");
+    browserStorage.removeItem("logiclab-theme");
   }, []);
 
   return { dark: false, toggle: () => {} };
@@ -110,10 +111,10 @@ function App() {
   }, [qTab]);
 
   const enterApp = (destination: "learn" | "simulator", familiarity: Familiarity) => {
-    localStorage.setItem("logiclab-onboarding-complete", "true");
-    localStorage.setItem("logiclab-familiarity", familiarity);
+    browserStorage.setItem("logiclab-onboarding-complete", "true");
+    browserStorage.setItem("logiclab-familiarity", familiarity);
     setAutoTourEndTab(familiarity === "new" ? "learn" : "simulator");
-    if (localStorage.getItem("logiclab-auto-tutorial-shown-v3") !== "true") {
+    if (browserStorage.getItem("logiclab-auto-tutorial-shown-v3") !== "true") {
       setAutoTourRequested(true);
     }
     s.setTab(destination);
@@ -289,7 +290,7 @@ function App() {
   };
 
   useEffect(() => {
-    const saved = localStorage.getItem("logiclab-project");
+    const saved = browserStorage.getItem("logiclab-project");
     if (saved && !q && !qTab && !qValues) {
       try {
         const data = JSON.parse(saved) as { expression?: string; values?: Record<string, 0 | 1>; mode?: "single-letter" | "named" };
@@ -302,7 +303,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(
+    browserStorage.setItem(
       "logiclab-project",
       JSON.stringify({ expression: s.expression, values: s.values, mode: s.mode }),
     );

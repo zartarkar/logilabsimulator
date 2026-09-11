@@ -1,14 +1,9 @@
-﻿import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { BooleanIntroduction } from "@/components/BooleanIntroduction";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GateShape } from "@/components/circuit/GateShape";
-import {
-  BOOLEAN_LAWS,
-  gateValue,
-  inputRows,
-  universalNetwork,
-  type Gate,
-} from "@/logic/lessonCurriculum";
+import { gateValue, inputRows, universalNetwork, type Gate } from "@/logic/lessonCurriculum";
 
 type Node = { name: string; gate: Gate; inputs: string[]; x: number; y: number };
 const box = "rounded-xl border border-primary/20 bg-primary/5 p-4";
@@ -102,7 +97,7 @@ function Circuit({ nodes, values, label }: { nodes: Node[]; values: number[]; la
         aria-label={label}
         viewBox={`0 0 ${width} ${height}`}
         className="h-auto w-full"
-        style={{ minWidth: Math.min(width, 620) }}
+        style={{ minWidth: width > 500 ? 580 : undefined }}
       >
         <title>{label}</title>
         {values.map((v, i) => (
@@ -174,31 +169,47 @@ function Circuit({ nodes, values, label }: { nodes: Node[]; values: number[]; la
     </div>
   );
 }
-function DeMorgan({ bn, proof = false }: { bn: boolean; proof?: boolean }) {
-  const [law, setLaw] = useState(0),
-    [values, setValues] = useState([0, 1]);
+function DeMorgan({ bn, proof = false, law }: { bn: boolean; proof?: boolean; law: 0 | 1 }) {
+  const [values, setValues] = useState([0, 1]);
   const [a, b] = values as [number, number];
   const first: Gate = law === 0 ? "OR" : "AND",
     second: Gate = law === 0 ? "AND" : "OR";
-  const left = Number(!gateValue(first, a, b)),
-    right = gateValue(second, 1 - a, 1 - b);
   return (
     <div className="space-y-5">
-      <div className="flex gap-2">
-        {[0, 1].map((i) => (
-          <Button
-            key={i}
-            variant={law === i ? "default" : "outline"}
-            aria-pressed={law === i}
-            onClick={() => setLaw(i)}
-          >
-            {bn ? "সূত্র" : "Law"} {i + 1}
-          </Button>
-        ))}
-      </div>
-      <h3 className="font-mono text-xl font-bold">
-        {law === 0 ? "(A + B)′ = A′B′" : "(AB)′ = A′ + B′"}
+      <h3 className="text-xl font-bold text-primary">
+        {law === 0
+          ? bn
+            ? "প্রথম উপপাদ্য"
+            : "First theorem"
+          : bn
+            ? "দ্বিতীয় উপপাদ্য"
+            : "Second theorem"}
       </h3>
+      <p className="text-base leading-8">
+        {law === 0
+          ? bn
+            ? "দুই বা ততোধিক বুলিয়ান চলকের যৌক্তিক যোগফলের পূরক প্রতিটি চলকের পূরকের যৌক্তিক গুণফলের সমান।"
+            : "The complement of the logical sum of two or more Boolean variables equals the logical product of their complements."
+          : bn
+            ? "দুই বা ততোধিক বুলিয়ান চলকের যৌক্তিক গুণফলের পূরক প্রতিটি চলকের পূরকের যৌক্তিক যোগফলের সমান।"
+            : "The complement of the logical product of two or more Boolean variables equals the logical sum of their complements."}
+      </p>
+      <p className="text-sm">{bn ? "A ও B বুলিয়ান চলক হলে" : "For Boolean variables A and B"}</p>
+      <div
+        role="math"
+        aria-label={
+          law === 0
+            ? "NOT (A OR B) equals (NOT A) AND (NOT B)"
+            : "NOT (A AND B) equals (NOT A) OR (NOT B)"
+        }
+        className="flex items-center justify-center gap-4 rounded-xl bg-primary/5 px-4 py-6 font-mono text-2xl"
+      >
+        <span className="border-t-2 border-current pt-1">A {law === 0 ? "+" : "·"} B</span>
+        <span>=</span>
+        <span className="border-t-2 border-current pt-1">A</span>
+        <span>{law === 0 ? "·" : "+"}</span>
+        <span className="border-t-2 border-current pt-1">B</span>
+      </div>
       <p className="text-sm leading-7">
         {law === 0
           ? bn
@@ -210,20 +221,20 @@ function DeMorgan({ bn, proof = false }: { bn: boolean; proof?: boolean }) {
       </p>
       <Switches values={values} set={setValues} bn={bn} />
       {!proof && (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
           <div>
-            <p className="mb-2 text-sm font-semibold">
-              {bn ? "আগে গেট, তারপর NOT" : "Gate first, then NOT"}
-            </p>
+            <p className="mb-2 text-sm font-semibold">{law === 0 ? "NOR" : "NAND"}</p>
             <Circuit
               values={values}
-              label={law === 0 ? "OR followed by NOT" : "AND followed by NOT"}
+              label={law === 0 ? "NOR gate" : "NAND gate"}
               nodes={[
-                { name: "P", gate: first, inputs: ["A", "B"], x: 115, y: 90 },
-                { name: "F", gate: "NOT", inputs: ["P"], x: 240, y: 90 },
+                { name: "F", gate: law === 0 ? "NOR" : "NAND", inputs: ["A", "B"], x: 140, y: 90 },
               ]}
             />
           </div>
+          <span aria-hidden="true" className="text-center text-3xl font-bold">
+            =
+          </span>
           <div>
             <p className="mb-2 text-sm font-semibold">
               {bn ? "আগে NOT, তারপর বদলানো গেট" : "Invert inputs, then swap the gate"}
@@ -240,12 +251,6 @@ function DeMorgan({ bn, proof = false }: { bn: boolean; proof?: boolean }) {
           </div>
         </div>
       )}
-      <output
-        aria-live="polite"
-        className="block rounded-xl bg-primary/10 p-4 text-center font-mono font-bold"
-      >
-        {bn ? "বাঁ পাশ" : "Left"} = {left}　{bn ? "ডান পাশ" : "Right"} = {right} ✓
-      </output>
       {proof && (
         <>
           <Table
@@ -275,26 +280,10 @@ function DeMorgan({ bn, proof = false }: { bn: boolean; proof?: boolean }) {
     </div>
   );
 }
-function TruthBuilder({ bn }: { bn: boolean }) {
-  const [n, setN] = useState(2),
-    [reveal, setReveal] = useState(0);
+function TruthBuilder({ bn, n }: { bn: boolean; n: 2 | 3 }) {
+  const [reveal, setReveal] = useState(0);
   return (
     <div className="space-y-5">
-      <div className="flex gap-2">
-        {[2, 3].map((i) => (
-          <Button
-            key={i}
-            aria-pressed={n === i}
-            variant={n === i ? "default" : "outline"}
-            onClick={() => {
-              setN(i);
-              setReveal(0);
-            }}
-          >
-            {i} {bn ? "টি চলক" : "variables"}
-          </Button>
-        ))}
-      </div>
       <p className="text-sm leading-7">
         {bn
           ? "১. আলাদা চলক গুনে 2ⁿটি সারি নাও। ২. বাইনারি ক্রমে ইনপুট লেখো। ৩. NOT, তারপর AND, সবশেষে OR হিসাব করো; বন্ধনী থাকলে আগে সেটি। প্রতিটি মধ্যবর্তী ফলের জন্য কলাম রাখো।"
@@ -373,7 +362,6 @@ const examples = [
 ];
 function Simplify({ bn }: { bn: boolean }) {
   const [example, setExample] = useState(0),
-    [step, setStep] = useState(0),
     [values, setValues] = useState([0, 1]);
   const e = examples[example]!,
     [a, b] = values as [number, number];
@@ -395,10 +383,10 @@ function Simplify({ bn }: { bn: boolean }) {
         {examples.map((_, i) => (
           <Button
             key={i}
-            variant={example === i ? "default" : "outline"}
+            variant="outline"
+            aria-pressed={example === i}
             onClick={() => {
               setExample(i);
-              setStep(0);
             }}
           >
             {bn ? "উদাহরণ" : "Example"} {i + 1}
@@ -406,7 +394,7 @@ function Simplify({ bn }: { bn: boolean }) {
         ))}
       </div>
       <ol className="space-y-3">
-        {e.steps.slice(0, step + 1).map((expression, i) => (
+        {e.steps.map((expression, i) => (
           <li key={i} className={`${box} animate-in fade-in motion-reduce:animate-none`}>
             <p className="font-mono text-xl">
               {i ? "= " : "F = "}
@@ -420,15 +408,6 @@ function Simplify({ bn }: { bn: boolean }) {
           </li>
         ))}
       </ol>
-      <Button variant="outline" onClick={() => setStep(step === e.steps.length - 1 ? 0 : step + 1)}>
-        {step === e.steps.length - 1
-          ? bn
-            ? "আবার করি"
-            : "Start again"
-          : bn
-            ? "পরের ধাপ দেখি"
-            : "Reveal next step"}
-      </Button>
       <Switches values={values} set={setValues} bn={bn} />
       <output aria-live="polite" className="block font-mono text-primary">
         {bn ? "মূল রাশি" : "Original"} = {original}　{bn ? "সরল রাশি" : "Simplified"} = {reduced} ✓
@@ -440,224 +419,53 @@ const rules: Record<Gate, [string, string, string]> = {
   AND: ["AB", "1 only when both inputs are 1.", "দুটি ইনপুটই 1 হলে শুধু ফল 1।"],
   OR: ["A+B", "1 when at least one input is 1.", "অন্তত একটি 1 হলে ফল 1।"],
   NOT: ["A′", "Flip the input: 0 becomes 1; 1 becomes 0.", "ইনপুট উল্টাও: 0 হয় 1, 1 হয় 0।"],
-  NAND: ["(AB)′", "AND, then NOT: only 11 gives 0.", "AND, তারপর NOT: শুধু 11-তে ফল 0।"],
-  NOR: ["(A+B)′", "OR, then NOT: only 00 gives 1.", "OR, তারপর NOT: শুধু 00-তে ফল 1।"],
+  NAND: ["(AB)′", "AND, then NOT: only 11 gives 0.", "AND, তারপর NOT: শুধু 11 তে ফল 0।"],
+  NOR: ["(A+B)′", "OR, then NOT: only 00 gives 1.", "OR, তারপর NOT: শুধু 00 তে ফল 1।"],
   XOR: ["A′B + AB′", "1 when the two inputs differ.", "দুটি ইনপুট ভিন্ন হলে ফল 1।"],
   XNOR: ["AB + A′B′", "1 when the two inputs match.", "দুটি ইনপুট সমান হলে ফল 1।"],
 };
-function GateExplorer({ bn }: { bn: boolean }) {
-  const [gate, setGate] = useState<Gate>("AND"),
-    [values, setValues] = useState([0, 1]);
-  return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap gap-2">
-        {Object.keys(rules).map((g) => (
-          <Button
-            key={g}
-            aria-pressed={g === gate}
-            variant={g === gate ? "default" : "outline"}
-            onClick={() => setGate(g as Gate)}
-          >
-            {g}
-          </Button>
-        ))}
-      </div>
-      <p className="text-sm leading-7">
-        {rules[gate][bn ? 2 : 1]} <strong className="font-mono">F = {rules[gate][0]}</strong>
-      </p>
-      <Switches
-        values={gate === "NOT" ? values.slice(0, 1) : values}
-        set={(v) => setValues(v.length === 1 ? [v[0]!, values[1]!] : v)}
-        bn={bn}
-      />
-      <div className="grid items-center gap-4 md:grid-cols-2">
-        <Circuit
-          label={`${gate} gate`}
-          values={gate === "NOT" ? values.slice(0, 1) : values}
-          nodes={[{ name: "F", gate, inputs: gate === "NOT" ? ["A"] : ["A", "B"], x: 140, y: 85 }]}
-        />
-        <Table
-          headers={gate === "NOT" ? ["A", "F"] : ["A", "B", "F"]}
-          rows={inputRows(gate === "NOT" ? 1 : 2).map((r) => [
-            ...r,
-            gateValue(gate, r[0]!, r[1] ?? 0),
-          ])}
-          selected={gate === "NOT" ? values[0]! : values[0]! * 2 + values[1]!}
-        />
-      </div>
-      <p className="text-sm text-primary">
-        {bn
-          ? "তোমার ইনপুটের সারিটি রঙ দিয়ে দেখানো হয়েছে। সব ইনপুট দিয়ে চেষ্টা করো।"
-          : "The highlighted row matches your switches. Try every input combination."}
-      </p>
+const gateNotes: Record<Gate, [string, string]> = {
+  AND: ["যৌক্তিক গুণের কাজ করে। সব ইনপুট ১ হলেই আউটপুট ১। যেমন, দুটি সুইচ একসঙ্গে চালু থাকলেই বাতি জ্বলবে।", "Logical multiplication. Every input must be 1. Think of a lamp that needs both switches on."],
+  OR: ["যৌক্তিক যোগের কাজ করে। যেকোনো একটি ইনপুট ১ হলেই আউটপুট ১। সব ইনপুট ০ হলে আউটপুট ০। যেমন, দুটি অ্যালার্মের যেকোনোটি চালু হলেই সংকেত আসবে।", "Logical addition. Any input being 1 is enough; only all zeros give 0. Either alarm can trigger the signal."],
+  NOT: ["একটি ইনপুট ও একটি আউটপুট থাকে। ইনপুটের পূরক বা বিপরীত মান দেয়। তাই একে ইনভার্টার (Inverter) বলা হয়। ০ দিলে ১, আর ১ দিলে ০।", "One input, one output. It returns the complement of the input, so it is also called an inverter: 0 becomes 1 and 1 becomes 0."],
+  NAND: ["AND গেটের আউটপুটে NOT যুক্ত করলে NAND হয়। আগে যৌক্তিক গুণ, তারপর ফলের পূরক। শুধু দুটি ইনপুটই ১ হলে আউটপুট ০।", "Connect NOT after AND to make NAND. Multiply logically, then complement the result. Only two ones produce 0."],
+  NOR: ["OR গেটের আউটপুটে NOT যুক্ত করলে NOR হয়। আগে যৌক্তিক যোগ, তারপর ফলের পূরক। শুধু দুটি ইনপুটই ০ হলে আউটপুট ১।", "Connect NOT after OR to make NOR. Add logically, then complement the result. Only two zeros produce 1."],
+  XOR: ["দুটি ইনপুট অসমান হলে আউটপুট ১; সমান হলে ০। ⊕ চিহ্ন দিয়ে XOR বোঝানো হয়। ০১ ও ১০ অবস্থায় এটি চালু হয়।", "For two inputs, different values give 1 and matching values give 0. The symbol ⊕ means XOR. It detects 01 and 10."],
+  XNOR: ["XOR গেটের আউটপুট উল্টে দিলে XNOR হয়। দুটি ইনপুট সমান হলে আউটপুট ১; অসমান হলে ০। অর্থাৎ ০০ ও ১১ অবস্থায় এটি চালু হয়।", "Invert XOR to get XNOR. Matching inputs give 1; different inputs give 0. It detects 00 and 11."],
+};
+function GateLesson({ gate, bn }: { gate: Gate; bn: boolean }) {
+  const [values, setValues] = useState(gate === "NOT" ? [0] : [0, 1]);
+  const preceding: Gate | null = gate === "NAND" ? "AND" : gate === "NOR" ? "OR" : gate === "XNOR" ? "XOR" : null;
+  return <article className="gate-article space-y-5">
+    <div className="flex flex-wrap items-center justify-between gap-3">
+      <h3 className="text-2xl font-bold">{gate} {bn ? "গেট" : "gate"}</h3>
+      <span className="rounded-lg bg-muted px-4 py-2 font-mono text-lg">Y = {rules[gate][0]}</span>
     </div>
-  );
+    <p className="text-sm leading-8 text-muted-foreground">{gateNotes[gate][bn ? 0 : 1]}</p>
+    <Switches values={values} set={setValues} bn={bn} />
+    <div className="grid items-center gap-5 sm:grid-cols-2">
+      <div><p className="mb-3 text-xs font-semibold text-muted-foreground">{bn ? "লজিক চিত্র" : "Gate symbol"}</p><Circuit label={`${gate} gate`} values={values} nodes={[{name:"Y", gate, inputs:gate === "NOT" ? ["A"] : ["A","B"], x:140,y:75}]} /></div>
+      <div><p className="mb-3 text-xs font-semibold text-muted-foreground">{bn ? "সত্যক সারণি" : "Truth table"}</p><Table headers={gate === "NOT" ? ["A","Y"] : ["A","B","Y"]} rows={inputRows(values.length).map(r => [...r,gateValue(gate,r[0]!,r[1] ?? 0)])} selected={values.length === 1 ? values[0]! : values[0]!*2+values[1]!} /><p className="mt-3 text-xs leading-6 text-muted-foreground">{bn ? "ইনপুট বদলালে চিত্রের সংকেত ও সারণির নির্বাচিত সারি বদলাবে।" : "Toggle an input to follow its signal and matching table row."}</p></div>
+    </div>
+    {preceding && <div className="border-t pt-5"><h4 className="mb-3 font-semibold">{preceding} → NOT = {gate}</h4><Circuit label={`${preceding} followed by NOT equals ${gate}`} values={values} nodes={[{name:"P",gate:preceding,inputs:["A","B"],x:130,y:80},{name:"Y",gate:"NOT",inputs:["P"],x:280,y:80}]} /></div>}
+    {(gate === "XOR" || gate === "XNOR") && <Universal bn={bn} target={gate} />}
+  </article>;
 }
-function Universal({ bn }: { bn: boolean }) {
-  const [family, setFamily] = useState<"NAND" | "NOR">("NAND"),
-    [target, setTarget] = useState<"XOR" | "XNOR">("XOR"),
-    [values, setValues] = useState([0, 1]),
-    [reveal, setReveal] = useState(1);
-  const steps = universalNetwork(family, target, values[0]!, values[1]!);
-  const shown = steps.slice(0, Math.min(reveal, steps.length));
-  return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap gap-2">
-        {(["NAND", "NOR"] as const).map((f) => (
-          <Button
-            key={f}
-            variant={family === f ? "default" : "outline"}
-            onClick={() => {
-              setFamily(f);
-              setReveal(1);
-            }}
-          >
-            {bn ? "শুধু" : "Only"} {f}
-          </Button>
-        ))}
-        {(["XOR", "XNOR"] as const).map((t) => (
-          <Button
-            key={t}
-            variant={target === t ? "default" : "outline"}
-            onClick={() => {
-              setTarget(t);
-              setReveal(1);
-            }}
-          >
-            {t}
-          </Button>
-        ))}
-      </div>
-      <p className="text-sm leading-7">
-        {bn
-          ? "NAND ও NOR universal: এক ধরনের গেট দিয়েই অন্য গেট বানানো যায়। একই সিগন্যাল দুই ইনপুটে দিলে সেটি NOT হয়। এখানে P, Q, R, S আগের গেটের ফল—নতুন ইনপুট নয়।"
-          : "NAND and NOR are universal: one family can build other gates. Tying both inputs to the same signal makes NOT. P, Q, R and S below are earlier gate outputs, not extra inputs."}
-      </p>
-      <p className={box}>
-        {family === "NAND"
-          ? bn
-            ? "প্রথম ৪টি NAND-এ XOR হয়। XNOR চাইলে একই XOR ফল দুই ইনপুটে দিয়ে পঞ্চম NAND-এ উল্টাও।"
-            : "The first four NANDs produce XOR. For XNOR, feed that result into both inputs of a fifth NAND to invert it."
-          : bn
-            ? "প্রথম ৪টি NOR-এ XNOR হয়। XOR চাইলে একই XNOR ফল দুই ইনপুটে দিয়ে পঞ্চম NOR-এ উল্টাও।"
-            : "The first four NORs produce XNOR. For XOR, feed that result into both inputs of a fifth NOR to invert it."}
-      </p>
-      <Switches values={values} set={setValues} bn={bn} />
-      <p className="text-sm leading-7">
-        {family === "NAND"
-          ? bn
-            ? "কেন কাজ করে? Q শুধু A=1, B=0 হলে 0; R শুধু A=0, B=1 হলে 0। শেষ NAND তাই ইনপুট দুটি ভিন্ন হলেই 1 দেয়—এটাই XOR।"
-            : "Why it works: Q is 0 only for A=1, B=0; R is 0 only for A=0, B=1. The last NAND turns either of these cases into 1, so different inputs give XOR=1."
-          : bn
-            ? "কেন কাজ করে? Q=A′B, R=AB′—এরা আলাদা ইনপুটের দুটি অবস্থা চেনে। শেষ NOR এদের OR উল্টে দেয়, তাই সমান ইনপুটে 1 আসে—এটাই XNOR।"
-            : "Why it works: Q=A′B and R=AB′ detect the two cases with different inputs. The last NOR inverts their OR, giving 1 for matching inputs: XNOR."}
-      </p>
-      <Circuit
-        values={values}
-        label={`${target} using only ${family}`}
-        nodes={shown.map((s) => ({ ...s, gate: family }))}
-      />
-      <ol className="space-y-2">
-        {shown.map((s, i) => (
-          <li key={s.name} className="rounded-lg bg-muted/50 p-3 text-sm">
-            <span className="font-mono">
-              {i + 1}. {s.name} = {s.inputs.join(` ${family} `)} = {s.value}
-            </span>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {i === 0
-                ? bn
-                  ? "A ও B থেকে প্রথম মধ্যবর্তী ফল।"
-                  : "Combine A and B to get the shared intermediate result."
-                : i === 1
-                  ? bn
-                    ? "A এবং P-কে পরের গেটে দাও।"
-                    : "Feed A and P to the next gate."
-                  : i === 2
-                    ? bn
-                      ? "B এবং P-কে আরেকটি গেটে দাও।"
-                      : "Feed B and P to another gate."
-                    : i === 3
-                      ? bn
-                        ? "Q ও R-কে মিলিয়ে ফল বের করো।"
-                        : "Combine Q and R."
-                      : bn
-                        ? "একই ফল দুই ইনপুটে: আউটপুট উল্টে যায়।"
-                        : "Same result on both inputs: this inverts the output."}
-            </p>
-          </li>
-        ))}
-      </ol>
-      <Button variant="outline" onClick={() => setReveal(reveal >= steps.length ? 1 : reveal + 1)}>
-        {reveal >= steps.length
-          ? bn
-            ? "ধাপগুলো আবার দেখি"
-            : "Restart the steps"
-          : bn
-            ? "পরের গেট যুক্ত করি"
-            : "Connect the next gate"}
-      </Button>
-      <Table
-        headers={["A", "B", `Only ${family}`, target]}
-        rows={inputRows(2).map(([a, b]) => [
-          a!,
-          b!,
-          universalNetwork(family, target, a!, b!).at(-1)!.value,
-          gateValue(target, a!, b!),
-        ])}
-        selected={values[0]! * 2 + values[1]!}
-      />
-      <p className="text-sm text-primary">
-        {bn
-          ? "সম্পূর্ণ সার্কিটের ফল ও লক্ষ্য গেটের ফল প্রতিটি সারিতে একই।"
-          : "The completed circuit and target gate agree in every row."}{" "}
-        {steps.length} {family} {bn ? "গেট ব্যবহৃত" : "gates used"}.
-      </p>
-    </div>
-  );
-}
-function Compound({ bn }: { bn: boolean }) {
-  const [mode, setMode] = useState(0),
-    [values, setValues] = useState([0, 1, 1]);
-  const names = ["AND-OR (AO)", "OR-AND (OA)", "AND-OR-Invert (AOI)", "OR-AND-Invert (OAI)"];
-  const first: Gate = mode % 2 === 0 ? "AND" : "OR",
-    second: Gate = mode % 2 === 0 ? "OR" : "AND";
-  const nodes: Node[] = [
-    { name: "P", gate: first, inputs: ["A", "B"], x: 140, y: 70 },
-    { name: "Q", gate: second, inputs: ["P", "C"], x: 285, y: 150 },
-  ];
-  if (mode >= 2) nodes.push({ name: "F", gate: "NOT", inputs: ["Q"], x: 425, y: 150 });
-  const evaluate = (a: number, b: number, c: number) => {
-    const v = gateValue(second, gateValue(first, a, b), c);
-    return mode >= 2 ? 1 - v : v;
-  };
-  return (
-    <div className="space-y-5">
-      <p className="text-sm leading-7">
-        {bn
-          ? "Compound মানে কয়েকটি মৌলিক অপারেশন একসঙ্গে। NAND = AND + NOT, NOR = OR + NOT; XOR/XNOR-ও মৌলিক গেট দিয়ে তৈরি হয়। তাই বিভাগগুলো একে অপরের সঙ্গে মিলে যেতে পারে। আরও উদাহরণ: AO, OA, AOI ও OAI।"
-          : "Compound means combining basic operations. NAND is AND followed by NOT; NOR is OR followed by NOT. XOR/XNOR can also be built from basic gates, so these categories overlap. Further examples are AO, OA, AOI and OAI."}
-      </p>
-      <div className="flex flex-wrap gap-2">
-        {names.map((name, i) => (
-          <Button
-            key={name}
-            variant={i === mode ? "default" : "outline"}
-            onClick={() => setMode(i)}
-          >
-            {name}
-          </Button>
-        ))}
-      </div>
-      <p className="font-mono">F = {["AB + C", "(A+B)C", "(AB+C)′", "((A+B)C)′"][mode]}</p>
-      <Switches values={values} set={setValues} bn={bn} />
-      <Circuit nodes={nodes} values={values} label={names[mode]!} />
-      <Table
-        headers={["A", "B", "C", "F"]}
-        rows={inputRows(3).map(([a, b, c]) => [a!, b!, c!, evaluate(a!, b!, c!)])}
-        selected={values[0]! * 4 + values[1]! * 2 + values[2]!}
-      />
-    </div>
-  );
+function Universal({ bn, target }: { bn: boolean; target: "XOR" | "XNOR" }) {
+  const [family,setFamily] = useState<"NAND" | "NOR">("NAND");
+  const [values,setValues] = useState([0,1]);
+  const steps=universalNetwork(family,target,values[0]!,values[1]!);
+  const terms = family === "NAND" ? target === "XOR" ? ["(A′B)′", "(AB′)′"] : ["(AB)′", "(A′B′)′"] : target === "XOR" ? ["(A+B)′", "(A′+B′)′"] : ["(A+B′)′", "(A′+B)′"];
+  return <section className="space-y-5 border-t pt-6">
+    <h4 className="text-lg font-bold">{bn ? "সার্বজনীন গেট দিয়ে তৈরি করি" : "Build it with universal gates"}</h4>
+    <div className="flex gap-2">{(["NAND","NOR"] as const).map(f=><Button key={f} variant="outline" aria-pressed={family===f} onClick={()=>setFamily(f)}>{bn ? "শুধু" : "Only"} {f}</Button>)}</div>
+    <p className="text-sm leading-7">{bn ? "একই ইনপুট দুবার দিলে NAND ও NOR দুটিই NOT এর কাজ করে। প্রথম দুটি গেটে A ও B এর পূরক নিই। পরের দুটি গেটে প্রয়োজনীয় পদ তৈরি করে শেষ গেটে মিলিয়ে দিই। এখানে মোট পাঁচটি গেট ব্যবহার করা হয়েছে।" : "Tying both inputs together makes either NAND or NOR act as NOT. First complement A and B, form the two required terms, then combine them in the final gate. This construction uses five gates."}</p>
+    <div className="space-y-2 rounded-xl bg-muted/60 p-4 font-mono text-sm leading-7"><p>P = A′, Q = B′</p><p>R = {terms[0]}, S = {terms[1]}</p><p>Y = {family === "NAND" ? "(R·S)′" : "(R+S)′"} = {rules[target][0]}</p></div>
+    <Switches values={values} set={setValues} bn={bn} />
+    <Circuit label={`${target} using only ${family}`} values={values} nodes={steps.map(s=>({...s,gate:family}))} />
+    <ol className="grid gap-2 sm:grid-cols-2">{steps.map((s,i)=><li key={s.name} className="rounded-lg border bg-muted/20 p-3 font-mono text-sm">{i+1}. {s.name} = {s.inputs.join(` ${family} `)} = {s.value}</li>)}</ol>
+    <Table headers={["A","B",family,target]} rows={inputRows(2).map(([a,b])=>[a!,b!,universalNetwork(family,target,a!,b!).at(-1)!.value,gateValue(target,a!,b!)])} selected={values[0]!*2+values[1]!} />
+  </section>;
 }
 export function LessonVisual({
   lesson,
@@ -677,30 +485,30 @@ export function LessonVisual({
         : ["Introduction & laws", "De Morgan’s two laws"]
       : lesson === 1
         ? bn
-          ? ["সারণি তৈরি", "ডি মর্গ্যানের প্রমাণ"]
-          : ["Build a truth table", "Prove De Morgan"]
+          ? ["২টি চলকের সারণি", "৩টি চলকের সারণি", "ডি মর্গ্যানের প্রমাণ"]
+          : ["Truth table with 2 variables", "Truth table with 3 variables", "Prove De Morgan"]
         : lesson === 2
           ? bn
             ? ["ধাপে ধাপে সরলীকরণ"]
             : ["Simplify step by step"]
           : bn
-            ? ["গেটের বিভাগ", "প্রতিটি গেট", "যৌগিক গেট", "NAND/NOR দিয়ে XOR/XNOR"]
-            : ["Gate families", "Explore every gate", "Compound gates", "XOR/XNOR from NAND/NOR"];
+            ? ["গেটের বিভাগ", "মৌলিক গেট", "সার্বজনীন গেট", "বিশেষ বা এক্সক্লুসিভ গেট"]
+            : ["Gate families", "Basic gates", "Universal gates", "Exclusive gates"];
   const [page, setPage] = useState(0);
+  const partHeading = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    partHeading.current?.closest('[role="dialog"]')?.scrollTo({ top: 0 });
+    partHeading.current?.focus({ preventScroll: true });
+  }, [page]);
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap gap-2">
-        {pages.map((name, i) => (
-          <Button
-            key={name}
-            variant={page === i ? "default" : "outline"}
-            aria-pressed={page === i}
-            onClick={() => setPage(i)}
-            className="h-auto whitespace-normal text-left"
-          >
-            {i + 1}. {name}
-          </Button>
-        ))}
+      <div
+        ref={partHeading}
+        tabIndex={-1}
+        aria-current="step"
+        className="w-fit rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground"
+      >
+        {page + 1}. {pages[page]}
       </div>
       <div
         key={page}
@@ -708,71 +516,61 @@ export function LessonVisual({
       >
         {lesson === 0 &&
           (page === 0 ? (
-            <>
-              <h3 className="text-xl font-bold">
-                {bn ? "বুলিয়ান বীজগণিত কী?" : "What is Boolean algebra?"}
-              </h3>
-              <p className="text-sm leading-7">
-                {bn
-                  ? "এটি সত্য/মিথ্যা বা চালু/বন্ধ নিয়ে হিসাবের নিয়ম। চলকের মান কেবল 0 বা 1। + মানে OR, · বা পাশাপাশি লেখা মানে AND, ′ মানে NOT। যেমন A=1, B=0 হলে A+B=1, AB=0, A′=0। Theorem বা সূত্র হলো এমন সমতা যা সব ইনপুটের জন্য সত্য।"
-                  : "Boolean algebra is a system for reasoning about true/false or on/off. Variables take only 0 or 1. + means OR, · or adjacent letters mean AND, and ′ means NOT. For A=1, B=0: A+B=1, AB=0, A′=0. A theorem is an identity that holds for every input."}
-              </p>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {BOOLEAN_LAWS.map((l) => (
-                  <article key={l.name} className={box}>
-                    <h4 className="font-semibold">
-                      {l.name} {bn && `· ${l.bn}`}
-                    </h4>
-                    <div className="my-3 space-y-1 font-mono text-sm">
-                      {l.forms.map((f) => (
-                        <p key={f}>{f}</p>
-                      ))}
-                    </div>
-                    <p className="text-sm leading-6">{bn ? l.text : l.en}</p>
-                    <p className="mt-3 rounded-lg bg-card p-2 font-mono text-xs leading-6">
-                      {l.example}
-                    </p>
-                  </article>
-                ))}
-              </div>
-            </>
+            <BooleanIntroduction bn={bn} />
           ) : (
-            <DeMorgan bn={bn} />
+            <div className="space-y-10">
+              <DeMorgan bn={bn} law={0} />
+              <div className="border-t pt-8">
+                <DeMorgan bn={bn} law={1} />
+              </div>
+            </div>
           ))}
-        {lesson === 1 && (page === 0 ? <TruthBuilder bn={bn} /> : <DeMorgan bn={bn} proof />)}
+        {lesson === 1 &&
+          (page < 2 ? (
+            <TruthBuilder key={page} bn={bn} n={page === 0 ? 2 : 3} />
+          ) : (
+            <div className="space-y-10">
+              <DeMorgan bn={bn} law={0} proof />
+              <div className="border-t pt-8">
+                <DeMorgan bn={bn} law={1} proof />
+              </div>
+            </div>
+          ))}
         {lesson === 2 && <Simplify bn={bn} />}
         {lesson === 3 &&
           (page === 0 ? (
             <>
               <p className="text-sm leading-7">
                 {bn
-                  ? "গেট ইনপুটের উপর একটি লজিক নিয়ম চালিয়ে আউটপুট দেয়। নিচে কাজ অনুযায়ী বিভাগ। Compound একটি বিস্তৃত বর্ণনা; universal ও exclusive গেটও মৌলিক অপারেশন মিলিয়ে তৈরি করা যায়।"
-                  : "A gate applies a logic rule to inputs to produce an output. Here are useful families. Compound is a broader description; universal and exclusive gates can also be built by combining basic operations."}
+                  ? "বুলিয়ান অ্যালজেবরার যৌক্তিক কাজ সম্পাদনের জন্য ব্যবহৃত ইলেকট্রনিক সার্কিটকে লজিক গেট বলে। এক বা একাধিক ইনপুট থেকে নির্দিষ্ট নিয়মে একটি আউটপুট পাওয়া যায়। কাজের ধরন অনুযায়ী লজিক গেটের চারটি বিভাগ নিচে দেখানো হলো।"
+                  : "A logic gate is an electronic circuit that performs a Boolean operation. It takes one or more inputs and produces an output according to its rule. The four families below group gates by their role."}
               </p>
-              <div className="mx-auto w-fit rounded-xl bg-destructive px-6 py-3 font-semibold text-destructive-foreground">
+              <div className="mx-auto w-fit rounded-xl bg-foreground px-8 py-4 font-semibold text-background">
                 {bn ? "লজিক গেট" : "Logic gates"}
               </div>
               <div aria-hidden="true" className="mx-auto h-6 w-px bg-primary/40" />
-              <div className="grid gap-3 border-t-2 border-primary/20 pt-5 sm:grid-cols-2">
+              <div className="grid gap-3 border-t-2 border-border pt-5 sm:grid-cols-2 lg:grid-cols-4">
                 {[
                   ["Basic", "মৌলিক", "AND · OR · NOT"],
                   ["Universal", "সার্বজনীন", "NAND · NOR"],
                   ["Exclusive", "বিশেষ", "XOR · XNOR"],
-                  ["Compound", "যৌগিক", "NAND · NOR · XOR · XNOR; AO · OA · AOI · OAI"],
+                  ["Compound", "যৌগিক বা জটিল", "AO · OA · AOI · OAI"],
                 ].map(([en, bengali, items]) => (
-                  <div key={en} className={box}>
+                  <div key={en} className="relative rounded-xl border bg-card p-4 before:absolute before:-top-6 before:left-1/2 before:h-6 before:w-px before:bg-border">
                     <h4 className="font-bold">{bn ? bengali : en}</h4>
+                    {bn && <p className="mt-1 text-xs text-muted-foreground">{en} gate</p>}
                     <p className="mt-2 font-mono text-sm leading-6">{items}</p>
                   </div>
                 ))}
               </div>
+              <p className="rounded-xl bg-muted/60 p-4 text-sm leading-7">{bn ? "মৌলিক গেটের সমন্বয়ে যৌগিক সার্কিট তৈরি হয়। যেমন AND এর পরে OR দিলে AO। NAND, NOR এবং বিশেষ গেটও মৌলিক গেট মিলিয়ে তৈরি করা যায়। পরের অংশগুলোতে প্রথম তিনটি বিভাগের সাতটি গেট শিখব।" : "Compound circuits combine basic operations, such as AND followed by OR (AO). NAND, NOR and exclusive gates can also be built from basic gates. Next, explore the seven gates in the first three families."}</p>
             </>
           ) : page === 1 ? (
-            <GateExplorer bn={bn} />
+            <div>{(["AND", "OR", "NOT"] as const).map(gate => <GateLesson key={gate} gate={gate} bn={bn} />)}</div>
           ) : page === 2 ? (
-            <Compound bn={bn} />
+            <div><p className="mb-6 rounded-xl bg-muted/60 p-4 text-sm leading-7">{bn ? "NAND অথবা NOR, যেকোনো এক ধরনের গেট দিয়েই মৌলিক গেটসহ যেকোনো বুলিয়ান ফাংশন বাস্তবায়ন করা যায়। তাই এদের সার্বজনীন গেট বলা হয়।" : "NAND alone or NOR alone can implement any Boolean function, including all basic gates. That is why they are called universal gates."}</p>{(["NAND", "NOR"] as const).map(gate => <GateLesson key={gate} gate={gate} bn={bn} />)}</div>
           ) : (
-            <Universal bn={bn} />
+            <div>{(["XOR", "XNOR"] as const).map(gate => <GateLesson key={gate} gate={gate} bn={bn} />)}</div>
           ))}
       </div>
       <div className="flex flex-wrap justify-between gap-3 border-t pt-5">

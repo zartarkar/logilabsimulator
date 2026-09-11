@@ -1,4 +1,4 @@
-﻿export type Bit = 0 | 1;
+export type Bit = 0 | 1;
 export type Gate = "AND" | "OR" | "NOT" | "NAND" | "NOR" | "XOR" | "XNOR";
 export function gateValue(gate: Gate, a: number, b = 0): number {
   switch (gate) {
@@ -29,20 +29,20 @@ export function universalNetwork(
   a: number,
   b: number,
 ) {
-  const g = (x: number, y: number) => gateValue(family, x, y);
-  const p = g(a, b),
-    q = g(a, p),
-    r = g(b, p),
-    s = g(q, r);
-  const steps = [
-    { name: "P", inputs: ["A", "B"], value: p, x: 170, y: 140 },
-    { name: "Q", inputs: ["A", "P"], value: q, x: 340, y: 70 },
-    { name: "R", inputs: ["B", "P"], value: r, x: 340, y: 220 },
-    { name: "S", inputs: ["Q", "R"], value: s, x: 510, y: 140 },
+  const p = gateValue(family, a, a), q = gateValue(family, b, b);
+  const cross = (family === "NAND") === (target === "XOR");
+  const rInputs = cross ? (family === "NAND" ? ["P", "B"] : ["A", "Q"]) : ["A", "B"];
+  const sInputs = cross ? (family === "NAND" ? ["A", "Q"] : ["P", "B"]) : ["P", "Q"];
+  const values: Record<string, number> = { A:a, B:b, P:p, Q:q };
+  const r = gateValue(family, values[rInputs[0]!]!, values[rInputs[1]!]!);
+  const s = gateValue(family, values[sInputs[0]!]!, values[sInputs[1]!]!);
+  return [
+    {name:"P",inputs:["A","A"],value:p,x:140,y:25},
+    {name:"Q",inputs:["B","B"],value:q,x:140,y:235},
+    {name:"R",inputs:rInputs,value:r,x:310,y:60},
+    {name:"S",inputs:sInputs,value:s,x:310,y:220},
+    {name:"Y",inputs:["R","S"],value:gateValue(family,r,s),x:480,y:140},
   ];
-  if ((family === "NAND" && target === "XNOR") || (family === "NOR" && target === "XOR"))
-    steps.push({ name: "F", inputs: ["S", "S"], value: g(s, s), x: 680, y: 140 });
-  return steps;
 }
 export const BOOLEAN_LAWS = [
   {
@@ -75,7 +75,7 @@ export const BOOLEAN_LAWS = [
     forms: ["A + 1 = 1", "A·0 = 0"],
     example: "0 + 1 = 1; 1·0 = 0",
     en: "1 forces OR on; 0 forces AND off.",
-    text: "OR-এ 1 থাকলে ফল 1; AND-এ 0 থাকলে ফল 0।",
+    text: "OR এ 1 থাকলে ফল 1; AND এ 0 থাকলে ফল 0।",
   },
   {
     name: "Commutative",
@@ -99,7 +99,7 @@ export const BOOLEAN_LAWS = [
     forms: ["A(B + C) = AB + AC", "A + BC = (A + B)(A + C)"],
     example: "1(0 + 1) = 1·0 + 1·1 = 1",
     en: "AND distributes over OR. In Boolean algebra OR also distributes over AND.",
-    text: "AND-কে OR-এর উপর ছড়িয়ে দাও। বুলিয়ান বীজগণিতে OR-ও AND-এর উপর বণ্টিত হয়।",
+    text: "AND কে OR এর উপর ছড়িয়ে দাও। বুলিয়ান বীজগণিতে OR ও AND এর উপর বণ্টিত হয়।",
   },
   {
     name: "Absorption",
@@ -107,7 +107,7 @@ export const BOOLEAN_LAWS = [
     forms: ["A + AB = A", "A(A + B) = A"],
     example: "1 + 1·0 = 1; 0(0 + 1) = 0",
     en: "A already decides the result; the extra term adds nothing.",
-    text: "A-ই ফল নির্ধারণ করে, অতিরিক্ত পদটি আর কিছু বদলায় না।",
+    text: "A ই ফল নির্ধারণ করে, অতিরিক্ত পদটি আর কিছু বদলায় না।",
   },
   {
     name: "De Morgan I",
@@ -115,7 +115,7 @@ export const BOOLEAN_LAWS = [
     forms: ["(A + B)′ = A′B′"],
     example: "(0 + 1)′ = 0; 0′·1′ = 1·0 = 0",
     en: "NOT an OR means AND of the inverted inputs.",
-    text: "পুরো OR-এর উল্টো = ইনপুট দুটো উল্টে AND।",
+    text: "পুরো OR এর উল্টো = ইনপুট দুটো উল্টে AND।",
   },
   {
     name: "De Morgan II",
@@ -123,6 +123,6 @@ export const BOOLEAN_LAWS = [
     forms: ["(AB)′ = A′ + B′"],
     example: "(0·1)′ = 1; 0′ + 1′ = 1 + 0 = 1",
     en: "NOT an AND means OR of the inverted inputs.",
-    text: "পুরো AND-এর উল্টো = ইনপুট দুটো উল্টে OR।",
+    text: "পুরো AND এর উল্টো = ইনপুট দুটো উল্টে OR।",
   },
 ];

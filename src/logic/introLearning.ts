@@ -1,8 +1,10 @@
-﻿import { gateValue, type Gate } from "./lessonCurriculum";
+import { gateValue, type Gate } from "./lessonCurriculum";
 export type Familiarity = "new" | "some" | "confident";
 type Copy = { en: string; bn: string };
 const copy = (en: string, bn: string): Copy => ({ en, bn });
-export const QUESTIONS_PER_LESSON = 4;
+export const QUESTION_COUNTS = [5, 5, 5, 5] as const;
+export const questionOffset = (lesson: number) =>
+  QUESTION_COUNTS.slice(0, lesson).reduce<number>((sum, count) => sum + count, 0);
 export const INTRO_LESSONS = [
   {
     title: copy("Boolean algebra", "বুলিয়ান বীজগণিত"),
@@ -41,8 +43,8 @@ export const INTRO_LESSONS = [
     ),
     practice: copy("Choose the simplified expression", "সরল রাশি বেছে নাও"),
     text: copy(
-      "Reveal one justified step at a time. Keep the output the same while reducing the expression.",
-      "সূত্রের ব্যাখ্যাসহ একবারে একটি ধাপ দেখো। আউটপুট একই রেখে রাশি ছোট করো।",
+      "Read all simplification steps together, with the law used at each step.",
+      "প্রতিটি ধাপে ব্যবহৃত সূত্রের ব্যাখ্যাসহ সরলীকরণের সব ধাপ একসঙ্গে দেখো।",
     ),
     example: "AB + AB′ = A(B+B′) = A",
   },
@@ -78,12 +80,12 @@ export function makeIntroQuestion(
   const x = random() < 0.5 ? "A" : "X",
     y = x === "A" ? "B" : "Y";
   if (lesson === 0) {
-    const expressions = [`${x} + 0`, `(${x} + ${y})′`, `(${x}${y})′`, `${x}·${x}′`];
-    const correct = [x, `${x}′${y}′`, `${x}′ + ${y}′`, "0"];
+    const expressions = [`${x} + 0`, `(${x} + ${y})′`, `(${x}${y})′`, `${x}·${x}′`, `(${x}′)′`];
+    const correct = [x, `${x}′${y}′`, `${x}′ + ${y}′`, "0", x];
     answer = correct[step]!;
     prompt = copy(
       `Which expression equals ${expressions[step]}?`,
-      `${expressions[step]}-এর সমান রাশি কোনটি?`,
+      `${expressions[step]} এর সমান রাশি কোনটি?`,
     );
     options = Array.from(
       new Set([
@@ -94,8 +96,8 @@ export function makeIntroQuestion(
       ]),
     );
     explanation = copy(
-      `${expressions[step]} = ${answer}. ${["Identity: OR with 0 leaves the input unchanged.", "De Morgan I: invert both inputs and change OR to AND.", "De Morgan II: invert both inputs and change AND to OR.", "Complement: a value and its opposite cannot both be 1."][step]}`,
-      `${expressions[step]} = ${answer}। ${["অভেদ: 0 দিয়ে OR করলে মান বদলায় না।", "ডি মর্গ্যান ১: ইনপুট উল্টে OR বদলে AND করো।", "ডি মর্গ্যান ২: ইনপুট উল্টে AND বদলে OR করো।", "পূরক: একটি মান ও তার বিপরীত একসঙ্গে 1 হতে পারে না।"][step]}`,
+      `${expressions[step]} = ${answer}. ${["Identity: OR with 0 leaves the input unchanged.", "De Morgan I: invert both inputs and change OR to AND.", "De Morgan II: invert both inputs and change AND to OR.", "Complement: a value and its opposite cannot both be 1.", "Double complement: inverting twice returns the original input."][step]}`,
+      `${expressions[step]} = ${answer}। ${["অভেদ: 0 দিয়ে OR করলে মান বদলায় না।", "ডি মর্গ্যান ১: ইনপুট উল্টে OR বদলে AND করো।", "ডি মর্গ্যান ২: ইনপুট উল্টে AND বদলে OR করো।", "পূরক: একটি মান ও তার বিপরীত একসঙ্গে 1 হতে পারে না।", "দ্বি পূরক: দুবার উল্টালে মূল ইনপুট ফিরে আসে।"][step]}`,
     );
   } else if (lesson === 1) {
     kind = "number";
@@ -132,16 +134,16 @@ export function makeIntroQuestion(
       );
       options = ["0", "1"];
     } else {
-      kind = "choice";
-      answer = "4";
-      options = ["1", "2", "3", "4"];
+      const op = step === 3 ? "OR" : "AND";
+      answer = String(Number(!gateValue(op, a, b)));
+      options = ["0", "1"];
       prompt = copy(
-        "In how many of the four input rows must both sides agree to prove a two-variable identity?",
-        "দুই চলকের সূত্র প্রমাণ করতে চারটি ইনপুট সারির কতটিতে দুই পাশ মিলতে হবে?",
+        `A=${a}, B=${b}. Fill the truth-table output for ${step === 3 ? "(A + B)′" : "(AB)′"}.`,
+        `A=${a}, B=${b} হলে ট্রুথ টেবিলে ${step === 3 ? "(A + B)′" : "(AB)′"} এর আউটপুট কত?`,
       );
       explanation = copy(
-        "All four rows. Both De Morgan laws agree for 00, 01, 10 and 11.",
-        "চারটি সারিতেই। ডি মর্গ্যানের দুই সূত্রই 00, 01, 10 ও 11-তে মিলে যায়।",
+        `First ${op}: ${gateValue(op, a, b)}. Then invert: ${answer}. De Morgan gives the same result using ${step === 3 ? "A′B′" : "A′ + B′"}.`,
+        `আগে ${op} করলে ${gateValue(op, a, b)}। ফল উল্টালে ${answer}। ডি মরগ্যানের সূত্রে ${step === 3 ? "A′B′" : "A′ + B′"} দিয়েও একই ফল পাওয়া যায়।`,
       );
     }
   } else if (lesson === 2) {
@@ -150,13 +152,25 @@ export function makeIntroQuestion(
       `${x} + ${x}′${y}`,
       `(${x}+${y})(${x}+${y}′)`,
       `(${x}+${y})′ + ${x}′${y}`,
+      `${x} + ${x}${y}`,
     ];
-    answer = [x, `${x} + ${y}`, x, `${x}′`][step]!;
+    answer = [x, `${x} + ${y}`, x, `${x}′`, x][step]!;
     prompt = copy(`Simplify ${expressions[step]}.`, `${expressions[step]} সরল করো।`);
     options = Array.from(new Set([answer, step === 3 ? x : `${x}′`, y, "0"]));
     explanation = copy(
-      `${expressions[step]} = ${answer}. ${["Factor the shared input; Y + Y′ = 1.", "Distribute, then use the complement and identity laws.", "Reverse distribution gives X + YY′ = X + 0 = X.", "De Morgan, then factor X′; Y′ + Y = 1."][step]}`,
-      `${expressions[step]} = ${answer}। ${["সাধারণ পদ নাও; Y + Y′ = 1।", "বণ্টন, তারপর পূরক ও অভেদ সূত্র।", "উল্টো বণ্টনে X + YY′ = X + 0 = X।", "ডি মর্গ্যান, তারপর X′ সাধারণ নাও; Y′ + Y = 1।"][step]}`,
+      `${expressions[step]} = ${answer}. ${["Factor the shared input; Y + Y′ = 1.", "Distribute, then use the complement and identity laws.", "Reverse distribution gives X + YY′ = X + 0 = X.", "De Morgan, then factor X′; Y′ + Y = 1.", "Absorption: the first term already determines the result."][step]}`,
+      `${expressions[step]} = ${answer}। ${["সাধারণ পদ নাও; Y + Y′ = 1।", "বণ্টন, তারপর পূরক ও অভেদ সূত্র।", "উল্টো বণ্টনে X + YY′ = X + 0 = X।", "ডি মর্গ্যান, তারপর X′ সাধারণ নাও; Y′ + Y = 1।", "পরিশোষণ: প্রথম পদই ফল নির্ধারণ করে।"][step]}`,
+    );
+  } else if (step === 4) {
+    answer = "5";
+    options = ["2", "3", "4", "5"];
+    prompt = copy(
+      "In the construction you learned, how many NAND gates make XNOR?",
+      "শেখানো নির্মাণে শুধু NAND দিয়ে XNOR বানাতে মোট কতটি গেট লাগে?",
+    );
+    explanation = copy(
+      "Four NAND gates make XOR. A fifth NAND with tied inputs inverts XOR to XNOR.",
+      "চারটি NAND দিয়ে XOR হয়। এর ফল পঞ্চম NAND এর দুই ইনপুটে দিলে উল্টে XNOR হয়।",
     );
   } else {
     const gate: Gate =
@@ -169,7 +183,7 @@ export function makeIntroQuestion(
       step < 2
         ? copy(
             `A=${a}, B=${b}: complete the ${gate} output.`,
-            `A=${a}, B=${b}: ${gate}-এর আউটপুট পূরণ করো।`,
+            `A=${a}, B=${b}: ${gate} এর আউটপুট পূরণ করো।`,
           )
         : copy(
             `A=${a}, B=${b}. The four-${step === 2 ? "NAND" : "NOR"} construction is complete. What is its ${gate} output?`,
@@ -177,7 +191,7 @@ export function makeIntroQuestion(
           );
     explanation = copy(
       `${gate}(${a},${b}) = ${answer}. ${step === 2 ? "Four NAND gates produce XOR; one more tied-input NAND inverts it to XNOR." : step === 3 ? "Four NOR gates produce XNOR; one more tied-input NOR inverts it to XOR." : gate === "XOR" ? "XOR is 1 for different inputs." : gate === "AND" ? "AND needs both inputs to be 1." : "NOR is 1 only for 00."}`,
-      `${gate}(${a},${b}) = ${answer}। ${step === 2 ? "চারটি NAND-এ XOR; একই ফল দুই ইনপুটে দিয়ে আরেকটি NAND-এ XNOR হয়।" : step === 3 ? "চারটি NOR-এ XNOR; একই ফল দুই ইনপুটে দিয়ে আরেকটি NOR-এ XOR হয়।" : gate === "XOR" ? "ভিন্ন ইনপুটে XOR-এর ফল 1।" : gate === "AND" ? "AND-এ দুটি ইনপুটই 1 চাই।" : "শুধু 00-তে NOR-এর ফল 1।"}`,
+      `${gate}(${a},${b}) = ${answer}। ${step === 2 ? "চারটি NAND এ XOR; একই ফল দুই ইনপুটে দিয়ে আরেকটি NAND এ XNOR হয়।" : step === 3 ? "চারটি NOR এ XNOR; একই ফল দুই ইনপুটে দিয়ে আরেকটি NOR এ XOR হয়।" : gate === "XOR" ? "ভিন্ন ইনপুটে XOR এর ফল 1।" : gate === "AND" ? "AND এ দুটি ইনপুটই 1 চাই।" : "শুধু 00 তে NOR এর ফল 1।"}`,
     );
   }
   for (let i = options.length - 1; i > 0; i--) {

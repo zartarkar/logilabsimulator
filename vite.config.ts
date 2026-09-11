@@ -5,8 +5,18 @@
 //     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { errorCollectorPlugin } from "@lovable.dev/vite-tanstack-config/dev-server-bridge";
 
 export default defineConfig({
+  vite: {
+    plugins: [
+      errorCollectorPlugin({
+        endpoint: "/__logiclab/dev-error",
+        outputFile: "logs/browser-errors.log",
+        resetOnStart: false,
+      }),
+    ],
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
