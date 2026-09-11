@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLang } from "@/i18n";
+import { IntroLearning } from "@/components/IntroLearning";
 
 export type Familiarity = "new" | "some" | "confident";
 
@@ -24,6 +25,12 @@ export function OnboardingLanding({
   const bn = lang === "bn";
   const [choice, setChoice] = useState<Familiarity | null>(null);
   const [showIntroVideo, setShowIntroVideo] = useState(true);
+  const [showLessons, setShowLessons] = useState(true);
+  const [suggestion, setSuggestion] = useState<Familiarity | null>(null);
+
+  if (showLessons) return (
+    <IntroLearning onComplete={(result) => { setSuggestion(result); setChoice(result); setShowLessons(false); }} />
+  );
 
   const features = [
     {
@@ -97,6 +104,8 @@ export function OnboardingLanding({
           </section>
 
           <section className="rounded-2xl border border-white/90 bg-white/85 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.11)] backdrop-blur-xl sm:p-7" aria-labelledby="path-title">
+            {suggestion && <p className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">{bn ? "তোমার অনুশীলনের ভিত্তিতে একটি পথ বেছে দিয়েছি। চাইলে নিচে পরিবর্তন করতে পারো।" : "Your suggested path is selected below, based on your practice. Feel free to choose another."}</p>}
+            <button className="mb-4 text-sm font-medium text-destructive underline underline-offset-4" onClick={() => setShowLessons(true)}>{bn ? "ছোট পাঠ ও অনুশীলন আবার করি" : "Try the guided lessons again"}</button>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-destructive">{bn ? "শুরু করার আগে" : "Before you begin"}</p>
             <h2 id="path-title" className="mt-2 text-xl font-bold leading-snug">{bn ? "Boolean expression ও logic gate সম্পর্কে তোমার ধারণা কেমন?" : "How familiar are you with Boolean expressions and logic gates?"}</h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">{bn ? "তোমার উত্তরের ভিত্তিতে উপযুক্ত জায়গা থেকে শুরু করব।" : "We’ll take you to the most suitable starting point."}</p>
@@ -149,7 +158,7 @@ export function OnboardingLanding({
               <div className="mt-6 rounded-xl border border-destructive/15 bg-destructive/[0.04] p-5 shadow-sm">
                 <h3 className="text-base font-semibold">{choice === "some" ? (bn ? "মূল conceptগুলো দ্রুত ঝালিয়ে নিই" : "Review the core concepts first") : (bn ? "তোমার শেখার journey শুরু করো" : "Start your learning journey")}</h3>
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">{choice === "some" ? (bn ? "তোমাকে Concept বুঝি section-এ নিয়ে যাওয়া হবে।" : "You’ll begin in the concept overview.") : (bn ? "তোমাকে সরাসরি Expression Simulator-এ নিয়ে যাওয়া হবে।" : "You’ll go directly to the Expression Simulator.")}</p>
-                <Button variant="destructive" className="mt-4" onClick={() => onEnter("simulator", choice)}>{bn ? "Journey শুরু করি" : "Start journey"}</Button>
+                <Button variant="destructive" className="mt-4" onClick={() => onEnter(choice === "some" ? "learn" : "simulator", choice)}>{bn ? "Journey শুরু করি" : "Start journey"}</Button>
               </div>
             )}
 
