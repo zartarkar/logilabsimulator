@@ -6,7 +6,7 @@ export type Lang = "en" | "bn";
 type Dict = Record<string, { en: string; bn: string }>;
 
 export const DICT: Dict = {
-  classLine: { en: "Class 11", bn: "একাদশ শ্রেণি" },
+  classLine: { en: "Class 11–12", bn: "একাদশ–দ্বাদশ শ্রেণি" },
   chapterLine: {
     en: "Chapter 3: Number Systems & Digital Devices",
     bn: "অধ্যায় ৩: সংখ্যা পদ্ধতি ও ডিজিটাল ডিভাইস",

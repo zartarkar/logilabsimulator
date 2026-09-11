@@ -52,6 +52,17 @@ describe("guided curriculum", () => {
             expect(checkIntroAnswer(q, " ")).toBe(false);
           }
   });
+  it("uses basic OR, NOT and gate-family questions for the last three gate exercises", () => {
+    for (const [a, b] of inputRows(2)) {
+      for (const step of [2, 3]) {
+        let calls = 0;
+        const question = makeIntroQuestion(3, false, () => (calls++ === 0 ? a! : b!) / 2, step);
+        expect(question.kind).toBe("choice");
+        expect(question.answer).toBe(String(step === 2 ? a! | b! : 1 - a!));
+      }
+    }
+    expect(makeIntroQuestion(3, false, () => 0, 4).answer).toBe("NAND, NOR");
+  });
   it("accepts Bengali digits", () => {
     expect(
       checkIntroAnswer(

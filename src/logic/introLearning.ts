@@ -162,23 +162,23 @@ export function makeIntroQuestion(
       `${expressions[step]} = ${answer}। ${["সাধারণ পদ নাও; Y + Y′ = 1।", "বণ্টন, তারপর পূরক ও অভেদ সূত্র।", "উল্টো বণ্টনে X + YY′ = X + 0 = X।", "ডি মর্গ্যান, তারপর X′ সাধারণ নাও; Y′ + Y = 1।", "পরিশোষণ: প্রথম পদই ফল নির্ধারণ করে।"][step]}`,
     );
   } else if (step === 4) {
-    answer = "5";
-    options = ["2", "3", "4", "5"];
+    answer = "NAND, NOR";
+    options = ["NAND, NOR", "AND, OR", "XOR, XNOR", "AND, NOT"];
     prompt = copy(
-      "In the construction you learned, how many NAND gates make XNOR?",
-      "শেখানো নির্মাণে শুধু NAND দিয়ে XNOR বানাতে মোট কতটি গেট লাগে?",
+      "Which pair contains the universal gates?",
+      "কোন দুটি গেটকে সার্বজনীন গেট বলা হয়?",
     );
     explanation = copy(
-      "Four NAND gates make XOR. A fifth NAND with tied inputs inverts XOR to XNOR.",
-      "চারটি NAND দিয়ে XOR হয়। এর ফল পঞ্চম NAND এর দুই ইনপুটে দিলে উল্টে XNOR হয়।",
+      "NAND and NOR are universal: either type alone can build the other gates.",
+      "NAND ও NOR সার্বজনীন গেট। যেকোনো এক ধরনের গেট দিয়েই অন্য গেটগুলো তৈরি করা যায়।",
     );
   } else {
     const gate: Gate =
-      step === 0 ? (challenge ? "NOR" : "AND") : step === 1 ? "XOR" : step === 2 ? "XOR" : "XNOR";
+      step === 0 ? (challenge ? "NOR" : "AND") : step === 1 ? "XOR" : step === 2 ? "OR" : "NOT";
     answer = String(gateValue(gate, a, b));
     options = ["0", "1"];
-    kind = "table";
-    row = { a, b, gate };
+    kind = step < 2 ? "table" : "choice";
+    if (step < 2) row = { a, b, gate };
     prompt =
       step < 2
         ? copy(
@@ -186,12 +186,12 @@ export function makeIntroQuestion(
             `A=${a}, B=${b}: ${gate} এর আউটপুট পূরণ করো।`,
           )
         : copy(
-            `A=${a}, B=${b}. The four-${step === 2 ? "NAND" : "NOR"} construction is complete. What is its ${gate} output?`,
-            `A=${a}, B=${b}। চারটি ${step === 2 ? "NAND" : "NOR"} দিয়ে সার্কিট সম্পূর্ণ। এর ${gate} আউটপুট কত?`,
+            step === 2 ? `An OR gate has inputs A=${a}, B=${b}. What is its output?` : `A NOT gate has input A=${a}. What is its output?`,
+            step === 2 ? `OR গেটে A=${a}, B=${b} দিলে আউটপুট কত?` : `NOT গেটে A=${a} দিলে আউটপুট কত?`,
           );
     explanation = copy(
-      `${gate}(${a},${b}) = ${answer}. ${step === 2 ? "Four NAND gates produce XOR; one more tied-input NAND inverts it to XNOR." : step === 3 ? "Four NOR gates produce XNOR; one more tied-input NOR inverts it to XOR." : gate === "XOR" ? "XOR is 1 for different inputs." : gate === "AND" ? "AND needs both inputs to be 1." : "NOR is 1 only for 00."}`,
-      `${gate}(${a},${b}) = ${answer}। ${step === 2 ? "চারটি NAND এ XOR; একই ফল দুই ইনপুটে দিয়ে আরেকটি NAND এ XNOR হয়।" : step === 3 ? "চারটি NOR এ XNOR; একই ফল দুই ইনপুটে দিয়ে আরেকটি NOR এ XOR হয়।" : gate === "XOR" ? "ভিন্ন ইনপুটে XOR এর ফল 1।" : gate === "AND" ? "AND এ দুটি ইনপুটই 1 চাই।" : "শুধু 00 তে NOR এর ফল 1।"}`,
+      `Output = ${answer}. ${step === 2 ? "OR gives 1 if either input is 1." : step === 3 ? "NOT flips the input: 0 becomes 1, and 1 becomes 0." : gate === "XOR" ? "XOR is 1 for different inputs." : gate === "AND" ? "AND needs both inputs to be 1." : "NOR is 1 only for 00."}`,
+      `আউটপুট = ${answer}। ${step === 2 ? "OR গেটে অন্তত একটি ইনপুট 1 হলে আউটপুট 1।" : step === 3 ? "NOT ইনপুট উল্টে দেয়: 0 হলে 1, আর 1 হলে 0।" : gate === "XOR" ? "ভিন্ন ইনপুটে XOR এর ফল 1।" : gate === "AND" ? "AND এ দুটি ইনপুটই 1 চাই।" : "শুধু 00 তে NOR এর ফল 1।"}`,
     );
   }
   for (let i = options.length - 1; i > 0; i--) {

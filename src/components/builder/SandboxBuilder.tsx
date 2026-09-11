@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { applyBuilderGeometry, type BuilderGeometry } from "@/logic/builderGeometry";
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -26,7 +27,7 @@ import { toast } from "sonner";
 import { useLang, DICT } from "@/i18n";
 import { PRACTICE_CHALLENGES, checkCircuitMatchesChallengeTarget, getChallengeAst, getChallengeRootGate } from "@/logic/challenges";
 
-export interface SBNode {
+export interface SBNode extends BuilderGeometry {
   id: string;
   kind: CircuitNodeType;
   label: string;
@@ -519,6 +520,13 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
   const getTranslatedChallengeText = (challengeId: string, property: string, index?: number): string => {
     const prefix = getChallengeKeyPrefix(challengeId);
     const challenge = PRACTICE_CHALLENGES.find((item) => item.id === challengeId);
+    const guideEntry = property.match(/^Guide(\d+)(Msg|Detail)$/);
+    const guideStep = guideEntry ? challenge?.guide[Number(guideEntry[1])] : undefined;
+    if (guideStep?.target === "canvas:toggle") {
+      if (guideEntry?.[2] === "Msg") return lang === "bn" ? "ইনপুটের ০/১ বোতাম চাপো" : "Tap an input’s 0/1 switch";
+      return lang === "bn" ? "চিহ্নিত সুইচ চাপলে মান বদলাবে। ইনপুট বদলে তারের রং ও LED দেখো। LED জ্বালিয়ে এই ধাপ শেষ করো।" : "Tap the highlighted switch to change its value. Follow the wire colour and LED. Make the LED light up to finish this step.";
+    }
+    if (guideStep?.target === "canvas:wire" && guideEntry?.[2] === "Detail") return lang === "bn" ? "প্রথমে ইনপুটের ডান পাশের বিন্দুতে চাপো, তারপর গেটের বাম পাশের বিন্দুতে চাপো। এভাবেই A ও B কে গেটে এবং গেটের ডান পাশকে LED তে যুক্ত করো। বিন্দু ধরে টেনেও তার জোড়া যায়।" : "Tap the dot on the right of an input, then a dot on the left of the gate. Connect A and B to the gate, then its right dot to the LED. You can also drag between dots.";
     if (!prefix && challenge) {
       if (property === "Title") return challenge.title;
       if (property === "Summary") return challenge.summary;
@@ -543,7 +551,10 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
   // drag frame) avoids re-running simulate() and the whole truth-table loop
   // on every position update, which was the source of visible jank while
   // dragging a node around the canvas.
-  const logicSignature = nodes.map((n) => `${n.id}:${n.kind}:${n.inputValue}`).join("|");
+  const logicSignature = nodes.map((n) => `${n.id}:${n.kind}:${n.label}:${n.inputValue}`).join("|");
+
+  // Positions never invalidate logic, labels, or per-node event handlers.
+  const logicalNodes = useMemo(() => nodes, [logicSignature]);
 
   const values = useMemo(
     () => simulate(nodes, edges),
@@ -587,15 +598,16 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         kind === "INPUT" ? String.fromCharCode(65 + ((seq - 1) % 26)) : kind === "OUTPUT" ? "OUT" : kind;
 
       setNodes((ns) => {
-        if (!isPracticeMode) {
-          return [...ns, { id, kind, label, x: center.x, y: center.y, inputValue: 0 }];
-        }
-
         const sameKindCount = ns.filter((node) => node.kind === kind).length;
         const usedInputLabels = new Set(ns.filter((node) => node.kind === "INPUT").map((node) => node.label));
         const firstAvailableInputLabel = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index))
           .find((candidate) => !usedInputLabels.has(candidate)) ?? `IN${sameKindCount + 1}`;
         const practiceLabel = kind === "INPUT" ? firstAvailableInputLabel : label;
+        if (!isPracticeMode) {
+          let x = center.x, y = center.y;
+          while (ns.some(n => Math.abs(n.x-x) < 100 && Math.abs(n.y-y) < 65)) { x += 45; y += 65; }
+          return [...ns, { id, kind, label: practiceLabel, x, y, inputValue: 0 }];
+        }
         const logicKinds: CircuitNodeType[] = ["AND", "OR", "NOT", "NAND", "NOR", "XOR", "XNOR", "BUFFER"];
         const isLogic = logicKinds.includes(kind);
         const isLateStage = kind === "OR" || kind === "NOR";
@@ -642,17 +654,11 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     ));
   }, [canvasExtent, selectedIds]);
 
-  // iOS tap-to-place: continuous touch-and-move on a node — whether handled
-  // by React Flow's own drag or by a custom pointermove-driven equivalent —
-  // reliably made the node vanish on iOS Safari. Only a fully discrete
-  // interaction (a tap that ends, then a separate tap) has proven safe.
-  // Tapping a node selects it (and stops the touch from also starting a
-  // pane pan, via the "nopan" class in nodes.tsx); tapping empty canvas
-  // afterward (onPaneClick, below) relocates the selected node there.
+  // Select without blocking React Flow's drag gesture. Tap-to-place and
+  // directional buttons remain available as alternatives on touch screens.
   const handleNodePointerDown = useCallback(
     (id: string, e: ReactPointerEvent) => {
       if ((e.target as HTMLElement).closest?.(".react-flow__handle")) return;
-      e.stopPropagation();
       setSelectedIds([id]);
     },
     [isMobile],
@@ -660,12 +666,12 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
 
   const onPaneClick = useCallback(
     (event: { clientX: number; clientY: number }) => {
-      if (selectedIds.length !== 1) return;
+      if (!isMobile || selectedIds.length !== 1) return;
       const id = selectedIds[0];
       const pos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
       setNodes((ns) => ns.map((n) => (n.id === id ? { ...n, x: pos.x, y: pos.y } : n)));
     },
-    [selectedIds, screenToFlowPosition],
+    [selectedIds, screenToFlowPosition, isMobile],
   );
 
   const activeChallenge = PRACTICE_CHALLENGES.find((c) => c.id === activeChallengeId) ?? PRACTICE_CHALLENGES[0];
@@ -683,7 +689,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     if (!currentGuide) return;
 
     const target = currentGuide.target;
-    const circuitMatchesTarget = checkCircuitMatchesChallengeTarget(nodes, edges, activeChallenge.target);
+    const circuitMatchesTarget = checkCircuitMatchesChallengeTarget(logicalNodes, edges, activeChallenge.target);
 
     let isCompleted = false;
 
@@ -698,7 +704,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     } else if (target === "canvas:toggle") {
       const inputs = nodes.filter((node) => node.kind === "INPUT");
       const outputs = nodes.filter((node) => node.kind === "OUTPUT");
-      isCompleted = circuitMatchesTarget && inputs.length > 0 && inputs.every((node) => node.inputValue === 1) && outputs.some((node) => values[node.id] === 1);
+      isCompleted = circuitMatchesTarget && inputs.length > 0 && outputs.some((node) => values[node.id] === 1);
     }
 
     if (isCompleted && !completedSteps.has(guideIndex)) {
@@ -712,12 +718,11 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         }
       }, 800);
     }
-  }, [nodes, edges, guideIndex, activeChallenge, isPracticeMode, completedSteps, guideSkipped, values]);
+  }, [logicalNodes, edges, guideIndex, activeChallenge, isPracticeMode, completedSteps, guideSkipped, values]);
 
   useEffect(() => {
     checkStepCompletion();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodes, edges]);
+  }, [checkStepCompletion]);
 
   const loadChallenge = useCallback((challengeId: string) => {
     const challenge = PRACTICE_CHALLENGES.find((item) => item.id === challengeId) ?? PRACTICE_CHALLENGES[0];
@@ -742,17 +747,12 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     if (firstChallenge) loadChallenge(firstChallenge.id);
   }, [loadChallenge]);
 
-  const rfNodes: Node[] = useMemo(
-    () =>
-      nodes.map((n) => ({
-        id: n.id,
-        type: rfType(n.kind),
-        position: { x: n.x, y: n.y },
-        selected: selectedIds.includes(n.id),
-        data: {
+  const nodeData = useMemo(() => {
+    const expressionMemo = new Map<string, string>();
+    return new Map(logicalNodes.map(n => [n.id, {
           gateType: n.kind,
           label: n.label,
-          expr: nodeExpression(n.id, nodes, edges),
+          expr: nodeExpression(n.id, logicalNodes, edges, expressionMemo),
           value: values[n.id] ?? 0,
           inputCount: ARITY[n.kind] ?? 2,
           showLabels: true,
@@ -767,10 +767,14 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
               : undefined,
           onDelete: () => removeNode(n.id),
           onNodePointerDown: (e: ReactPointerEvent) => handleNodePointerDown(n.id, e),
-        } satisfies GateNodeData,
-      })),
-    [nodes, edges, values, removeNode, selectedIds, handleNodePointerDown, challengeNodeErrors],
-  );
+        } satisfies GateNodeData]));
+  }, [logicalNodes, edges, values, removeNode, handleNodePointerDown, challengeNodeErrors]);
+  const rfNodes: Node[] = useMemo(() => nodes.map(n => ({
+    id:n.id, type:rfType(n.kind), position:{x:n.x,y:n.y},
+    ...(n.measured ? { measured: n.measured } : {}),
+    dragging: n.dragging ?? false,
+    selected:selectedIds.includes(n.id), data:nodeData.get(n.id)!,
+  })), [nodes, selectedIds, nodeData]);
 
   const isGuideTarget = useCallback(
     (target: string) => isPracticeMode && activeGuide?.target === target,
@@ -834,7 +838,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     };
   }, [activeChallenge.id, activeChallenge.difficulty, activeChallenge.guide.length, activeGuide, guideIndex, isPracticeMode]);
 
-  const styledEdges = edges.map((e) => {
+  const styledEdges = useMemo(() => edges.map((e) => {
     const on = values[e.source] === 1;
     return {
       ...e,
@@ -852,7 +856,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
       interactionWidth: isMobile ? 32 : 20,
       className: "cursor-pointer",
     };
-  });
+  }), [edges, values, isMobile]);
 
   const onConnect = useCallback((c: Connection) => {
     setEdges((es) => {
@@ -869,35 +873,16 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     toast.success(lang === "bn" ? "Wire সরানো হয়েছে" : "Wire removed");
   }, [lang]);
 
-  const updateNodePosition = useCallback((_event: unknown, node: Node) => {
-    if (!Number.isFinite(node.position.x) || !Number.isFinite(node.position.y)) return;
-    setNodes((ns) =>
-      ns.map((item) =>
-        item.id === node.id ? { ...item, x: node.position.x, y: node.position.y } : item,
-      ),
-    );
-  }, []);
-
   const onNodesChange = useCallback((changes: NodeChange[]) => {
-    const removed: string[] = [];
-    const selectedOn: string[] = [];
-    const selectedOff: string[] = [];
-    setNodes((ns) => {
-      let next = ns;
-      for (const c of changes) {
-        if (c.type === "position") continue;
-        if (c.type === "select") {
-          (c.selected ? selectedOn : selectedOff).push(c.id);
-        } else if (c.type === "remove") {
-          toast.error(`Debug: ReactFlow requested removal of ${c.id}`);
-          removed.push(c.id);
-          next = next.filter((n) => n.id !== c.id);
-        }
-      }
-      return next;
-    });
-    if (selectedOn.length || selectedOff.length) {
-      setSelectedIds((prev) => [...new Set([...prev, ...selectedOn])].filter((id) => !selectedOff.includes(id)));
+    const removed = changes.filter(c => c.type === "remove").map(c => c.id);
+    const selectionChanges = changes.filter(c => c.type === "select");
+    setNodes(ns => applyBuilderGeometry(ns, changes));
+    if (selectionChanges.length) {
+      setSelectedIds(prev => {
+        const selected = new Set(prev);
+        selectionChanges.forEach(c => c.selected ? selected.add(c.id) : selected.delete(c.id));
+        return [...selected];
+      });
     }
     if (removed.length) {
       setSelectedIds((prev) => prev.filter((id) => !removed.includes(id)));
@@ -1169,7 +1154,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         </div>
       </aside>
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden relative">
-        <div ref={paneRef} data-tour="builder-canvas" data-practice-target="canvas" className="flex-1 relative">
+        <div ref={paneRef} data-tour="builder-canvas" data-practice-target="canvas" className={`min-h-0 flex-1 relative ${highlightGuide === "canvas:wire" ? "practice-wire-help" : highlightGuide === "canvas:toggle" ? "practice-toggle-help" : ""}`}>
           {highlightGuide === "canvas:wire" && (
             <div className="pointer-events-none absolute inset-x-4 top-4 z-30 rounded-xl border-2 border-primary/70 bg-gradient-to-r from-primary/20 to-primary/10 px-4 py-3 text-center text-sm font-semibold text-primary shadow-lg shadow-primary/30 backdrop-blur-sm animate-pulse">
               🔌 {getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Msg`)}
@@ -1182,7 +1167,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
           )}
           {isMobile && selectedIds.length === 1 && (
             <div className="pointer-events-none absolute left-1/2 top-2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full border border-border bg-card/95 px-3 py-1 text-[10px] text-muted-foreground shadow">
-              {t("mobileMoveInstruction")}
+              {lang === "bn" ? "গেট টানো · অথবা খালি জায়গায় চাপো" : "Drag a gate · or tap empty space to place it"}
             </div>
           )}
           <Button
@@ -1197,7 +1182,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             <Maximize2 className="h-3.5 w-3.5" />
             <span className="ml-1 hidden sm:inline">Fit</span>
           </Button>
-          {isMobile && isPracticeMode && selectedIds.length === 1 && (
+          {isMobile && selectedIds.length === 1 && (
             <div className="absolute bottom-2 right-2 z-30 flex items-center gap-0.5 rounded-lg border border-border bg-card/90 p-1 shadow-md backdrop-blur-sm" aria-label="Move selected component">
               <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveSelectedNode(-28, 0)} aria-label="Move left">
                 <ArrowLeft className="h-3 w-3" />
@@ -1224,8 +1209,6 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             }}
             onConnect={onConnect}
             onEdgeClick={removeEdgeOnTap}
-            onNodeDrag={updateNodePosition}
-            onNodeDragStop={updateNodePosition}
             onPaneClick={onPaneClick}
             deleteKeyCode={["Backspace", "Delete"]}
             proOptions={{ hideAttribution: true }}
@@ -1240,8 +1223,11 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             panOnDrag={isMobile ? true : [1, 2]}
             autoPanOnConnect={!isMobile}
             autoPanOnNodeDrag={!isMobile}
-            nodesDraggable={false}
-            zoomOnPinch={!isMobile || !isPracticeMode}
+            nodesDraggable={true}
+            nodeDragThreshold={8}
+            connectOnClick={true}
+            connectionRadius={32}
+            zoomOnPinch={true}
             zoomOnDoubleClick={false}
             nodeOrigin={[0.5, 0.5]}
           >
@@ -1277,6 +1263,13 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                   <p className="text-[10px] text-muted-foreground">
                     {getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Detail`)}
                   </p>
+                  {highlightGuide === "canvas:wire" && <svg role="img" aria-label={lang === "bn" ? "প্রথমে OUT, তারপর IN বিন্দুতে চাপ দিয়ে তার জোড়ো" : "Tap OUT first, then IN to connect a wire"} viewBox="0 0 270 32" className="mt-1 h-8 w-64 max-w-full text-primary">
+                    <rect x="1" y="3" width="72" height="26" rx="6" fill="var(--muted)" />
+                    <text x="12" y="20" fontSize="11" fill="currentColor">1. OUT</text><circle cx="73" cy="16" r="5" fill="currentColor" />
+                    <path d="M80 16 H183 M176 11 L183 16 L176 21" stroke="currentColor" strokeWidth="2" fill="none" />
+                    <rect x="196" y="3" width="72" height="26" rx="6" fill="var(--muted)" />
+                    <circle cx="196" cy="16" r="5" fill="currentColor" /><text x="211" y="20" fontSize="11" fill="currentColor">2. IN</text>
+                  </svg>}
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-1.5">

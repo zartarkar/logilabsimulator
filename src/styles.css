@@ -357,8 +357,6 @@
  * around this WebKit rendering bug without affecting other browsers.
  */
 .react-flow__node {
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -562,3 +560,17 @@ svg.react-flow__connectionline {
   .react-flow__pane { cursor: grab; }
   .react-flow__pane:active { cursor: grabbing; }
 }
+
+/* Bengali numerals use the same legible Bengali face as the lesson text. */
+.lesson-controls { font-family: "Noto Sans Bengali", "Inter", sans-serif; }
+.driver-popover { max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; }
+@media (pointer: coarse) {
+  .react-flow__node { touch-action: none; }
+  .sandbox-container .react-flow__handle { min-width: 22px; min-height: 22px; }
+}
+.practice-wire-help .react-flow__handle { box-shadow: 0 0 0 5px rgb(22 163 74 / .2); border-color: var(--primary) !important; }
+.practice-toggle-help button[aria-label^="Toggle input"] { outline: 3px solid var(--primary); outline-offset: 5px; }
+
+.practice-wire-help .react-flow__handle::after { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--foreground); color: var(--background); font: 10px/1.4 sans-serif; padding: 3px 5px; border-radius: 4px; pointer-events: none; }
+.practice-wire-help .react-flow__handle.source::after { content: "OUT"; }
+.practice-wire-help .react-flow__handle.target::after { content: "IN"; }

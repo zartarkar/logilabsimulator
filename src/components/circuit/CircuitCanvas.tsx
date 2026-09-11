@@ -10,6 +10,7 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { nodeTypes, type GateNodeData } from "./nodes";
 import type { CircuitGraph } from "@/logic/types";
 
@@ -47,6 +48,7 @@ function Inner({
   minimap = false,
 }: Props) {
   const { fitView } = useReactFlow();
+  const isMobile = useIsMobile();
   const flowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -77,7 +79,7 @@ function Inner({
         type: rfType(n.type),
         position: { x: n.x, y: n.y },
         selected: selectedId === n.id,
-        draggable: true,
+        draggable: false,
         data: {
           gateType: n.type,
           label: n.label,
@@ -137,12 +139,12 @@ function Inner({
         minZoom={0.15}
         maxZoom={2.5}
         panOnScroll={false}
-        zoomOnPinch={true}
+        zoomOnPinch={!isMobile}
         nodesDraggable={false}
         nodesConnectable={false}
         elementsSelectable={true}
-        panOnDrag={true}
-        preventScrolling={true}
+        panOnDrag={!isMobile}
+        preventScrolling={!isMobile}
         zoomOnScroll={false}
         proOptions={{ hideAttribution: true }}
         className="bg-transparent"

@@ -55,8 +55,8 @@ export function MobileLandscapeGate() {
   if (!needsLandscape) return null;
 
   return (
-    <div className="fixed inset-0 z-[1000000001] flex items-center justify-center bg-background/95 p-5 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="landscape-title">
-      <div className="w-full max-w-sm rounded-2xl border border-primary/30 bg-card p-6 text-center shadow-2xl">
+    <div className="fixed inset-0 z-[1000000001] flex h-dvh items-center justify-center overflow-y-auto bg-background/95 p-3 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="landscape-title">
+      <div className="max-h-full w-full max-w-sm overflow-y-auto overscroll-contain rounded-2xl border border-primary/30 bg-card p-6 text-center shadow-2xl">
         <div className="relative mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Smartphone className="h-10 w-10" />
           <RotateCw className="absolute -right-1 top-0 h-7 w-7 animate-pulse" />
@@ -73,7 +73,7 @@ export function MobileLandscapeGate() {
           <p className="text-xs">{canAutoLock ? "Tap the button below to let supported browsers switch automatically." : "Turn on Auto Rotation, then rotate your phone to open the simulator."}</p>
         </div>
         {canAutoLock ? (
-          <Button className="mt-5 w-full" onClick={enterLandscape}>
+          <Button className="mt-5 h-auto min-h-11 w-full whitespace-normal py-3" onClick={enterLandscape}>
             <RotateCw className="mr-2 h-4 w-4" /> Landscape Mode-এ নিন · Enter Landscape Mode
           </Button>
         ) : (

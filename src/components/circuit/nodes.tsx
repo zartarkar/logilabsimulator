@@ -3,7 +3,7 @@ import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { GateShape } from "./GateShape";
 import type { CircuitNodeType } from "@/logic/types";
 import { cn } from "@/lib/utils";
-import { Lightbulb, ToggleLeft } from "lucide-react";
+import { GripVertical, Lightbulb, ToggleLeft } from "lucide-react";
 
 export interface GateNodeData extends Record<string, unknown> {
   gateType: CircuitNodeType;
@@ -28,7 +28,7 @@ export interface GateNodeData extends Record<string, unknown> {
 }
 
 const DELETE_BTN =
-  "absolute -right-2 -top-2 z-[60] h-5 w-5 items-center justify-center rounded-full border border-border bg-background text-xs text-destructive shadow-md hidden group-hover:flex";
+  "nodrag absolute -right-2 -top-2 z-[60] h-5 w-5 items-center justify-center rounded-full border border-border bg-background text-xs text-destructive shadow-md hidden group-hover:flex";
 
 function DiagnosticBadge({ message }: { message?: string | undefined }) {
   if (!message) return null;
@@ -125,7 +125,7 @@ export function InputNode({ data, selected }: NodeProps & { data: GateNodeData }
         aria-label={`Toggle input ${data.label}, currently ${data.value}`}
         aria-pressed={on}
         className={cn(
-          "flex h-10 items-center gap-2 rounded-lg border-2 px-2 font-mono text-xs font-bold transition-colors",
+          "nodrag flex h-10 items-center gap-2 rounded-lg border-2 px-2 font-mono text-xs font-bold transition-colors",
           on
             ? "border-[var(--signal-on)] bg-[var(--signal-on)]/15 text-foreground"
             : "border-border bg-card text-muted-foreground",
@@ -143,6 +143,7 @@ export function InputNode({ data, selected }: NodeProps & { data: GateNodeData }
         </span>
         <span className="tabular-nums">{data.value} · {on ? "ON" : "OFF"}</span>
       </button>
+      {data.onNodePointerDown && <span title="Drag to move input" className="flex h-11 w-7 cursor-grab items-center justify-center rounded bg-muted text-muted-foreground"><GripVertical className="h-5 w-5" /></span>}
       <Handle id="out" type="source" position={Position.Right} className="!h-2 !w-2 !border-2 !border-border !bg-background pointer-coarse:!h-5 pointer-coarse:!w-5" />
       {data.onDelete && (
         <button

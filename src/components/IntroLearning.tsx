@@ -129,7 +129,7 @@ export function IntroLearning({
             </span>
             LogicLab
             <span className="hidden border-l pl-3 text-xs font-medium text-muted-foreground sm:inline">
-              {bn ? "একাদশ শ্রেণি · অধ্যায় ৩" : "Class 11 · Chapter 3"}
+              {bn ? "একাদশ–দ্বাদশ শ্রেণি · অধ্যায় ৩" : "Class 11–12 · Chapter 3"}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -189,14 +189,14 @@ export function IntroLearning({
                   bn ? "পাঠ ও বিষয়বস্তু দেখে নাও" : "Browse the content and lessons",
                 ],
                 [
-                  bn ? "০২ · শিখি ও চেষ্টা করি" : "02 · Learn and practise",
+                  bn ? "০২ · বুলিয়ান এক্সপ্রেশন থেকে লজিক গেট তৈরি" : "02 · Expression to logic gates",
                   bn
-                    ? "৪টি পাঠ · বিষয়ভিত্তিক ২০টি প্রশ্ন"
-                    : "4 lessons · 20 lesson-based questions",
+                    ? "রাশি লিখে সার্কিট ও তার ফল দেখো"
+                    : "Enter an expression and explore its circuit",
                 ],
                 [
-                  bn ? "০৩ · নিজের পথে এগোই" : "03 · Find your starting point",
-                  bn ? "উৎসাহ ও পরবর্তী ধাপের পরামর্শ" : "Encouragement and a suggested next step",
+                  bn ? "০৩ · নিজের হাতে সার্কিট বিল্ড" : "03 · Build your own circuit",
+                  bn ? "গেট বসাও, তার জোড়ো, ইনপুট বদলে দেখো" : "Place gates, connect wires and toggle inputs",
                 ],
               ].map(([label, text]) => (
                 <div key={label} className="rounded-xl border border-border/70 bg-white/70 p-4">

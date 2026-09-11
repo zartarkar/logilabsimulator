@@ -281,7 +281,6 @@ function DeMorgan({ bn, proof = false, law }: { bn: boolean; proof?: boolean; la
   );
 }
 function TruthBuilder({ bn, n }: { bn: boolean; n: 2 | 3 }) {
-  const [reveal, setReveal] = useState(0);
   return (
     <div className="space-y-5">
       <p className="text-sm leading-7">
@@ -302,30 +301,19 @@ function TruthBuilder({ bn, n }: { bn: boolean; n: 2 | 3 }) {
         rows={inputRows(n).map((r) => {
           const [a, b, c] = r as [number, number, number];
           return n === 2
-            ? [a, b, reveal >= 1 ? 1 - b : "?", reveal >= 2 ? a | (1 - b) : "?"]
+            ? [a, b, 1 - b, a | (1 - b)]
             : [
                 a,
                 b,
                 c,
-                reveal >= 1 ? 1 - a : "?",
-                reveal >= 2 ? a & b : "?",
-                reveal >= 2 ? (1 - a) & c : "?",
-                reveal >= 3 ? (a & b) | ((1 - a) & c) : "?",
+                1 - a,
+                a & b,
+                (1 - a) & c,
+                (a & b) | ((1 - a) & c),
               ];
         })}
       />
-      <Button
-        variant="outline"
-        onClick={() => setReveal(reveal >= (n === 2 ? 2 : 3) ? 0 : reveal + 1)}
-      >
-        {reveal >= (n === 2 ? 2 : 3)
-          ? bn
-            ? "আবার শুরু"
-            : "Reset steps"
-          : bn
-            ? "পরের কলাম হিসাব করি"
-            : "Calculate the next column"}
-      </Button>
+
       <p className="text-sm text-muted-foreground">
         {n === 2
           ? bn

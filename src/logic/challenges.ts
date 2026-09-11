@@ -127,6 +127,7 @@ export const PRACTICE_CHALLENGES: PracticeChallenge[] = [
         detail: "Connect A and B to the OR gate, then connect the OR gate to the output LED.",
         highlight: "wire",
       },
+      { id: "toggle-OR", target: "canvas:toggle", message: "Toggle an input", detail: "Light the LED by changing the inputs.", highlight: "toggle" },
     ],
   },
   {
@@ -177,6 +178,7 @@ export const PRACTICE_CHALLENGES: PracticeChallenge[] = [
         detail: "Connect A and B to the XOR gate, then connect the XOR gate to the output LED.",
         highlight: "wire",
       },
+      { id: "toggle-XOR", target: "canvas:toggle", message: "Toggle an input", detail: "Light the LED by changing the inputs.", highlight: "toggle" },
     ],
   },
   ...[

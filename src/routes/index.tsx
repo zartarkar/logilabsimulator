@@ -26,7 +26,6 @@ import { TruthTablePanel } from "@/components/panels/TruthTablePanel";
 import { SimplifyPanel } from "@/components/panels/SimplifyPanel";
 import { AstPanel } from "@/components/panels/AstPanel";
 import { SandboxBuilder } from "@/components/builder/SandboxBuilder";
-import { LearnPanel } from "@/components/panels/LearnPanel";
 import { MobileLandscapeGate } from "@/components/MobileLandscapeGate";
 import { OnboardingLanding, type Familiarity } from "@/components/OnboardingLanding";
 import { TutorialDialog, type TutorialHandle } from "@/components/TutorialDialog";
@@ -102,7 +101,7 @@ function App() {
   const [showExamples, setShowExamples] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
   const [autoTourRequested, setAutoTourRequested] = useState(false);
-  const [autoTourEndTab, setAutoTourEndTab] = useState<"learn" | "simulator">("learn");
+  const [autoTourEndTab, setAutoTourEndTab] = useState<"simulator">("simulator");
 
   useEffect(() => {
     // The bare site URL is the public landing page. URLs that explicitly name
@@ -110,10 +109,10 @@ function App() {
     setShowOnboarding(qTab === undefined);
   }, [qTab]);
 
-  const enterApp = (destination: "learn" | "simulator", familiarity: Familiarity) => {
+  const enterApp = (destination: "simulator", familiarity: Familiarity) => {
     browserStorage.setItem("logiclab-onboarding-complete", "true");
     browserStorage.setItem("logiclab-familiarity", familiarity);
-    setAutoTourEndTab(familiarity === "new" ? "learn" : "simulator");
+    setAutoTourEndTab("simulator");
     if (browserStorage.getItem("logiclab-auto-tutorial-shown-v3") !== "true") {
       setAutoTourRequested(true);
     }
@@ -122,7 +121,7 @@ function App() {
     setShowOnboarding(false);
   };
 
-  const selectTourTab = useCallback((tab: "learn" | "simulator" | "builder") => {
+  const selectTourTab = useCallback((tab: "simulator" | "builder") => {
     useCircuitStore.getState().setTab(tab);
     navigate({ search: { tab }, replace: true });
   }, [navigate]);
@@ -153,7 +152,7 @@ function App() {
     }
     
     if (qTab !== undefined && qTab !== s.tab) {
-      const normalizedTab = qTab === 'circuit' ? 'simulator' : qTab;
+      const normalizedTab = qTab === 'circuit' || qTab === 'learn' ? 'simulator' : qTab;
       updates.tab = normalizedTab;
       changed = true;
     }
@@ -395,7 +394,6 @@ function App() {
           <nav data-tour="navigation" className="app-header-nav flex min-w-0 max-w-full justify-center gap-1.5 overflow-x-auto no-scrollbar sm:col-start-2 sm:row-start-1 sm:justify-center sm:gap-1 sm:overflow-visible" aria-label="Primary navigation">
               {(
                 [
-                  { id: "learn", label: t("tabLearn") },
                   { id: "simulator", label: t("tabCircuit") },
                   { id: "builder", label: t("tabBuild") },
                 ] as const
@@ -420,11 +418,7 @@ function App() {
         </div>
       </header>
 
-      {s.tab === "learn" ? (
-        <main data-tour="learn-panel" className="mobile-scroll-container min-h-0 flex-1 overflow-y-auto learn-panel-container bg-transparent">
-          <LearnPanel />
-        </main>
-      ) : s.tab === "builder" || s.tab === "practice" ? (
+      {s.tab === "builder" || s.tab === "practice" ? (
         <main className="min-h-0 flex-1 overflow-hidden bg-transparent flex flex-col builder-layout">
           <SandboxBuilder isPracticeMode={s.tab === "practice"} />
         </main>

@@ -19,7 +19,7 @@ export type Familiarity = "new" | "some" | "confident";
 export function OnboardingLanding({
   onEnter,
 }: {
-  onEnter: (destination: "learn" | "simulator", familiarity: Familiarity) => void;
+  onEnter: (destination: "simulator", familiarity: Familiarity) => void;
 }) {
   const { lang, setLang } = useLang();
   const bn = lang === "bn";
@@ -71,7 +71,7 @@ export function OnboardingLanding({
           <div className="flex items-center gap-3 font-display text-lg font-bold tracking-tight">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-destructive text-destructive-foreground shadow-md shadow-destructive/20"><CircuitBoard className="h-4 w-4" /></span>
             LogicLab
-            <span className="hidden border-l border-border pl-3 text-xs font-medium text-muted-foreground sm:inline">{bn ? "একাদশ শ্রেণি · অধ্যায় ৩" : "Class 11 · Chapter 3"}</span>
+            <span className="hidden border-l border-border pl-3 text-xs font-medium text-muted-foreground sm:inline">{bn ? "একাদশ–দ্বাদশ শ্রেণি · অধ্যায় ৩" : "Class 11–12 · Chapter 3"}</span>
           </div>
           <div className="flex items-center overflow-hidden rounded-lg border border-border/80 bg-white/80 shadow-sm">
             <Languages className="ml-2 h-4 w-4 text-muted-foreground" />
@@ -90,7 +90,7 @@ export function OnboardingLanding({
               {bn ? "Boolean logic বুঝো এবং circuit তৈরি করো" : "Understand Boolean logic and build circuits"}
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
-              {bn ? "একাদশ শ্রেণির Boolean expression ও digital logic শেখার জন্য ব্যাখ্যা, live simulation এবং hands-on practice একই জায়গায়।" : "Explanations, live simulation, and hands-on practice for learning Class 11 Boolean expressions and digital logic in one place."}
+              {bn ? "একাদশ–দ্বাদশ শ্রেণির Boolean expression ও digital logic শেখার জন্য ব্যাখ্যা, live simulation এবং hands-on practice একই জায়গায়।" : "Explanations, live simulation, and hands-on practice for learning Class 11–12 Boolean expressions and digital logic in one place."}
             </p>
 
             <div className="mt-9 grid gap-3 sm:auto-rows-fr sm:grid-cols-2 lg:grid-cols-4" aria-label={bn ? "অ্যাপের সুবিধা" : "App features"}>
@@ -146,19 +146,19 @@ export function OnboardingLanding({
                 <div className="rounded-xl border-2 border-destructive/20 bg-destructive/[0.04] p-4 shadow-sm sm:flex sm:items-center sm:justify-between sm:gap-4">
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-destructive">{bn ? "পরবর্তী ধাপ" : "Next step"}</p>
-                    <h3 className="mt-1 text-sm font-bold">{bn ? "মূল ধারণাগুলো শেখা শুরু করো" : "Start learning the core concepts"}</h3>
-                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{bn ? "এই বোতামটি তোমাকে সরাসরি ‘নিজে শিখি’ পাতায় নিয়ে যাবে।" : "This button takes you directly to the Learn section."}</p>
+                    <h3 className="mt-1 text-sm font-bold">{bn ? "রাশি থেকে সার্কিট তৈরি করি" : "Turn an expression into a circuit"}</h3>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{bn ? "সিমুলেটরে রাশি লিখে গেট ও আউটপুট পরীক্ষা করো।" : "Enter an expression in the simulator and explore its gates and output."}</p>
                   </div>
-                  <Button className="mt-3 w-full shrink-0 sm:mt-0 sm:w-auto" variant="destructive" onClick={() => onEnter("learn", "new")}>
-                    <BookOpenCheck className="mr-2 h-4 w-4" />{bn ? "নিজে শিখি পাতায় যাও" : "Go to Learn"}
+                  <Button className="mt-3 w-full shrink-0 sm:mt-0 sm:w-auto" variant="destructive" onClick={() => onEnter("simulator", "new")}>
+                    <BookOpenCheck className="mr-2 h-4 w-4" />{bn ? "সিমুলেটরে যাই" : "Open simulator"}
                   </Button>
                 </div>
               </div>
             ) : (
               <div className="mt-6 rounded-xl border border-destructive/15 bg-destructive/[0.04] p-5 shadow-sm">
-                <h3 className="text-base font-semibold">{choice === "some" ? (bn ? "মূল conceptগুলো দ্রুত ঝালিয়ে নিই" : "Review the core concepts first") : (bn ? "তোমার শেখার journey শুরু করো" : "Start your learning journey")}</h3>
-                <p className="mt-1 text-xs leading-5 text-muted-foreground">{choice === "some" ? (bn ? "তোমাকে Concept বুঝি section-এ নিয়ে যাওয়া হবে।" : "You’ll begin in the concept overview.") : (bn ? "তোমাকে সরাসরি Expression Simulator-এ নিয়ে যাওয়া হবে।" : "You’ll go directly to the Expression Simulator.")}</p>
-                <Button variant="destructive" className="mt-4" onClick={() => onEnter(choice === "some" ? "learn" : "simulator", choice)}>{bn ? "Journey শুরু করি" : "Start journey"}</Button>
+                <h3 className="text-base font-semibold">{bn ? "নিজে পরীক্ষা করে দেখি" : "Try it for yourself"}</h3>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">{bn ? "এক্সপ্রেশন সিমুলেটরে রাশি থেকে সার্কিট তৈরি করে শুরু করো।" : "Start by creating a circuit in the Expression Simulator."}</p>
+                <Button variant="destructive" className="mt-4" onClick={() => onEnter("simulator", choice)}>{bn ? "শুরু করি" : "Get started"}</Button>
               </div>
             )}
 
@@ -169,7 +169,7 @@ export function OnboardingLanding({
           </section>
         </div>
 
-        <footer className="border-t border-border py-4 text-xs text-muted-foreground">{bn ? "একাদশ শ্রেণি · সংখ্যা পদ্ধতি ও ডিজিটাল ডিভাইস" : "Class 11 · Number Systems and Digital Devices"}</footer>
+        <footer className="border-t border-border py-4 text-xs text-muted-foreground">{bn ? "একাদশ–দ্বাদশ শ্রেণি · সংখ্যা পদ্ধতি ও ডিজিটাল ডিভাইস" : "Class 11–12 · Number Systems and Digital Devices"}</footer>
       </div>
     </main>
   );
