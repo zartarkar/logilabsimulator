@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LessonVisual } from "@/components/LessonVisual";
+import { WelcomeLearning } from "@/components/WelcomeLearning";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useLang } from "@/i18n";
 import {
@@ -33,6 +34,7 @@ export function IntroLearning({
 }) {
   const { lang, setLang } = useLang();
   const bn = lang === "bn";
+  const [welcome, setWelcome] = useState(true);
   const [overview, setOverview] = useState(true);
   const [lesson, setLesson] = useState(0);
   const [activePhase, setPhase] = useState<"lesson" | "question" | "result">("lesson");
@@ -58,8 +60,8 @@ export function IntroLearning({
     confident: bn ? "ভালোভাবে পরিচিত" : "Well acquainted",
   };
   useEffect(() => {
-    if (overview && preview === null) heading.current?.focus();
-  }, [overview, preview]);
+    if (!welcome && overview && preview === null) heading.current?.focus();
+  }, [overview, preview, welcome]);
 
   function startQuestion() {
     if (preview !== null) {
@@ -113,6 +115,11 @@ export function IntroLearning({
 
   return (
     <div className="lesson-controls relative min-h-dvh overflow-x-hidden bg-[#f7f8fa] text-foreground">
+      <WelcomeLearning open={welcome} bn={bn} onClose={() => setWelcome(false)} onExplore={(index) => {
+        setWelcome(false);
+        if (index === lesson && activePhase !== "result") setOverview(false);
+        else setPreview(index);
+      }} />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-24 top-24 h-72 w-72 rounded-full bg-destructive/10 blur-3xl"
