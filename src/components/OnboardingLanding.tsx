@@ -19,7 +19,7 @@ export type Familiarity = "new" | "some" | "confident";
 export function OnboardingLanding({
   onEnter,
 }: {
-  onEnter: (destination: "simulator", familiarity: Familiarity) => void;
+  onEnter: (destination: "simulator", familiarity: Familiarity, startGuide?: boolean) => void;
 }) {
   const { lang, setLang } = useLang();
   const bn = lang === "bn";
@@ -164,7 +164,7 @@ export function OnboardingLanding({
 
             {choice && <Button type="button" variant="outline" size="sm" className="mt-4 self-start" onClick={() => setChoice(null)}>{bn ? "উত্তর পরিবর্তন করি" : "Change answer"}</Button>}
             <div className="mt-6 border-t border-border pt-5 text-center">
-              <Button type="button" variant="outline" className="w-full border-destructive/25 bg-white text-xs text-foreground hover:border-destructive/60 hover:bg-destructive/[0.04] hover:text-destructive" onClick={() => onEnter("simulator", "confident")}>{bn ? "আগে ব্যবহার করেছি, সরাসরি অ্যাপে যাই" : "Used LogicLab before? Go directly to the app"}</Button>
+              <Button type="button" variant="outline" className="w-full border-destructive/25 bg-white text-xs text-foreground hover:border-destructive/60 hover:bg-destructive/[0.04] hover:text-destructive" onClick={() => onEnter("simulator", "confident", false)}>{bn ? "আগে ব্যবহার করেছি, সরাসরি অ্যাপে যাই" : "Used LogicLab before? Go directly to the app"}</Button>
             </div>
           </section>
         </div>

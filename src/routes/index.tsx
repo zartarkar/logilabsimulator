@@ -109,13 +109,12 @@ function App() {
     setShowOnboarding(qTab === undefined);
   }, [qTab]);
 
-  const enterApp = (destination: "simulator", familiarity: Familiarity) => {
+  const enterApp = (destination: "simulator", familiarity: Familiarity, startGuide = true) => {
     browserStorage.setItem("logiclab-onboarding-complete", "true");
     browserStorage.setItem("logiclab-familiarity", familiarity);
     setAutoTourEndTab("simulator");
-    if (browserStorage.getItem("logiclab-auto-tutorial-shown-v3") !== "true") {
-      setAutoTourRequested(true);
-    }
+    // Starting a journey explicitly requests guidance, even after an earlier tour.
+    setAutoTourRequested(startGuide);
     s.setTab(destination);
     navigate({ search: { tab: destination }, replace: true });
     setShowOnboarding(false);
@@ -128,11 +127,13 @@ function App() {
 
   useEffect(() => {
     if (showOnboarding !== false || !autoTourRequested) return;
-    const timer = window.setTimeout(() => {
-      tutorialRef.current?.startAutomatically(autoTourEndTab);
+    const timer = window.setInterval(() => {
+      if (!tutorialRef.current) return;
+      tutorialRef.current.startAutomatically(autoTourEndTab);
+      window.clearInterval(timer);
       setAutoTourRequested(false);
     }, 150);
-    return () => window.clearTimeout(timer);
+    return () => window.clearInterval(timer);
   }, [showOnboarding, autoTourRequested, autoTourEndTab]);
 
   useEffect(() => {
