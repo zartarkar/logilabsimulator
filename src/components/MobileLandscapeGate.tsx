@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, RotateCw, Smartphone } from "lucide-react";
 
@@ -11,6 +11,18 @@ export function MobileLandscapeGate() {
   const [message, setMessage] = useState("");
   const [canAutoLock, setCanAutoLock] = useState<boolean | null>(null);
   const [isEmbeddedBrowser, setIsEmbeddedBrowser] = useState(false);
+  const [switching, setSwitching] = useState(false);
+  const ownsLock = useRef(false);
+
+  const updateViewport = useCallback(() => {
+    // Read the actual layout after rotation; orientationchange can fire before
+    // the browser updates either its media query or viewport dimensions.
+    const width = document.documentElement.clientWidth || window.innerWidth;
+    const height = window.innerHeight;
+    const portrait = height > width;
+    setNeedsLandscape(width <= 900 && portrait);
+    if (!portrait) setMessage("");
+  }, []);
 
   useEffect(() => {
     const mobile = window.matchMedia("(max-width: 900px)");
@@ -18,37 +30,65 @@ export function MobileLandscapeGate() {
     const userAgent = navigator.userAgent;
     setCanAutoLock(typeof (screen.orientation as LockableOrientation | undefined)?.lock === "function");
     setIsEmbeddedBrowser(/FBAN|FBAV|Instagram|Messenger/i.test(userAgent));
+    let frame = 0;
+    let settled = 0;
     const update = () => {
-      setNeedsLandscape(mobile.matches && portrait.matches);
-      if (!portrait.matches) setMessage("");
+      cancelAnimationFrame(frame);
+      clearTimeout(settled);
+      frame = requestAnimationFrame(updateViewport);
+      settled = window.setTimeout(updateViewport, 300);
     };
-    update();
+    updateViewport();
     mobile.addEventListener("change", update);
     portrait.addEventListener("change", update);
     window.addEventListener("orientationchange", update);
+    window.addEventListener("resize", update);
+    window.addEventListener("pageshow", update);
+    screen.orientation?.addEventListener?.("change", update);
+    window.visualViewport?.addEventListener("resize", update);
+    document.addEventListener("fullscreenchange", update);
     return () => {
       mobile.removeEventListener("change", update);
       portrait.removeEventListener("change", update);
       window.removeEventListener("orientationchange", update);
+      window.removeEventListener("resize", update);
+      window.removeEventListener("pageshow", update);
+      screen.orientation?.removeEventListener?.("change", update);
+      window.visualViewport?.removeEventListener("resize", update);
+      document.removeEventListener("fullscreenchange", update);
+      cancelAnimationFrame(frame);
+      clearTimeout(settled);
+      if (ownsLock.current) screen.orientation?.unlock?.();
     };
-  }, []);
+  }, [updateViewport]);
 
   const enterLandscape = async () => {
-    let fullscreenFailed = false;
+    if (switching) return;
+    setSwitching(true);
+    setMessage("");
+    let enteredFullscreen = false;
     try {
-      if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-        await document.documentElement.requestFullscreen();
+      const orientation = screen.orientation as LockableOrientation | undefined;
+      if (!orientation?.lock) throw new Error("unsupported");
+      try {
+        await orientation.lock("landscape");
+      } catch {
+        // Some Android browsers require fullscreen before allowing a lock.
+        if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+          enteredFullscreen = true;
+        }
+        await orientation.lock("landscape");
       }
+      ownsLock.current = true;
+      updateViewport();
     } catch {
-      fullscreenFailed = true;
-    }
-
-    try {
-      const orientation = screen.orientation as LockableOrientation;
-      if (!orientation.lock) throw new Error("unsupported");
-      await orientation.lock("landscape");
-    } catch {
-      setMessage(`${fullscreenFailed ? "Fullscreen চালু করা যায়নি। " : ""}এই browser স্বয়ংক্রিয়ভাবে Landscape Mode চালু করতে দেয় না। Auto Rotation চালু করে মোবাইলটি ঘুরিয়ে নিন।\n${fullscreenFailed ? "Fullscreen could not be enabled. " : ""}This browser cannot switch to Landscape Mode automatically. Turn on Auto Rotation and rotate your phone.`);
+      if (enteredFullscreen && document.fullscreenElement) {
+        await document.exitFullscreen().catch(() => {});
+      }
+      setMessage("এই browser থেকে সরাসরি ঘোরানো যাচ্ছে না। ফোনের Auto Rotation চালু করে Rotation Lock বন্ধ করো, তারপর ফোনটি পাশে ঘোরাও।\nTurn on Auto Rotation, turn off Rotation Lock, then rotate your phone sideways.");
+    } finally {
+      setSwitching(false);
     }
   };
 
@@ -73,7 +113,7 @@ export function MobileLandscapeGate() {
           <p className="text-xs">{canAutoLock ? "Tap the button below to let supported browsers switch automatically." : "Turn on Auto Rotation, then rotate your phone to open the simulator."}</p>
         </div>
         {canAutoLock ? (
-          <Button className="mt-5 h-auto min-h-11 w-full whitespace-normal py-3" onClick={enterLandscape}>
+          <Button disabled={switching} className="mt-5 h-auto min-h-11 w-full whitespace-normal py-3" onClick={enterLandscape}>
             <RotateCw className="mr-2 h-4 w-4" /> Landscape Mode-এ নিন · Enter Landscape Mode
           </Button>
         ) : (
