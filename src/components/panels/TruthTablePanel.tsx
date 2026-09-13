@@ -8,7 +8,6 @@ import { toast } from "sonner";
 
 export function TruthTablePanel() {
   const { parsed, values, setValues } = useCircuitStore();
-  const [filter, setFilter] = useState<"all" | "1" | "0">("all");
   const [confirmed, setConfirmed] = useState(false);
   const [showIntermediate, setShowIntermediate] = useState(true);
 
@@ -56,7 +55,7 @@ export function TruthTablePanel() {
       </div>
     );
 
-  const visible = rows.filter((r) => filter === "all" || String(r.out) === filter);
+  const visible = rows;
   const activeIndex = rows.findIndex((r) => vars.every((v) => r.env[v] === (values[v] ?? 0)));
 
   const csv = () => {
@@ -75,28 +74,25 @@ export function TruthTablePanel() {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col">
       <div className="flex flex-wrap items-center gap-2 border-b border-border p-2">
-        <Button size="sm" variant={filter === "all" ? "default" : "outline"} onClick={() => setFilter("all")} className={filter === "all" ? "button-red" : ""}>
-          All rows
-        </Button>
         <span className="ml-auto text-xs text-muted-foreground">{visible.length} rows</span>
       </div>
-      <div className="min-h-0 flex-1 overflow-auto">
+      <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <thead className="sticky top-0 bg-card">
             <tr>
               {vars.map((v) => (
-                <th key={v} className="border-b border-border px-3 py-2 text-left font-mono text-xs">
+                <th key={v} className="border-b border-border px-2 py-2 text-left font-mono text-xs">
                   {v}
                 </th>
               ))}
               {intermediates.map((m) => (
-                <th key={m.expr} className="border-b border-border px-3 py-2 text-left font-mono text-xs text-muted-foreground">
+                <th key={m.expr} className="border-b border-border px-2 py-2 text-left font-mono text-xs text-muted-foreground">
                   {m.expr}
                 </th>
               ))}
-              <th className="border-b border-border px-3 py-2 text-left font-mono text-xs">{parsed.name}</th>
+              <th className="border-b border-border px-2 py-2 text-left font-mono text-xs">{parsed.name}</th>
             </tr>
           </thead>
           <tbody>
@@ -112,16 +108,16 @@ export function TruthTablePanel() {
                   )}
                 >
                   {vars.map((v) => (
-                    <td key={v} className="border-b border-border/50 px-3 py-1 font-mono tabular-nums">
+                    <td key={v} className="border-b border-border/50 px-2 py-1 font-mono tabular-nums">
                       {r.env[v]}
                     </td>
                   ))}
                   {r.mids.map((m, k) => (
-                    <td key={k} className="border-b border-border/50 px-3 py-1 font-mono tabular-nums text-muted-foreground">
+                    <td key={k} className="border-b border-border/50 px-2 py-1 font-mono tabular-nums text-muted-foreground">
                       {m}
                     </td>
                   ))}
-                  <td className="border-b border-border/50 px-3 py-1 font-mono font-bold tabular-nums">{r.out}</td>
+                  <td className="border-b border-border/50 px-2 py-1 font-mono font-bold tabular-nums">{r.out}</td>
                 </tr>
               );
             })}

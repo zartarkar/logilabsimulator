@@ -61,7 +61,7 @@ export function GateNode({ data, selected }: NodeProps & { data: GateNodeData })
   return (
     <div
       className={cn(
-        "group relative flex flex-col items-center text-foreground",
+        "group relative flex h-12 w-16 flex-col items-center text-foreground",
         data.highlighted && "drop-shadow-[0_0_8px_var(--signal-on)]",
         data.critical && "text-[var(--signal-on)]",
         selected && "text-primary drop-shadow-[0_0_6px_var(--signal-on)]",
@@ -77,6 +77,15 @@ export function GateNode({ data, selected }: NodeProps & { data: GateNodeData })
       <DiagnosticBadge message={data.diagnosticError} />
       <InputHandles count={data.inputCount} />
       <GateShape type={data.gateType} active={active} />
+      <svg aria-hidden="true" viewBox="0 0 68 48" className="pointer-events-none absolute inset-0 h-12 w-16 overflow-visible">
+        {Array.from({ length: Math.max(data.inputCount, 1) }, (_, i) => {
+          const y = ((i + 1) / (Math.max(data.inputCount, 1) + 1)) * 48;
+          const curved = ["OR", "NOR", "XOR", "XNOR"].includes(data.gateType);
+          const x = curved ? 6 + 40 * ((y - 2) / 44) * (1 - (y - 2) / 44) : ["NOT", "BUFFER"].includes(data.gateType) ? 10 : 8;
+          return <path key={i} d={`M0 ${y} H${x}`} stroke="var(--signal-off)" strokeWidth="1.5" fill="none" />;
+        })}
+        <path d={`M${["NAND", "NOR", "XNOR"].includes(data.gateType) ? 64 : data.gateType === "NOT" ? 56 : data.gateType === "AND" ? 54 : data.gateType === "BUFFER" ? 50 : 52} 24 H68`} stroke="var(--signal-off)" strokeWidth="1.5" fill="none" />
+      </svg>
       <Handle
         id="out"
         type="source"
@@ -84,7 +93,7 @@ export function GateNode({ data, selected }: NodeProps & { data: GateNodeData })
         className="!h-2 !w-2 !border-2 !border-border !bg-background pointer-coarse:!h-5 pointer-coarse:!w-5"
       />
       {data.showLabels && data.expr && (
-        <div className="mt-1 max-w-32 rounded bg-background/95 px-1 py-0.5 text-center font-mono text-[9px] font-semibold leading-tight text-foreground shadow-sm">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-max max-w-32 rounded bg-background/95 px-1 py-0.5 text-center font-mono text-[9px] font-semibold leading-tight text-foreground shadow-sm">
           {data.expr} = {data.value}
         </div>
       )}

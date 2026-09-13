@@ -15,7 +15,7 @@ export interface Parsed {
 
 interface State {
   expression: string;
-  tab: "simulator" | "builder" | "learn" | "practice" | "circuit";
+  tab: "concepts" | "simulator" | "builder" | "learn" | "practice" | "circuit";
   mode: SyntaxMode;
   twoInputMode: boolean;
   shareSubexpressions: boolean;
@@ -33,7 +33,7 @@ interface State {
   simplifiedGraph: CircuitGraph | null;
   validation: { ok: boolean; issues: string[]; acyclic: boolean; equivalent: boolean } | null;
   setExpression: (v: string) => void;
-  setTab: (t: "simulator" | "builder" | "learn" | "practice" | "circuit") => void;
+  setTab: (t: "concepts" | "simulator" | "builder" | "learn" | "practice" | "circuit") => void;
   setMode: (m: SyntaxMode) => void;
   setOption: (k: "twoInputMode" | "shareSubexpressions" | "showLabels" | "animate", v: boolean) => void;
   setDirection: (d: "LR" | "TB") => void;

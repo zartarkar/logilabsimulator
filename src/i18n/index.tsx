@@ -22,7 +22,7 @@ export const DICT: Dict = {
     en: "Follow these steps to go from a Boolean expression to a working circuit.",
     bn: "একটি বুলিয়ান এক্সপ্রেশন থেকে সম্পূর্ণ সার্কিট বানাতে এই ধাপগুলো অনুসরণ করো।",
   },
-  step1t: { en: "1. Write the expression", bn: "১. এক্সপ্রেশন লেখো" },
+  step1t: { en: "1. Write the expression", bn: "1. এক্সপ্রেশন লেখো" },
   step1d: {
     en: "Type a Boolean expression such as F = XYZ + XY' in the input box on the left. You can also pick a ready-made example.",
     bn: "বাঁ পাশের ইনপুট বক্সে F = XYZ + XY' এর মতো এক্সপ্রেশন লেখো, অথবা তৈরি উদাহরণ থেকে বেছে নাও।",
@@ -30,7 +30,7 @@ export const DICT: Dict = {
   step2t: { en: "2. Set the input values", bn: "২. ইনপুট মান ঠিক করো" },
   step2d: {
     en: "Toggle each variable between 0 (OFF) and 1 (ON), or use Randomize / All 0 / All 1.",
-    bn: "প্রতিটি ভেরিয়েবলকে ০ (OFF) বা ১ (ON) করো, অথবা Randomize / All 0 / All 1 ব্যবহার করো।",
+    bn: "প্রতিটি ভেরিয়েবলকে ০ (OFF) বা 1 (ON) করো, অথবা Randomize / All 0 / All 1 ব্যবহার করো।",
   },
   step3t: { en: "3. Press Generate", bn: "৩. Generate চাপো" },
   step3d: {
@@ -89,21 +89,21 @@ export const DICT: Dict = {
   },
   randomize: { en: "Randomize", bn: "এলোমেলো" },
   all0: { en: "All 0", bn: "সব ০" },
-  all1: { en: "All 1", bn: "সব ১" },
+  all1: { en: "All 1", bn: "সব 1" },
   parseFirst: { en: "Parse an expression to detect its variables.", bn: "ভেরিয়েবল দেখতে একটি এক্সপ্রেশন পার্স করো।" },
   uploadCircuit: { en: "Upload/Take Photo", bn: "আপলোড/ছবি তুলুন" },
   processingImage: { en: "Processing image...", bn: "ছবি প্রসেস করা হচ্ছে..." },
   imageSuccess: { en: "Circuit recognized!", bn: "সার্কিট শনাক্ত করা হয়েছে!" },
   imageError: { en: "Failed to recognize circuit.", bn: "সার্কিট শনাক্ত করা যায়নি।" },
   // Practice Challenge 1: AND Gate
-  practiceAnd1Title: { en: "Practice 1: Build an AND gate", bn: "প্রাকটিস ১: AND গেট তৈরি করো" },
+  practiceAnd1Title: { en: "Practice 1: Build an AND gate", bn: "প্রাকটিস 1: AND গেট তৈরি করো" },
   practiceAnd1Summary: {
     en: "Create a circuit that outputs 1 only when both inputs are 1.",
-    bn: "এমন সার্কিট বানাও যা শুধুমাত্র যখন দুটি ইনপুট ১ হয় তখনই আউটপুট ১ দেয়।",
+    bn: "এমন সার্কিট বানাও যা শুধুমাত্র যখন দুটি ইনপুট 1 হয় তখনই আউটপুট 1 দেয়।",
   },
   practiceAnd1Hint: {
     en: "The output should be 1 only when both A and B are 1.",
-    bn: "আউটপুট শুধুমাত্র তখনই ১ হবে যখন A এবং B দুটোই ১ হয়।",
+    bn: "আউটপুট শুধুমাত্র তখনই 1 হবে যখন A এবং B দুটোই 1 হয়।",
   },
   practiceAnd1Inst0: {
     en: "Add two input switches labeled A and B.",
@@ -145,13 +145,13 @@ export const DICT: Dict = {
   practiceAnd1Guide5Msg: { en: "Toggle the input values and check the result.", bn: "ইনপুট মান টগল করো এবং ফলাফল দেখো।" },
   practiceAnd1Guide5Detail: {
     en: "Set inputs to 1 and 1 to see the LED turn on.",
-    bn: "ইনপুট ১ এবং ১ করো LED চালু হতে দেখার জন্য।",
+    bn: "ইনপুট 1 এবং 1 করো LED চালু হতে দেখার জন্য।",
   },
   // Practice Challenge 2: OR Gate
   practiceOr2Title: { en: "Practice 2: Build an OR gate", bn: "প্রাকটিস ২: OR গেট তৈরি করো" },
   practiceOr2Summary: {
     en: "Create a circuit that outputs 1 when either input is 1.",
-    bn: "এমন সার্কিট বানাও যা যেকোনো ইনপুট ১ হলে আউটপুট ১ দেয়।",
+    bn: "এমন সার্কিট বানাও যা যেকোনো ইনপুট 1 হলে আউটপুট 1 দেয়।",
   },
   practiceOr2Hint: {
     en: "The output should be 0 only when both inputs are 0.",
@@ -198,7 +198,7 @@ export const DICT: Dict = {
   practiceXor3Title: { en: "Practice 3: Build an XOR gate", bn: "প্রাকটিস ৩: XOR গেট তৈরি করো" },
   practiceXor3Summary: {
     en: "Create a circuit that outputs 1 when exactly one input is on.",
-    bn: "এমন সার্কিট বানাও যা ঠিক একটি ইনপুট ১ হলে আউটপুট ১ দেয়।",
+    bn: "এমন সার্কিট বানাও যা ঠিক একটি ইনপুট 1 হলে আউটপুট 1 দেয়।",
   },
   practiceXor3Hint: {
     en: "XOR is true when the two inputs differ.",
@@ -219,7 +219,7 @@ export const DICT: Dict = {
   practiceXor3Guide0Msg: { en: "Choose this element: XOR gate.", bn: "এই উপাদান বেছে নাও: XOR গেট।" },
   practiceXor3Guide0Detail: {
     en: "This gate outputs 1 only when the two inputs differ.",
-    bn: "এই গেট শুধুমাত্র তখনই ১ দেয় যখন দুটি ইনপুট আলাদা হয়।",
+    bn: "এই গেট শুধুমাত্র তখনই 1 দেয় যখন দুটি ইনপুট আলাদা হয়।",
   },
   practiceXor3Guide1Msg: { en: "Add input switch A.", bn: "ইনপুট সুইচ A যোগ করো।" },
   practiceXor3Guide1Detail: {
@@ -258,6 +258,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     const stored = browserStorage.getItem("logiclab-lang");
     if (stored === "bn" || stored === "en") setLangState(stored);
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   const setLang = useCallback((l: Lang) => {
     setLangState(l);

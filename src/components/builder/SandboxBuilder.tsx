@@ -14,7 +14,6 @@ import {
   type NodeChange,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { driver, type Driver } from "driver.js";
 import { nodeTypes, type GateNodeData } from "@/components/circuit/nodes";
 import { GateShape } from "@/components/circuit/GateShape";
 import type { AstNode, CircuitNodeType } from "@/logic/types";
@@ -460,7 +459,6 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const { screenToFlowPosition, fitView } = useReactFlow();
   const paneRef = useRef<HTMLDivElement>(null);
-  const practiceDriverRef = useRef<Driver | null>(null);
   const nextIdRef = useRef(0);
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
   const isMobile = useIsMobile();
@@ -497,14 +495,14 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     let secondFrame = 0;
     const firstFrame = window.requestAnimationFrame(() => {
       secondFrame = window.requestAnimationFrame(() => {
-        fitView({ padding: isMobile ? 0.35 : 0.2, maxZoom: isMobile ? 0.9 : 1.05, duration: 250 });
+        fitView({ padding: 0.12, maxZoom: 1.05, duration: 0 });
       });
     });
     return () => {
       window.cancelAnimationFrame(firstFrame);
       if (secondFrame) window.cancelAnimationFrame(secondFrame);
     };
-  }, [fitView, guideIndex, isMobile, isPracticeMode, nodes.length]);
+  }, [fitView, isMobile, isPracticeMode, nodes.length]);
 
   // Helper to get i18n key prefix for challenge ID
   const getChallengeKeyPrefix = (challengeId: string): string => {
@@ -523,7 +521,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     const guideEntry = property.match(/^Guide(\d+)(Msg|Detail)$/);
     const guideStep = guideEntry ? challenge?.guide[Number(guideEntry[1])] : undefined;
     if (guideStep?.target === "canvas:toggle") {
-      if (guideEntry?.[2] === "Msg") return lang === "bn" ? "ইনপুটের ০/১ বোতাম চাপো" : "Tap an input’s 0/1 switch";
+      if (guideEntry?.[2] === "Msg") return lang === "bn" ? "ইনপুটের ০/1 বোতাম চাপো" : "Tap an input’s 0/1 switch";
       return lang === "bn" ? "চিহ্নিত সুইচ চাপলে মান বদলাবে। ইনপুট বদলে তারের রং ও LED দেখো। LED জ্বালিয়ে এই ধাপ শেষ করো।" : "Tap the highlighted switch to change its value. Follow the wire colour and LED. Make the LED light up to finish this step.";
     }
     if (guideStep?.target === "canvas:wire" && guideEntry?.[2] === "Detail") return lang === "bn" ? "প্রথমে ইনপুটের ডান পাশের বিন্দুতে চাপো, তারপর গেটের বাম পাশের বিন্দুতে চাপো। এভাবেই A ও B কে গেটে এবং গেটের ডান পাশকে LED তে যুক্ত করো। বিন্দু ধরে টেনেও তার জোড়া যায়।" : "Tap the dot on the right of an input, then a dot on the left of the gate. Connect A and B to the gate, then its right dot to the LED. You can also drag between dots.";
@@ -782,62 +780,6 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
   );
   const highlightGuide = isPracticeMode ? (activeGuide?.target ?? "") : "";
 
-  useEffect(() => {
-    practiceDriverRef.current?.destroy();
-    practiceDriverRef.current = null;
-    document.body.classList.remove("practice-canvas-focus");
-
-    if (!isPracticeMode || !activeGuide || activeChallenge.difficulty !== "beginner") return;
-
-    if (!activeGuide.target.startsWith("component:")) {
-      document.body.classList.add("practice-canvas-focus");
-      return () => document.body.classList.remove("practice-canvas-focus");
-    }
-
-    const targetSelector = `[data-practice-target="${activeGuide.target}"]`;
-    const targetElement = document.querySelector<HTMLElement>(targetSelector);
-    if (!targetElement || targetElement.getClientRects().length === 0) return;
-
-    const practiceDriver = driver({
-      animate: true,
-      overlayOpacity: 0.72,
-      stagePadding: 7,
-      stageRadius: 10,
-      allowClose: true,
-      allowScroll: false,
-      overlayClickBehavior: "close",
-      disableActiveInteraction: false,
-      showButtons: ["close"],
-      popoverClass: "practice-driver-popover",
-      onDestroyed: () => {
-        document.body.classList.remove("practice-guide-active");
-        if (practiceDriverRef.current === practiceDriver) practiceDriverRef.current = null;
-      },
-    });
-
-    practiceDriverRef.current = practiceDriver;
-    document.body.classList.add("practice-guide-active");
-    const frame = window.requestAnimationFrame(() => {
-      practiceDriver.highlight({
-        element: targetElement,
-        popover: {
-          title: `Step ${guideIndex + 1} of ${activeChallenge.guide.length}`,
-          description: `${getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Msg`)} ${getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Detail`)}`,
-          side: "right",
-          align: "center",
-          showButtons: ["close"],
-        },
-      });
-    });
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      practiceDriver.destroy();
-      document.body.classList.remove("practice-guide-active");
-      if (practiceDriverRef.current === practiceDriver) practiceDriverRef.current = null;
-    };
-  }, [activeChallenge.id, activeChallenge.difficulty, activeChallenge.guide.length, activeGuide, guideIndex, isPracticeMode]);
-
   const styledEdges = useMemo(() => edges.map((e) => {
     const on = values[e.source] === 1;
     return {
@@ -956,7 +898,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         </AlertDialogContent>
       </AlertDialog>
       <aside className="flex shrink-0 flex-col gap-2 border-b border-border bg-card/60 backdrop-blur-sm p-2.5 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto no-scrollbar">
-        <div data-tour="practice-panel" className="practice-panel order-1 relative w-full shrink-0 overflow-hidden rounded-xl border-2 border-primary/45 bg-gradient-to-br from-primary/15 via-card to-card p-3 shadow-md ring-1 ring-primary/10 flex flex-col gap-2.5 lg:sticky lg:top-0 lg:z-20">
+        <div data-tour="practice-panel" className="practice-panel order-1 relative w-full shrink-0 overflow-hidden rounded-xl border-2 border-primary/45 bg-card p-3 shadow-md ring-1 ring-primary/10 flex flex-col gap-2.5">
             {/* Header */}
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-primary">
@@ -1055,7 +997,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             )}
           </div>
 
-        <div data-tour="builder-palette" className="component-palette order-2 flex min-w-0 gap-2 overflow-x-auto lg:flex-col lg:overflow-x-visible lg:pt-1">
+        <div data-tour="builder-palette" className="component-palette order-2 flex shrink-0 min-w-0 gap-2 overflow-x-auto lg:flex-col lg:overflow-x-visible lg:pt-1">
         <h3 className="hidden text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 lg:block mb-1">Components</h3>
         <button
           data-practice-target="component:INPUT"
@@ -1071,7 +1013,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         >
           <span className="relative flex items-center gap-2">
             {isGuideTarget("component:INPUT") && (
-              <span className="absolute -left-1 text-lg animate-bounce">➜</span>
+              <span className="absolute -left-1 text-lg ">➜</span>
             )}
             {isGuideTarget("component:INPUT") && <span className="text-[10px] font-bold uppercase text-primary">Choose</span>}
             <ToggleLeft className="h-4 w-4 text-primary" aria-hidden="true" />
@@ -1092,7 +1034,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         >
           <span className="relative flex items-center gap-2">
             {isGuideTarget("component:OUTPUT") && (
-              <span className="absolute -left-1 text-lg animate-bounce">➜</span>
+              <span className="absolute -left-1 text-lg ">➜</span>
             )}
             {isGuideTarget("component:OUTPUT") && <span className="text-[10px] font-bold uppercase text-primary">Choose</span>}
             <Lightbulb className="h-4 w-4 text-[var(--signal-on)]" aria-hidden="true" />
@@ -1116,7 +1058,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
           >
             <span className="relative flex items-center gap-2">
               {isGuideTarget(`component:${g}`) && (
-                <span className="absolute -left-1 text-lg animate-bounce">➜</span>
+                <span className="absolute -left-1 text-lg ">➜</span>
               )}
               {isGuideTarget(`component:${g}`) && <span className="text-[10px] font-bold uppercase text-primary">Choose</span>}
               <span className="scale-[0.5] origin-left -mr-6">
@@ -1153,18 +1095,8 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         </Button>
         </div>
       </aside>
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden relative">
+      <div className="builder-workspace flex min-h-0 flex-1 flex-col overflow-y-auto relative">
         <div ref={paneRef} data-tour="builder-canvas" data-practice-target="canvas" className={`min-h-0 flex-1 relative ${highlightGuide === "canvas:wire" ? "practice-wire-help" : highlightGuide === "canvas:toggle" ? "practice-toggle-help" : ""}`}>
-          {highlightGuide === "canvas:wire" && (
-            <div className="pointer-events-none absolute inset-x-4 top-4 z-30 rounded-xl border-2 border-primary/70 bg-gradient-to-r from-primary/20 to-primary/10 px-4 py-3 text-center text-sm font-semibold text-primary shadow-lg shadow-primary/30 backdrop-blur-sm animate-pulse">
-              🔌 {getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Msg`)}
-            </div>
-          )}
-          {highlightGuide === "canvas:toggle" && (
-            <div className="pointer-events-none absolute inset-x-4 top-4 z-30 rounded-xl border-2 border-primary/70 bg-gradient-to-r from-primary/20 to-primary/10 px-4 py-3 text-center text-sm font-semibold text-primary shadow-lg shadow-primary/30 backdrop-blur-sm animate-pulse">
-              ⚡ {getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Msg`)}
-            </div>
-          )}
           {isMobile && selectedIds.length === 1 && (
             <div className="pointer-events-none absolute left-1/2 top-2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full border border-border bg-card/95 px-3 py-1 text-[10px] text-muted-foreground shadow">
               {lang === "bn" ? "গেট টানো · অথবা খালি জায়গায় চাপো" : "Drag a gate · or tap empty space to place it"}
@@ -1245,7 +1177,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
 
         {isPracticeMode && activeGuide && (
           <section className="practice-guide shrink-0 border-t border-border bg-card/95 px-4 py-2.5 backdrop-blur-sm" aria-label="Guided practice step">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <div className="flex flex-col items-stretch gap-2">
               <div className="flex min-w-0 flex-1 items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                 <div className="min-w-0">
@@ -1299,12 +1231,12 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         )}
         
         {/* Overlaid Truth Table - reduced prominence as requested */}
-        <details className={`absolute left-4 right-4 z-20 group ${isPracticeMode && activeGuide ? "bottom-28" : "bottom-4"}`}>
-          <summary className="flex w-max cursor-pointer list-none items-center gap-2 rounded-full border border-border bg-card/90 px-4 py-2 text-xs font-bold shadow-lg backdrop-blur-sm hover:bg-card transition-all">
+        <section aria-label="Circuit truth table" className="builder-truth shrink-0 border-t bg-card px-4 py-3">
+          <h3 className="flex items-center gap-2 text-xs font-semibold">
             <span className="h-2 w-2 rounded-full bg-primary" />
             {t("builderTruth")}
-          </summary>
-          <div className="mt-2 max-h-48 overflow-auto rounded-xl border border-border bg-card/95 p-3 shadow-2xl backdrop-blur-md">
+          </h3>
+          <div className="mt-3 rounded-lg border border-border bg-card p-2">
             {truth ? (
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-sm">
@@ -1344,7 +1276,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
               <p className="text-sm text-muted-foreground">{t("builderTruthEmpty")}</p>
             )}
           </div>
-        </details>
+        </section>
       </div>
     </div>
   );

@@ -1,0 +1,222 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/BooleanIntroduction.tsx");const _jsxDEV = __vite__cjsImport1_react_jsxDevRuntime["jsxDEV"]; const _Fragment = __vite__cjsImport1_react_jsxDevRuntime["Fragment"];import { BOOLEAN_LAWS } from "/src/logic/lessonCurriculum.ts?t=1789137670155";
+var _jsxFileName = "C:/Users/zarin/logilabsimulator/src/components/BooleanIntroduction.tsx";
+import __vite__cjsImport1_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=e65d69f5";
+const theorems = [
+	{
+		bn: "পরিচিতি সূত্র (Identity Law)",
+		en: "Identity Law",
+		forms: ["A + 0 = A", "A · 1 = A"],
+		example: 0
+	},
+	{
+		bn: "পূরক উপপাদ্য (Complement Law)",
+		en: "Complement Law",
+		forms: ["A + A̅ = 1", "A · A̅ = 0"],
+		example: 1
+	},
+	{
+		bn: "অপরিবর্তনীয় সূত্র (Idempotent Law)",
+		en: "Idempotent Law",
+		forms: ["A + A = A", "A · A = A"],
+		example: 2
+	},
+	{
+		bn: "কর্তৃত্ব সূত্র (Domination/Annulment Law)",
+		en: "Domination/Annulment Law",
+		forms: ["A + 1 = 1", "A · 0 = 0"],
+		example: 3
+	},
+	{
+		bn: "বিনিময় উপপাদ্য (Commutative Law)",
+		en: "Commutative Law",
+		forms: ["A + B = B + A", "A · B = B · A"],
+		example: 4
+	},
+	{
+		bn: "অনুষঙ্গ উপপাদ্য (Associative Law)",
+		en: "Associative Law",
+		forms: ["A + (B + C) = (A + B) + C", "A · (B · C) = (A · B) · C"],
+		example: 5
+	},
+	{
+		bn: "বিভাজন উপপাদ্য (Distributive Law)",
+		en: "Distributive Law",
+		forms: ["A(B + C) = AB + AC", "A + BC = (A + B)(A + C)"],
+		example: 6
+	},
+	{
+		bn: "পরিশোষণ উপপাদ্য (Absorption Law)",
+		en: "Absorption Law",
+		forms: ["A(A + B) = A", "A + (A · B) = A"],
+		example: 7
+	},
+	{
+		bn: "ডি মরগ্যানের উপপাদ্য (De Morgan’s Law)",
+		en: "De Morgan’s Law",
+		forms: ["(A + B)̅ = A̅ · B̅", "(A · B)̅ = A̅ + B̅"],
+		example: 8
+	},
+	{
+		bn: "দ্বি পূরক উপপাদ্য (Double Complement Law)",
+		en: "Double Complement Law",
+		forms: ["(A̅)̅ = A"],
+		example: -1
+	}
+];
+export function BooleanIntroduction({ bn }) {
+	return /* @__PURE__ */ _jsxDEV("div", {
+		className: "space-y-6",
+		"data-tsd-source": "/src/components/BooleanIntroduction.tsx:66:5",
+		children: [
+			/* @__PURE__ */ _jsxDEV("h3", {
+				className: "font-display text-2xl font-bold",
+				"data-tsd-source": "/src/components/BooleanIntroduction.tsx:67:7",
+				children: bn ? "বুলিয়ান অ্যালজেবরা" : "Boolean Algebra"
+			}, void 0, false, {
+				fileName: _jsxFileName,
+				lineNumber: 67,
+				columnNumber: 7
+			}, this),
+			/* @__PURE__ */ _jsxDEV("p", {
+				className: "text-sm leading-8",
+				"data-tsd-source": "/src/components/BooleanIntroduction.tsx:70:7",
+				children: bn ? "বুলিয়ান অ্যালজেবরা মূলত সত্য মিথ্যা, হ্যাঁ না কিংবা চালু বন্ধ, এ ধরনের যৌক্তিক সিদ্ধান্তকে গাণিতিকভাবে প্রকাশ ও বিশ্লেষণের একটি পদ্ধতি। এখানে সাধারণত ১ দ্বারা সত্য (True) বা চালু (ON) এবং ০ দ্বারা মিথ্যা (False) বা বন্ধ (OFF) অবস্থা প্রকাশ করা হয়। কম্পিউটার, স্মার্টফোন, ক্যালকুলেটর, ট্রাফিক সিগন্যাল, অ্যালার্ম সিস্টেমসহ বিভিন্ন ডিজিটাল যন্ত্রের সিদ্ধান্ত গ্রহণ ও নিয়ন্ত্রণে বুলিয়ান অ্যালজেবরা ব্যবহৃত হয়।" : "Boolean algebra is a way to express and analyse logical decisions mathematically: true or false, yes or no, on or off. Usually, 1 represents True or ON, while 0 represents False or OFF. It is used for decisions and control in computers, smartphones, calculators, traffic lights, alarm systems and other digital devices."
+			}, void 0, false, {
+				fileName: _jsxFileName,
+				lineNumber: 70,
+				columnNumber: 7
+			}, this),
+			/* @__PURE__ */ _jsxDEV("p", {
+				className: "text-sm leading-8",
+				"data-tsd-source": "/src/components/BooleanIntroduction.tsx:75:7",
+				children: bn ? "বুলিয়ান অ্যালজেবরার প্রধান তিনটি লজিক্যাল অপারেশন হলো AND, OR ও NOT। AND অপারেশনকে · বা পাশাপাশি লিখে (যেমন, A·B বা AB) প্রকাশ করা হয় এবং সব ইনপুট ১ হলেই এর আউটপুট ১ হয়। OR অপারেশনকে + চিহ্ন দিয়ে (যেমন, A+B) প্রকাশ করা হয় এবং যেকোনো একটি ইনপুট ১ হলেই আউটপুট ১ হয়। অন্যদিকে, NOT একটি ইনপুটের বিপরীত মান প্রদান করে এবং একে A̅ বা A′ দ্বারা প্রকাশ করা হয়; অর্থাৎ ইনপুট ১ হলে আউটপুট ০ এবং ইনপুট ০ হলে আউটপুট ১ হয়। এই লজিকগুলো ব্যবহার করেই বিভিন্ন শর্ত অনুযায়ী ডিজিটাল সার্কিটের কার্যক্রম নিয়ন্ত্রণ করা হয়।" : "The three main logical operations are AND, OR and NOT. AND is written with · or adjacent letters, such as A·B or AB; its output is 1 only when all inputs are 1. OR is written with +, as in A+B; its output is 1 when at least one input is 1. NOT gives the opposite of its input and is written A̅ or A′: input 1 gives output 0, and input 0 gives output 1. These operations control how digital circuits respond to different conditions."
+			}, void 0, false, {
+				fileName: _jsxFileName,
+				lineNumber: 75,
+				columnNumber: 7
+			}, this),
+			/* @__PURE__ */ _jsxDEV("h3", {
+				className: "border-t pt-6 font-display text-xl font-bold",
+				"data-tsd-source": "/src/components/BooleanIntroduction.tsx:80:7",
+				children: bn ? "বুলিয়ান উপপাদ্য (Boolean Theorems)" : "Boolean Theorems"
+			}, void 0, false, {
+				fileName: _jsxFileName,
+				lineNumber: 80,
+				columnNumber: 7
+			}, this),
+			/* @__PURE__ */ _jsxDEV("p", {
+				className: "text-sm leading-7",
+				"data-tsd-source": "/src/components/BooleanIntroduction.tsx:83:7",
+				children: bn ? "বুলিয়ান অ্যালজেবরার বিভিন্ন রাশি সরলীকরণ এবং লজিক সার্কিটের কার্যপ্রণালি বিশ্লেষণের জন্য কিছু নির্দিষ্ট সূত্র বা উপপাদ্য ব্যবহার করা হয়। গুরুত্বপূর্ণ বুলিয়ান উপপাদ্যগুলো হলো, " : "Specific laws or theorems help simplify Boolean expressions and analyse logic circuits. The important Boolean theorems are:"
+			}, void 0, false, {
+				fileName: _jsxFileName,
+				lineNumber: 83,
+				columnNumber: 7
+			}, this),
+			/* @__PURE__ */ _jsxDEV("div", {
+				className: "space-y-4",
+				"data-tsd-source": "/src/components/BooleanIntroduction.tsx:88:7",
+				children: theorems.map((law, i) => /* @__PURE__ */ _jsxDEV("article", {
+					className: "rounded-xl border border-primary/20 bg-primary/5 p-4",
+					"data-tsd-source": "/src/components/BooleanIntroduction.tsx:90:11",
+					children: [
+						/* @__PURE__ */ _jsxDEV("h4", {
+							className: "font-semibold",
+							"data-tsd-source": "/src/components/BooleanIntroduction.tsx:91:13",
+							children: [
+								bn ? String(i + 1).replace(/\d/g, (d) => "০১২৩৪৫৬৭৮৯"[Number(d)]) : i + 1,
+								".",
+								" ",
+								bn ? law.bn : law.en
+							]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 91,
+							columnNumber: 13
+						}, this),
+						/* @__PURE__ */ _jsxDEV("div", {
+							className: "my-3 space-y-2 font-mono text-sm",
+							"data-tsd-source": "/src/components/BooleanIntroduction.tsx:95:13",
+							children: law.forms.map((form, j) => /* @__PURE__ */ _jsxDEV("p", {
+								"data-tsd-source": "/src/components/BooleanIntroduction.tsx:97:17",
+								children: [
+									j === 0 ? "i)" : "ii)",
+									" ",
+									form
+								]
+							}, form, true, {
+								fileName: _jsxFileName,
+								lineNumber: 97,
+								columnNumber: 17
+							}, this))
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 95,
+							columnNumber: 13
+						}, this),
+						/* @__PURE__ */ _jsxDEV("p", {
+							className: "rounded-lg bg-card p-3 font-mono text-xs leading-6",
+							"data-tsd-source": "/src/components/BooleanIntroduction.tsx:102:13",
+							children: [
+								bn ? "উদাহরণ: " : "Example: ",
+								law.example === -1 ? "A = 1 → A̅ = 0 → (A̅)̅ = 1 = A" : BOOLEAN_LAWS[law.example].example,
+								i === 8 && /* @__PURE__ */ _jsxDEV(_Fragment, { children: [/* @__PURE__ */ _jsxDEV("br", { "data-tsd-source": "/src/components/BooleanIntroduction.tsx:109:19" }, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 109,
+									columnNumber: 19
+								}, this), BOOLEAN_LAWS[9].example] }, void 0, true, {
+									fileName: _jsxFileName,
+									lineNumber: 108,
+									columnNumber: 17
+								}, this)
+							]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 102,
+							columnNumber: 13
+						}, this)
+					]
+				}, law.en, true, {
+					fileName: _jsxFileName,
+					lineNumber: 90,
+					columnNumber: 11
+				}, this))
+			}, void 0, false, {
+				fileName: _jsxFileName,
+				lineNumber: 88,
+				columnNumber: 7
+			}, this)
+		]
+	}, void 0, true, {
+		fileName: _jsxFileName,
+		lineNumber: 66,
+		columnNumber: 5
+	}, this);
+}
+_c = BooleanIntroduction;
+var _c;
+$RefreshReg$(_c, "BooleanIntroduction");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+import * as __vite_react_currentExports from "/src/components/BooleanIntroduction.tsx?t=1789137670155";
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+
+  const currentExports = __vite_react_currentExports;
+  queueMicrotask(() => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/zarin/logilabsimulator/src/components/BooleanIntroduction.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/zarin/logilabsimulator/src/components/BooleanIntroduction.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/zarin/logilabsimulator/src/components/BooleanIntroduction.tsx" + ' ' + id); }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUE7OztBQUNBO0NBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtDQUNBO0FBQ0E7QUFDQTtDQUNBLE9BQ0E7RUFBQTtFQUFBO1lBQUE7R0FDQTtJQUFBO0lBQUE7Y0FDQTtHQUNBOzs7OztHQUNBO0lBQUE7SUFBQTtjQUNBLEtBQ0EsMlpBQ0E7R0FDQTs7Ozs7R0FDQTtJQUFBO0lBQUE7Y0FDQSxLQUNBLHlmQUNBO0dBQ0E7Ozs7O0dBQ0E7SUFBQTtJQUFBO2NBQ0E7R0FDQTs7Ozs7R0FDQTtJQUFBO0lBQUE7Y0FDQSxLQUNBLG9MQUNBO0dBQ0E7Ozs7O0dBQ0E7SUFBQTtJQUFBO2NBQ0EseUJBQ0E7S0FBQTtLQUFBO2VBQUE7TUFDQTtPQUFBO09BQUE7aUJBQUE7UUFDQTtRQUFBO1FBQUE7UUFDQTtPQUNBOzs7Ozs7TUFDQTtPQUFBO09BQUE7aUJBQ0EsMkJBQ0E7UUFBQTtrQkFBQTtTQUNBO1NBQUE7U0FBQTtRQUNBO1VBRkE7Ozs7Y0FFQSxDQUNBO01BQ0E7Ozs7O01BQ0E7T0FBQTtPQUFBO2lCQUFBO1FBQ0E7UUFDQSxxQkFDQSxtQ0FDQTtRQUNBLFdBQ0EsZ0RBQ0Esb0dBQXNCOzs7O2tCQUN0Qix1QkFDQTs7Ozs7T0FFQTs7Ozs7O0tBQ0E7T0F4QkE7Ozs7V0F3QkEsQ0FDQTtHQUNBOzs7OztFQUNBOzs7Ozs7QUFFQSIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiQm9vbGVhbkludHJvZHVjdGlvbi50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgQk9PTEVBTl9MQVdTIH0gZnJvbSBcIkAvbG9naWMvbGVzc29uQ3VycmljdWx1bVwiO1xuY29uc3QgdGhlb3JlbXMgPSBbXG4gIHtcbiAgICBibjogXCLgpqrgprDgpr/gpprgpr/gpqTgpr8g4Ka44KeC4Kak4KeN4KawIChJZGVudGl0eSBMYXcpXCIsXG4gICAgZW46IFwiSWRlbnRpdHkgTGF3XCIsXG4gICAgZm9ybXM6IFtcIkEgKyAwID0gQVwiLCBcIkEgwrcgMSA9IEFcIl0sXG4gICAgZXhhbXBsZTogMCxcbiAgfSxcbiAge1xuICAgIGJuOiBcIuCmquCnguCmsOCmlSDgpongpqrgpqrgpr7gpqbgp43gpq8gKENvbXBsZW1lbnQgTGF3KVwiLFxuICAgIGVuOiBcIkNvbXBsZW1lbnQgTGF3XCIsXG4gICAgZm9ybXM6IFtcIkEgKyBBzIUgPSAxXCIsIFwiQSDCtyBBzIUgPSAwXCJdLFxuICAgIGV4YW1wbGU6IDEsXG4gIH0sXG4gIHtcbiAgICBibjogXCLgpoXgpqrgprDgpr/gpqzgprDgp43gpqTgpqjgp4Dgp58g4Ka44KeC4Kak4KeN4KawIChJZGVtcG90ZW50IExhdylcIixcbiAgICBlbjogXCJJZGVtcG90ZW50IExhd1wiLFxuICAgIGZvcm1zOiBbXCJBICsgQSA9IEFcIiwgXCJBIMK3IEEgPSBBXCJdLFxuICAgIGV4YW1wbGU6IDIsXG4gIH0sXG4gIHtcbiAgICBibjogXCLgppXgprDgp43gpqTgp4PgpqTgp43gpqwg4Ka44KeC4Kak4KeN4KawIChEb21pbmF0aW9uL0FubnVsbWVudCBMYXcpXCIsXG4gICAgZW46IFwiRG9taW5hdGlvbi9Bbm51bG1lbnQgTGF3XCIsXG4gICAgZm9ybXM6IFtcIkEgKyAxID0gMVwiLCBcIkEgwrcgMCA9IDBcIl0sXG4gICAgZXhhbXBsZTogMyxcbiAgfSxcbiAge1xuICAgIGJuOiBcIuCmrOCmv+CmqOCmv+CmruCnnyDgpongpqrgpqrgpr7gpqbgp43gpq8gKENvbW11dGF0aXZlIExhdylcIixcbiAgICBlbjogXCJDb21tdXRhdGl2ZSBMYXdcIixcbiAgICBmb3JtczogW1wiQSArIEIgPSBCICsgQVwiLCBcIkEgwrcgQiA9IEIgwrcgQVwiXSxcbiAgICBleGFtcGxlOiA0LFxuICB9LFxuICB7XG4gICAgYm46IFwi4KaF4Kao4KeB4Ka34KaZ4KeN4KaXIOCmieCmquCmquCmvuCmpuCnjeCmryAoQXNzb2NpYXRpdmUgTGF3KVwiLFxuICAgIGVuOiBcIkFzc29jaWF0aXZlIExhd1wiLFxuICAgIGZvcm1zOiBbXCJBICsgKEIgKyBDKSA9IChBICsgQikgKyBDXCIsIFwiQSDCtyAoQiDCtyBDKSA9IChBIMK3IEIpIMK3IENcIl0sXG4gICAgZXhhbXBsZTogNSxcbiAgfSxcbiAge1xuICAgIGJuOiBcIuCmrOCmv+CmreCmvuCmnOCmqCDgpongpqrgpqrgpr7gpqbgp43gpq8gKERpc3RyaWJ1dGl2ZSBMYXcpXCIsXG4gICAgZW46IFwiRGlzdHJpYnV0aXZlIExhd1wiLFxuICAgIGZvcm1zOiBbXCJBKEIgKyBDKSA9IEFCICsgQUNcIiwgXCJBICsgQkMgPSAoQSArIEIpKEEgKyBDKVwiXSxcbiAgICBleGFtcGxlOiA2LFxuICB9LFxuICB7XG4gICAgYm46IFwi4Kaq4Kaw4Ka/4Ka24KeL4Ka34KajIOCmieCmquCmquCmvuCmpuCnjeCmryAoQWJzb3JwdGlvbiBMYXcpXCIsXG4gICAgZW46IFwiQWJzb3JwdGlvbiBMYXdcIixcbiAgICBmb3JtczogW1wiQShBICsgQikgPSBBXCIsIFwiQSArIChBIMK3IEIpID0gQVwiXSxcbiAgICBleGFtcGxlOiA3LFxuICB9LFxuICB7XG4gICAgYm46IFwi4Kah4Ka/IOCmruCmsOCml+CnjeCmr+CmvuCmqOCnh+CmsCDgpongpqrgpqrgpr7gpqbgp43gpq8gKERlIE1vcmdhbuKAmXMgTGF3KVwiLFxuICAgIGVuOiBcIkRlIE1vcmdhbuKAmXMgTGF3XCIsXG4gICAgZm9ybXM6IFtcIihBICsgQinMhSA9IEHMhSDCtyBCzIVcIiwgXCIoQSDCtyBCKcyFID0gQcyFICsgQsyFXCJdLFxuICAgIGV4YW1wbGU6IDgsXG4gIH0sXG4gIHtcbiAgICBibjogXCLgpqbgp43gpqzgpr8g4Kaq4KeC4Kaw4KaVIOCmieCmquCmquCmvuCmpuCnjeCmryAoRG91YmxlIENvbXBsZW1lbnQgTGF3KVwiLFxuICAgIGVuOiBcIkRvdWJsZSBDb21wbGVtZW50IExhd1wiLFxuICAgIGZvcm1zOiBbXCIoQcyFKcyFID0gQVwiXSxcbiAgICBleGFtcGxlOiAtMSxcbiAgfSxcbl07XG5leHBvcnQgZnVuY3Rpb24gQm9vbGVhbkludHJvZHVjdGlvbih7IGJuIH06IHsgYm46IGJvb2xlYW4gfSkge1xuICByZXR1cm4gKFxuICAgIDxkaXYgY2xhc3NOYW1lPVwic3BhY2UteS02XCI+XG4gICAgICA8aDMgY2xhc3NOYW1lPVwiZm9udC1kaXNwbGF5IHRleHQtMnhsIGZvbnQtYm9sZFwiPlxuICAgICAgICB7Ym4gPyBcIuCmrOCngeCmsuCmv+Cnn+CmvuCmqCDgpoXgp43gpq/gpr7gprLgppzgp4fgpqzgprDgpr5cIiA6IFwiQm9vbGVhbiBBbGdlYnJhXCJ9XG4gICAgICA8L2gzPlxuICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1zbSBsZWFkaW5nLThcIj5cbiAgICAgICAge2JuXG4gICAgICAgICAgPyBcIuCmrOCngeCmsuCmv+Cnn+CmvuCmqCDgpoXgp43gpq/gpr7gprLgppzgp4fgpqzgprDgpr4g4Kau4KeC4Kay4KakIOCmuOCmpOCnjeCmryDgpq7gpr/gpqXgp43gpq/gpr4sIOCmueCnjeCmr+CmvuCmgSDgpqjgpr4g4KaV4Ka/4KaC4Kas4Ka+IOCmmuCmvuCmsuCngSDgpqzgpqjgp43gpqcsIOCmjyDgpqfgprDgpqjgp4fgprAg4Kav4KeM4KaV4KeN4Kak4Ka/4KaVIOCmuOCmv+CmpuCnjeCmp+CmvuCmqOCnjeCmpOCmleCnhyDgppfgpr7gpqPgpr/gpqTgpr/gppXgpq3gpr7gpqzgp4cg4Kaq4KeN4Kaw4KaV4Ka+4Ka2IOCmkyDgpqzgpr/gprbgp43gprLgp4fgprfgpqPgp4fgprAg4KaP4KaV4Kaf4Ka/IOCmquCmpuCnjeCmp+CmpOCmv+ClpCDgpo/gppbgpr7gpqjgp4cg4Ka44Ka+4Kan4Ka+4Kaw4Kaj4KakIOCnpyDgpqbgp43gpqzgpr7gprDgpr4g4Ka44Kak4KeN4KavIChUcnVlKSDgpqzgpr4g4Kaa4Ka+4Kay4KeBIChPTikg4KaP4Kas4KaCIOCnpiDgpqbgp43gpqzgpr7gprDgpr4g4Kau4Ka/4Kal4KeN4Kav4Ka+IChGYWxzZSkg4Kas4Ka+IOCmrOCmqOCnjeCmpyAoT0ZGKSDgpoXgpqzgprjgp43gpqXgpr4g4Kaq4KeN4Kaw4KaV4Ka+4Ka2IOCmleCmsOCmviDgprngp5/gpaQg4KaV4Kau4KeN4Kaq4Ka/4KaJ4Kaf4Ka+4KawLCDgprjgp43gpq7gpr7gprDgp43gpp/gpqvgp4vgpqgsIOCmleCnjeCmr+CmvuCmsuCmleCngeCmsuCnh+Cmn+CmsCwg4Kaf4KeN4Kaw4Ka+4Kar4Ka/4KaVIOCmuOCmv+Cml+CmqOCnjeCmr+CmvuCmsiwg4KaF4KeN4Kav4Ka+4Kay4Ka+4Kaw4KeN4KauIOCmuOCmv+CmuOCnjeCmn+Cnh+CmruCmuOCmuSDgpqzgpr/gpq3gpr/gpqjgp43gpqgg4Kah4Ka/4Kac4Ka/4Kaf4Ka+4KayIOCmr+CmqOCnjeCmpOCnjeCmsOCnh+CmsCDgprjgpr/gpqbgp43gpqfgpr7gpqjgp43gpqQg4KaX4KeN4Kaw4Ka54KajIOCmkyDgpqjgpr/gp5/gpqjgp43gpqTgp43gprDgpqPgp4cg4Kas4KeB4Kay4Ka/4Kef4Ka+4KaoIOCmheCnjeCmr+CmvuCmsuCmnOCnh+CmrOCmsOCmviDgpqzgp43gpq/gpqzgprngp4PgpqQg4Ka54Kef4KWkXCJcbiAgICAgICAgICA6IFwiQm9vbGVhbiBhbGdlYnJhIGlzIGEgd2F5IHRvIGV4cHJlc3MgYW5kIGFuYWx5c2UgbG9naWNhbCBkZWNpc2lvbnMgbWF0aGVtYXRpY2FsbHk6IHRydWUgb3IgZmFsc2UsIHllcyBvciBubywgb24gb3Igb2ZmLiBVc3VhbGx5LCAxIHJlcHJlc2VudHMgVHJ1ZSBvciBPTiwgd2hpbGUgMCByZXByZXNlbnRzIEZhbHNlIG9yIE9GRi4gSXQgaXMgdXNlZCBmb3IgZGVjaXNpb25zIGFuZCBjb250cm9sIGluIGNvbXB1dGVycywgc21hcnRwaG9uZXMsIGNhbGN1bGF0b3JzLCB0cmFmZmljIGxpZ2h0cywgYWxhcm0gc3lzdGVtcyBhbmQgb3RoZXIgZGlnaXRhbCBkZXZpY2VzLlwifVxuICAgICAgPC9wPlxuICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1zbSBsZWFkaW5nLThcIj5cbiAgICAgICAge2JuXG4gICAgICAgICAgPyBcIuCmrOCngeCmsuCmv+Cnn+CmvuCmqCDgpoXgp43gpq/gpr7gprLgppzgp4fgpqzgprDgpr7gprAg4Kaq4KeN4Kaw4Kan4Ka+4KaoIOCmpOCmv+CmqOCmn+CmvyDgprLgppzgpr/gppXgp43gpq/gpr7gprIg4KaF4Kaq4Ka+4Kaw4KeH4Ka24KaoIOCmueCmsuCniyBBTkQsIE9SIOCmkyBOT1TgpaQgQU5EIOCmheCmquCmvuCmsOCnh+CmtuCmqOCmleCnhyDCtyDgpqzgpr4g4Kaq4Ka+4Ka24Ka+4Kaq4Ka+4Ka24Ka/IOCmsuCmv+CmluCnhyAo4Kav4KeH4Kau4KaoLCBBwrdCIOCmrOCmviBBQikg4Kaq4KeN4Kaw4KaV4Ka+4Ka2IOCmleCmsOCmviDgprngp58g4KaP4Kas4KaCIOCmuOCmrCDgpofgpqjgpqrgp4Hgpp8g4KenIOCmueCmsuCnh+CmhyDgpo/gprAg4KaG4KaJ4Kaf4Kaq4KeB4KafIOCnpyDgprngp5/gpaQgT1Ig4KaF4Kaq4Ka+4Kaw4KeH4Ka24Kao4KaV4KeHICsg4Kaa4Ka/4Ka54KeN4KaoIOCmpuCmv+Cnn+CnhyAo4Kav4KeH4Kau4KaoLCBBK0IpIOCmquCnjeCmsOCmleCmvuCmtiDgppXgprDgpr4g4Ka54KefIOCmj+CmrOCmgiDgpq/gp4fgppXgp4vgpqjgp4sg4KaP4KaV4Kaf4Ka/IOCmh+CmqOCmquCngeCmnyDgp6cg4Ka54Kay4KeH4KaHIOCmhuCmieCmn+CmquCngeCmnyDgp6cg4Ka54Kef4KWkIOCmheCmqOCnjeCmr+CmpuCmv+CmleCnhywgTk9UIOCmj+CmleCmn+CmvyDgpofgpqjgpqrgp4Hgpp/gp4fgprAg4Kas4Ka/4Kaq4Kaw4KeA4KakIOCmruCmvuCmqCDgpqrgp43gprDgpqbgpr7gpqgg4KaV4Kaw4KeHIOCmj+CmrOCmgiDgpo/gppXgp4cgQcyFIOCmrOCmviBB4oCyIOCmpuCnjeCmrOCmvuCmsOCmviDgpqrgp43gprDgppXgpr7gprYg4KaV4Kaw4Ka+IOCmueCnnzsg4KaF4Kaw4KeN4Kal4Ka+4KeOIOCmh+CmqOCmquCngeCmnyDgp6cg4Ka54Kay4KeHIOCmhuCmieCmn+CmquCngeCmnyDgp6Yg4KaP4Kas4KaCIOCmh+CmqOCmquCngeCmnyDgp6Yg4Ka54Kay4KeHIOCmhuCmieCmn+CmquCngeCmnyDgp6cg4Ka54Kef4KWkIOCmj+CmhyDgprLgppzgpr/gppXgppfgp4HgprLgp4sg4Kas4KeN4Kav4Kas4Ka54Ka+4KawIOCmleCmsOCnh+CmhyDgpqzgpr/gpq3gpr/gpqjgp43gpqgg4Ka24Kaw4KeN4KakIOCmheCmqOCngeCmr+CmvuCnn+CngCDgpqHgpr/gppzgpr/gpp/gpr7gprIg4Ka44Ka+4Kaw4KeN4KaV4Ka/4Kaf4KeH4KawIOCmleCmvuCmsOCnjeCmr+CmleCnjeCmsOCmriDgpqjgpr/gp5/gpqjgp43gpqTgp43gprDgpqMg4KaV4Kaw4Ka+IOCmueCnn+ClpFwiXG4gICAgICAgICAgOiBcIlRoZSB0aHJlZSBtYWluIGxvZ2ljYWwgb3BlcmF0aW9ucyBhcmUgQU5ELCBPUiBhbmQgTk9ULiBBTkQgaXMgd3JpdHRlbiB3aXRoIMK3IG9yIGFkamFjZW50IGxldHRlcnMsIHN1Y2ggYXMgQcK3QiBvciBBQjsgaXRzIG91dHB1dCBpcyAxIG9ubHkgd2hlbiBhbGwgaW5wdXRzIGFyZSAxLiBPUiBpcyB3cml0dGVuIHdpdGggKywgYXMgaW4gQStCOyBpdHMgb3V0cHV0IGlzIDEgd2hlbiBhdCBsZWFzdCBvbmUgaW5wdXQgaXMgMS4gTk9UIGdpdmVzIHRoZSBvcHBvc2l0ZSBvZiBpdHMgaW5wdXQgYW5kIGlzIHdyaXR0ZW4gQcyFIG9yIEHigLI6IGlucHV0IDEgZ2l2ZXMgb3V0cHV0IDAsIGFuZCBpbnB1dCAwIGdpdmVzIG91dHB1dCAxLiBUaGVzZSBvcGVyYXRpb25zIGNvbnRyb2wgaG93IGRpZ2l0YWwgY2lyY3VpdHMgcmVzcG9uZCB0byBkaWZmZXJlbnQgY29uZGl0aW9ucy5cIn1cbiAgICAgIDwvcD5cbiAgICAgIDxoMyBjbGFzc05hbWU9XCJib3JkZXItdCBwdC02IGZvbnQtZGlzcGxheSB0ZXh0LXhsIGZvbnQtYm9sZFwiPlxuICAgICAgICB7Ym4gPyBcIuCmrOCngeCmsuCmv+Cnn+CmvuCmqCDgpongpqrgpqrgpr7gpqbgp43gpq8gKEJvb2xlYW4gVGhlb3JlbXMpXCIgOiBcIkJvb2xlYW4gVGhlb3JlbXNcIn1cbiAgICAgIDwvaDM+XG4gICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXNtIGxlYWRpbmctN1wiPlxuICAgICAgICB7Ym5cbiAgICAgICAgICA/IFwi4Kas4KeB4Kay4Ka/4Kef4Ka+4KaoIOCmheCnjeCmr+CmvuCmsuCmnOCnh+CmrOCmsOCmvuCmsCDgpqzgpr/gpq3gpr/gpqjgp43gpqgg4Kaw4Ka+4Ka24Ka/IOCmuOCmsOCmsuCngOCmleCmsOCmoyDgpo/gpqzgpoIg4Kay4Kac4Ka/4KaVIOCmuOCmvuCmsOCnjeCmleCmv+Cmn+Cnh+CmsCDgppXgpr7gprDgp43gpq/gpqrgp43gprDgpqPgpr7gprLgpr8g4Kas4Ka/4Ka24KeN4Kay4KeH4Ka34Kaj4KeH4KawIOCmnOCmqOCnjeCmryDgppXgpr/gppvgp4Eg4Kao4Ka/4Kaw4KeN4Kam4Ka/4Ka34KeN4KafIOCmuOCnguCmpOCnjeCmsCDgpqzgpr4g4KaJ4Kaq4Kaq4Ka+4Kam4KeN4KavIOCmrOCnjeCmr+CmrOCmueCmvuCmsCDgppXgprDgpr4g4Ka54Kef4KWkIOCml+CngeCmsOCngeCmpOCnjeCmrOCmquCnguCmsOCnjeCmoyDgpqzgp4HgprLgpr/gp5/gpr7gpqgg4KaJ4Kaq4Kaq4Ka+4Kam4KeN4Kav4KaX4KeB4Kay4KeLIOCmueCmsuCniywgXCJcbiAgICAgICAgICA6IFwiU3BlY2lmaWMgbGF3cyBvciB0aGVvcmVtcyBoZWxwIHNpbXBsaWZ5IEJvb2xlYW4gZXhwcmVzc2lvbnMgYW5kIGFuYWx5c2UgbG9naWMgY2lyY3VpdHMuIFRoZSBpbXBvcnRhbnQgQm9vbGVhbiB0aGVvcmVtcyBhcmU6XCJ9XG4gICAgICA8L3A+XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cInNwYWNlLXktNFwiPlxuICAgICAgICB7dGhlb3JlbXMubWFwKChsYXcsIGkpID0+IChcbiAgICAgICAgICA8YXJ0aWNsZSBrZXk9e2xhdy5lbn0gY2xhc3NOYW1lPVwicm91bmRlZC14bCBib3JkZXIgYm9yZGVyLXByaW1hcnkvMjAgYmctcHJpbWFyeS81IHAtNFwiPlxuICAgICAgICAgICAgPGg0IGNsYXNzTmFtZT1cImZvbnQtc2VtaWJvbGRcIj5cbiAgICAgICAgICAgICAge2JuID8gU3RyaW5nKGkgKyAxKS5yZXBsYWNlKC9cXGQvZywgKGQpID0+IFwi4Kem4Ken4Keo4Kep4Keq4Ker4Kes4Ket4Keu4KevXCJbTnVtYmVyKGQpXSEpIDogaSArIDF9LntcIiBcIn1cbiAgICAgICAgICAgICAge2JuID8gbGF3LmJuIDogbGF3LmVufVxuICAgICAgICAgICAgPC9oND5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibXktMyBzcGFjZS15LTIgZm9udC1tb25vIHRleHQtc21cIj5cbiAgICAgICAgICAgICAge2xhdy5mb3Jtcy5tYXAoKGZvcm0sIGopID0+IChcbiAgICAgICAgICAgICAgICA8cCBrZXk9e2Zvcm19PlxuICAgICAgICAgICAgICAgICAge2ogPT09IDAgPyBcImkpXCIgOiBcImlpKVwifSB7Zm9ybX1cbiAgICAgICAgICAgICAgICA8L3A+XG4gICAgICAgICAgICAgICkpfVxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJyb3VuZGVkLWxnIGJnLWNhcmQgcC0zIGZvbnQtbW9ubyB0ZXh0LXhzIGxlYWRpbmctNlwiPlxuICAgICAgICAgICAgICB7Ym4gPyBcIuCmieCmpuCmvuCmueCmsOCmozogXCIgOiBcIkV4YW1wbGU6IFwifVxuICAgICAgICAgICAgICB7bGF3LmV4YW1wbGUgPT09IC0xXG4gICAgICAgICAgICAgICAgPyBcIkEgPSAxIOKGkiBBzIUgPSAwIOKGkiAoQcyFKcyFID0gMSA9IEFcIlxuICAgICAgICAgICAgICAgIDogQk9PTEVBTl9MQVdTW2xhdy5leGFtcGxlXSEuZXhhbXBsZX1cbiAgICAgICAgICAgICAge2kgPT09IDggJiYgKFxuICAgICAgICAgICAgICAgIDw+XG4gICAgICAgICAgICAgICAgICA8YnIgLz5cbiAgICAgICAgICAgICAgICAgIHtCT09MRUFOX0xBV1NbOV0hLmV4YW1wbGV9XG4gICAgICAgICAgICAgICAgPC8+XG4gICAgICAgICAgICAgICl9XG4gICAgICAgICAgICA8L3A+XG4gICAgICAgICAgPC9hcnRpY2xlPlxuICAgICAgICApKX1cbiAgICAgIDwvZGl2PlxuICAgIDwvZGl2PlxuICApO1xufVxuIl0sImZpbGUiOiJDOi9Vc2Vycy96YXJpbi9sb2dpbGFic2ltdWxhdG9yL3NyYy9jb21wb25lbnRzL0Jvb2xlYW5JbnRyb2R1Y3Rpb24udHN4In0=

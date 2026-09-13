@@ -1,0 +1,439 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/WelcomeLearning.tsx");const _jsxDEV = __vite__cjsImport3_react_jsxDevRuntime["jsxDEV"];import { ArrowRight, BookOpen, CircuitBoard, Layers3, Sigma, Table2 } from "/node_modules/.vite/deps/lucide-react.js?v=e65d69f5";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "/src/components/ui/dialog.tsx";
+import { Button } from "/src/components/ui/button.tsx";
+var _jsxFileName = "C:/Users/zarin/logilabsimulator/src/components/WelcomeLearning.tsx";
+import __vite__cjsImport3_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=e65d69f5";
+const topics = [
+	{
+		icon: Sigma,
+		bn: "বুলিয়ান অ্যালজেবরা",
+		en: "Boolean algebra",
+		detailBn: "পরিচিতি, সূত্র ও ডি মর্গ্যান",
+		detailEn: "The basics, laws and De Morgan",
+		color: "bg-rose-50 text-rose-600"
+	},
+	{
+		icon: Table2,
+		bn: "সত্যক সারণি",
+		en: "Truth tables",
+		detailBn: "ইনপুট থেকে আউটপুট বোঝো",
+		detailEn: "Follow inputs to their outputs",
+		color: "bg-sky-50 text-sky-600"
+	},
+	{
+		icon: Layers3,
+		bn: "রাশি সরলীকরণ",
+		en: "Simplification",
+		detailBn: "উদাহরণে সূত্রের ব্যবহার দেখো",
+		detailEn: "See the laws in worked examples",
+		color: "bg-amber-50 text-amber-700"
+	},
+	{
+		icon: CircuitBoard,
+		bn: "লজিক গেট",
+		en: "Logic gates",
+		detailBn: "ইনপুট বদলে সার্কিট পরীক্ষা করো",
+		detailEn: "Toggle inputs and explore circuits",
+		color: "bg-emerald-50 text-emerald-700"
+	}
+];
+export function WelcomeLearning({ open, onClose, onExplore, bn }) {
+	return /* @__PURE__ */ _jsxDEV(Dialog, {
+		open,
+		onOpenChange: (value) => {
+			if (!value) onClose();
+		},
+		"data-tsd-source": "/src/components/WelcomeLearning.tsx:15:10",
+		children: /* @__PURE__ */ _jsxDEV(DialogContent, {
+			"data-testid": "learning-welcome",
+			className: "lesson-controls w-[calc(100%-1.5rem)] max-w-3xl max-h-[92dvh] overflow-y-auto rounded-3xl border-white bg-white p-0 gap-0 shadow-2xl sm:rounded-3xl motion-reduce:animate-none",
+			"data-tsd-source": "/src/components/WelcomeLearning.tsx:16:5",
+			children: [/* @__PURE__ */ _jsxDEV("div", {
+				className: "relative overflow-hidden border-b border-slate-100 bg-gradient-to-br from-rose-50 via-white to-emerald-50 px-6 pb-7 pt-8 sm:px-9",
+				"data-tsd-source": "/src/components/WelcomeLearning.tsx:17:7",
+				children: [
+					/* @__PURE__ */ _jsxDEV("div", {
+						className: "mb-6 flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-500",
+						"data-tsd-source": "/src/components/WelcomeLearning.tsx:18:9",
+						children: [
+							/* @__PURE__ */ _jsxDEV("span", {
+								className: "flex h-8 w-8 items-center justify-center rounded-xl bg-destructive text-white",
+								"data-tsd-source": "/src/components/WelcomeLearning.tsx:18:106",
+								children: /* @__PURE__ */ _jsxDEV(CircuitBoard, {
+									className: "h-4 w-4",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:18:202"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 18,
+									columnNumber: 322
+								}, this)
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 18,
+								columnNumber: 165
+							}, this),
+							" LOGICLAB ",
+							/* @__PURE__ */ _jsxDEV("span", {
+								className: "ml-2 border-l pl-3",
+								"data-tsd-source": "/src/components/WelcomeLearning.tsx:18:255",
+								children: bn ? "তোমার শেখার সঙ্গী" : "Your learning companion"
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 18,
+								columnNumber: 436
+							}, this)
+						]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 18,
+						columnNumber: 9
+					}, this),
+					/* @__PURE__ */ _jsxDEV("div", {
+						className: "grid items-center gap-5 sm:grid-cols-[1fr_160px]",
+						"data-tsd-source": "/src/components/WelcomeLearning.tsx:19:9",
+						children: [/* @__PURE__ */ _jsxDEV("div", {
+							"data-tsd-source": "/src/components/WelcomeLearning.tsx:20:11",
+							children: [/* @__PURE__ */ _jsxDEV(DialogTitle, {
+								className: "text-3xl font-bold leading-[1.4] tracking-tight text-slate-900 sm:text-4xl",
+								"data-tsd-source": "/src/components/WelcomeLearning.tsx:21:13",
+								children: bn ? "স্বাগতম, যুক্তির জগতে!" : "Welcome to a world of logic!"
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 21,
+								columnNumber: 13
+							}, this), /* @__PURE__ */ _jsxDEV(DialogDescription, {
+								className: "mt-3 max-w-lg text-sm leading-7 text-slate-600",
+								"data-tsd-source": "/src/components/WelcomeLearning.tsx:22:13",
+								children: bn ? "ছোট ছোট পাঠে ধারণা বুঝে নাও, চিত্রে পরীক্ষা করো, তারপর সহজ প্রশ্নে নিজেকে যাচাই করো। নিজের গতিতেই এগিয়ে চলো।" : "Learn in small lessons, explore ideas through diagrams, then try a few questions. Make progress at your own pace."
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 22,
+								columnNumber: 13
+							}, this)]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 20,
+							columnNumber: 11
+						}, this), /* @__PURE__ */ _jsxDEV("svg", {
+							viewBox: "0 0 180 150",
+							"aria-hidden": "true",
+							className: "hidden w-full sm:block",
+							"data-tsd-source": "/src/components/WelcomeLearning.tsx:24:11",
+							children: [
+								/* @__PURE__ */ _jsxDEV("path", {
+									d: "M28 43H66V62H88 M28 110H66V90H88 M139 76H164",
+									fill: "none",
+									stroke: "#16a34a",
+									strokeWidth: "3",
+									strokeLinecap: "round",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:25:13"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 25,
+									columnNumber: 13
+								}, this),
+								/* @__PURE__ */ _jsxDEV("rect", {
+									x: "3",
+									y: "27",
+									width: "42",
+									height: "32",
+									rx: "10",
+									fill: "white",
+									stroke: "#e2e8f0",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:26:13"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 26,
+									columnNumber: 13
+								}, this),
+								/* @__PURE__ */ _jsxDEV("rect", {
+									x: "3",
+									y: "94",
+									width: "42",
+									height: "32",
+									rx: "10",
+									fill: "white",
+									stroke: "#e2e8f0",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:26:95"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 26,
+									columnNumber: 155
+								}, this),
+								/* @__PURE__ */ _jsxDEV("text", {
+									x: "24",
+									y: "48",
+									textAnchor: "middle",
+									fill: "#334155",
+									fontSize: "15",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:27:13",
+									children: "1"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 27,
+									columnNumber: 13
+								}, this),
+								/* @__PURE__ */ _jsxDEV("text", {
+									x: "24",
+									y: "115",
+									textAnchor: "middle",
+									fill: "#334155",
+									fontSize: "15",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:27:90",
+									children: "1"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 27,
+									columnNumber: 150
+								}, this),
+								/* @__PURE__ */ _jsxDEV("path", {
+									d: "M88 46H109A30 30 0 0 1 109 106H88Z",
+									fill: "white",
+									stroke: "#e11d48",
+									strokeWidth: "2.5",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:28:13"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 28,
+									columnNumber: 13
+								}, this),
+								/* @__PURE__ */ _jsxDEV("text", {
+									x: "110",
+									y: "81",
+									textAnchor: "middle",
+									fill: "#e11d48",
+									fontSize: "12",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:28:108",
+									children: "AND"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 28,
+									columnNumber: 168
+								}, this),
+								/* @__PURE__ */ _jsxDEV("circle", {
+									cx: "163",
+									cy: "76",
+									r: "10",
+									fill: "#16a34a",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:29:13"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 29,
+									columnNumber: 13
+								}, this),
+								/* @__PURE__ */ _jsxDEV("circle", {
+									cx: "163",
+									cy: "76",
+									r: "16",
+									fill: "none",
+									stroke: "#bbf7d0",
+									strokeWidth: "3",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:29:62"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 29,
+									columnNumber: 122
+								}, this)
+							]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 24,
+							columnNumber: 11
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 19,
+						columnNumber: 9
+					}, this),
+					/* @__PURE__ */ _jsxDEV("p", {
+						className: "mt-5 flex items-center gap-2 text-xs font-medium text-slate-500",
+						"data-tsd-source": "/src/components/WelcomeLearning.tsx:32:9",
+						children: [/* @__PURE__ */ _jsxDEV(BookOpen, {
+							className: "h-4 w-4",
+							"data-tsd-source": "/src/components/WelcomeLearning.tsx:32:88"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 32,
+							columnNumber: 147
+						}, this), bn ? "৪টি পাঠ · প্রতি পাঠে ৫টি প্রশ্ন · হাতে কলমে শেখা" : "4 lessons · 5 questions each · Learn by doing"]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 32,
+						columnNumber: 9
+					}, this)
+				]
+			}, void 0, true, {
+				fileName: _jsxFileName,
+				lineNumber: 17,
+				columnNumber: 7
+			}, this), /* @__PURE__ */ _jsxDEV("div", {
+				className: "px-6 py-6 sm:px-9",
+				"data-tsd-source": "/src/components/WelcomeLearning.tsx:34:7",
+				children: [
+					/* @__PURE__ */ _jsxDEV("h3", {
+						className: "mb-4 text-sm font-semibold text-slate-800",
+						"data-tsd-source": "/src/components/WelcomeLearning.tsx:35:9",
+						children: bn ? "কোন বিষয়টি আগে দেখে নিতে চাও?" : "What would you like to explore?"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 35,
+						columnNumber: 9
+					}, this),
+					/* @__PURE__ */ _jsxDEV("div", {
+						className: "grid gap-3 sm:grid-cols-2",
+						"data-tsd-source": "/src/components/WelcomeLearning.tsx:36:9",
+						children: topics.map((topic, index) => /* @__PURE__ */ _jsxDEV("button", {
+							type: "button",
+							onClick: () => onExplore(index),
+							className: "group flex min-h-24 items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-left transition-colors hover:border-rose-300 hover:bg-rose-50/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-destructive",
+							"data-tsd-source": "/src/components/WelcomeLearning.tsx:37:41",
+							children: [
+								/* @__PURE__ */ _jsxDEV("span", {
+									className: `flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${topic.color}`,
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:38:13",
+									children: /* @__PURE__ */ _jsxDEV(topic.icon, {
+										className: "h-5 w-5",
+										"data-tsd-source": "/src/components/WelcomeLearning.tsx:38:111"
+									}, void 0, false, {
+										fileName: _jsxFileName,
+										lineNumber: 38,
+										columnNumber: 171
+									}, this)
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 38,
+									columnNumber: 13
+								}, this),
+								/* @__PURE__ */ _jsxDEV("span", {
+									className: "min-w-0 flex-1",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:39:13",
+									children: [/* @__PURE__ */ _jsxDEV("span", {
+										className: "block text-sm font-bold leading-6 text-slate-900",
+										"data-tsd-source": "/src/components/WelcomeLearning.tsx:39:46",
+										children: bn ? topic.bn : topic.en
+									}, void 0, false, {
+										fileName: _jsxFileName,
+										lineNumber: 39,
+										columnNumber: 106
+									}, this), /* @__PURE__ */ _jsxDEV("span", {
+										className: "mt-1 block text-xs leading-5 text-slate-500",
+										"data-tsd-source": "/src/components/WelcomeLearning.tsx:39:146",
+										children: bn ? topic.detailBn : topic.detailEn
+									}, void 0, false, {
+										fileName: _jsxFileName,
+										lineNumber: 39,
+										columnNumber: 266
+									}, this)]
+								}, void 0, true, {
+									fileName: _jsxFileName,
+									lineNumber: 39,
+									columnNumber: 13
+								}, this),
+								/* @__PURE__ */ _jsxDEV(ArrowRight, {
+									className: "h-4 w-4 shrink-0 text-slate-400 group-hover:text-rose-600",
+									"data-tsd-source": "/src/components/WelcomeLearning.tsx:40:13"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 40,
+									columnNumber: 13
+								}, this)
+							]
+						}, topic.en, true, {
+							fileName: _jsxFileName,
+							lineNumber: 37,
+							columnNumber: 41
+						}, this))
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 36,
+						columnNumber: 9
+					}, this),
+					/* @__PURE__ */ _jsxDEV("div", {
+						className: "mt-6 flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between",
+						"data-tsd-source": "/src/components/WelcomeLearning.tsx:43:9",
+						children: [/* @__PURE__ */ _jsxDEV("p", {
+							className: "text-xs leading-6 text-slate-500",
+							"data-tsd-source": "/src/components/WelcomeLearning.tsx:44:11",
+							children: bn ? "একদম নতুন? প্রথম পাঠ থেকে শুরু করো।" : "New to this? Start with the first lesson."
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 44,
+							columnNumber: 11
+						}, this), /* @__PURE__ */ _jsxDEV(Button, {
+							variant: "destructive",
+							onClick: () => onExplore(0),
+							className: "h-12 rounded-xl px-5",
+							"data-tsd-source": "/src/components/WelcomeLearning.tsx:45:11",
+							children: [bn ? "শেখা শুরু করি" : "Let’s start learning", /* @__PURE__ */ _jsxDEV(ArrowRight, {
+								className: "ml-2 h-4 w-4",
+								"data-tsd-source": "/src/components/WelcomeLearning.tsx:45:150"
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 45,
+								columnNumber: 210
+							}, this)]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 45,
+							columnNumber: 11
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 43,
+						columnNumber: 9
+					}, this),
+					/* @__PURE__ */ _jsxDEV("button", {
+						type: "button",
+						onClick: onClose,
+						className: "mt-4 w-full rounded-lg py-2 text-center text-xs text-slate-500 underline underline-offset-4 hover:text-slate-900",
+						"data-tsd-source": "/src/components/WelcomeLearning.tsx:47:9",
+						children: bn ? "আগে পুরো শেখার পথ দেখি" : "See the full learning path first"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 47,
+						columnNumber: 9
+					}, this)
+				]
+			}, void 0, true, {
+				fileName: _jsxFileName,
+				lineNumber: 34,
+				columnNumber: 7
+			}, this)]
+		}, void 0, true, {
+			fileName: _jsxFileName,
+			lineNumber: 16,
+			columnNumber: 5
+		}, this)
+	}, void 0, false, {
+		fileName: _jsxFileName,
+		lineNumber: 15,
+		columnNumber: 10
+	}, this);
+}
+_c = WelcomeLearning;
+var _c;
+$RefreshReg$(_c, "WelcomeLearning");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+import * as __vite_react_currentExports from "/src/components/WelcomeLearning.tsx";
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+
+  const currentExports = __vite_react_currentExports;
+  queueMicrotask(() => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/zarin/logilabsimulator/src/components/WelcomeLearning.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/zarin/logilabsimulator/src/components/WelcomeLearning.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/zarin/logilabsimulator/src/components/WelcomeLearning.tsx" + ' ' + id); }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBOzs7QUFFQTtDQUNBO0VBQUE7RUFBQTtFQUFBO0VBQUE7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7RUFBQTtFQUFBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0VBQUE7RUFBQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtFQUFBO0VBQUE7RUFBQTtFQUFBO0NBQUE7QUFDQTtBQUVBLGtFQUVBO0NBQ0E7RUFBQTtFQUFBO0dBQUE7RUFBQTtFQUFBO1lBQ0E7R0FBQTtHQUFBO0dBQUE7YUFBQSxDQUNBO0lBQUE7SUFBQTtjQUFBO0tBQ0E7TUFBQTtNQUFBO2dCQUFBO09BQXdHO1FBQUE7UUFBQTtrQkFBZ0c7U0FBQTtTQUFBO1FBQW1DOzs7OztPQUFBOzs7OztPQUFBO09BQUE7UUFBQTtRQUFBO2tCQUF1RDtPQUFBOzs7OztNQUFBOzs7Ozs7S0FDbFM7TUFBQTtNQUFBO2dCQUFBLENBQ0E7T0FBQTtpQkFBQSxDQUNBO1FBQUE7UUFBQTtrQkFBK0c7T0FBQTs7OztpQkFDL0c7UUFBQTtRQUFBO2tCQUF5RjtPQUFBOzs7O2VBQ3pGOzs7OztnQkFDQTtPQUFBO09BQUE7T0FBQTtPQUFBO2lCQUFBO1FBQ0E7U0FBQTtTQUFBO1NBQUE7U0FBQTtTQUFBO1NBQUE7UUFBc0k7Ozs7O1FBQ3RJO1NBQUE7U0FBQTtTQUFBO1NBQUE7U0FBQTtTQUFBO1NBQUE7U0FBQTtRQUE0Rjs7Ozs7UUFBQTtTQUFBO1NBQUE7U0FBQTtTQUFBO1NBQUE7U0FBQTtTQUFBO1NBQUE7UUFBa0Y7Ozs7O1FBQzlLO1NBQUE7U0FBQTtTQUFBO1NBQUE7U0FBQTtTQUFBO21CQUFnRjtRQUFBOzs7OztRQUFBO1NBQUE7U0FBQTtTQUFBO1NBQUE7U0FBQTtTQUFBO21CQUE4RTtRQUFBOzs7OztRQUM5SjtTQUFBO1NBQUE7U0FBQTtTQUFBO1NBQUE7UUFBeUc7Ozs7O1FBQUE7U0FBQTtTQUFBO1NBQUE7U0FBQTtTQUFBO1NBQUE7bUJBQXVFO1FBQUE7Ozs7O1FBQ2hMO1NBQUE7U0FBQTtTQUFBO1NBQUE7U0FBQTtRQUEyRDs7Ozs7UUFBQTtTQUFBO1NBQUE7U0FBQTtTQUFBO1NBQUE7U0FBQTtTQUFBO1FBQStFOzs7OztPQUMxSTs7Ozs7Y0FDQTs7Ozs7O0tBQ0E7TUFBQTtNQUFBO2dCQUFBLENBQXNGO09BQUE7T0FBQTtNQUErQjs7OztnQkFBQTs7Ozs7O0lBQ3JIOzs7OzthQUNBO0lBQUE7SUFBQTtjQUFBO0tBQ0E7TUFBQTtNQUFBO2dCQUFpRTtLQUFBOzs7OztLQUNqRTtNQUFBO01BQUE7Z0JBQ0E7T0FBQTtPQUFBO09BQUE7T0FBQTtpQkFBQTtRQUNBO1NBQUE7U0FBQTttQkFBNkc7VUFBQTtVQUFBO1NBQWlDOzs7OztRQUFBOzs7OztRQUM5STtTQUFBO1NBQUE7bUJBQUEsQ0FBNEM7VUFBQTtVQUFBO29CQUFtRTtTQUFBOzs7O21CQUFBO1VBQUE7VUFBQTtvQkFBK0Y7U0FBQTs7OztpQkFBQTs7Ozs7O1FBQzlNO1NBQUE7U0FBQTtRQUE4Rjs7Ozs7T0FDOUY7U0FKQTs7OzthQUlBO0tBQ0E7Ozs7O0tBQ0E7TUFBQTtNQUFBO2dCQUFBLENBQ0E7T0FBQTtPQUFBO2lCQUF5RDtNQUFBOzs7O2dCQUN6RDtPQUFBO09BQUE7T0FBQTtPQUFBO2lCQUFBLENBQXFHO1FBQUE7UUFBQTtPQUFxRjs7OztlQUFBOzs7OztjQUMxTDs7Ozs7O0tBQ0E7TUFBQTtNQUFBO01BQUE7TUFBQTtnQkFBNEs7S0FBQTs7Ozs7SUFDNUs7Ozs7O1dBQ0E7Ozs7OztDQUNBOzs7OztBQUNBIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJXZWxjb21lTGVhcm5pbmcudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEFycm93UmlnaHQsIEJvb2tPcGVuLCBDaXJjdWl0Qm9hcmQsIExheWVyczMsIFNpZ21hLCBUYWJsZTIgfSBmcm9tIFwibHVjaWRlLXJlYWN0XCI7XG5pbXBvcnQgeyBEaWFsb2csIERpYWxvZ0NvbnRlbnQsIERpYWxvZ0Rlc2NyaXB0aW9uLCBEaWFsb2dUaXRsZSB9IGZyb20gXCJAL2NvbXBvbmVudHMvdWkvZGlhbG9nXCI7XG5pbXBvcnQgeyBCdXR0b24gfSBmcm9tIFwiQC9jb21wb25lbnRzL3VpL2J1dHRvblwiO1xuXG5jb25zdCB0b3BpY3MgPSBbXG4gIHsgaWNvbjogU2lnbWEsIGJuOiBcIuCmrOCngeCmsuCmv+Cmr+CmvOCmvuCmqCDgpoXgp43gpq/gpr7gprLgppzgp4fgpqzgprDgpr5cIiwgZW46IFwiQm9vbGVhbiBhbGdlYnJhXCIsIGRldGFpbEJuOiBcIuCmquCmsOCmv+CmmuCmv+CmpOCmvywg4Ka44KeC4Kak4KeN4KawIOCmkyDgpqHgpr8g4Kau4Kaw4KeN4KaX4KeN4Kav4Ka+4KaoXCIsIGRldGFpbEVuOiBcIlRoZSBiYXNpY3MsIGxhd3MgYW5kIERlIE1vcmdhblwiLCBjb2xvcjogXCJiZy1yb3NlLTUwIHRleHQtcm9zZS02MDBcIiB9LFxuICB7IGljb246IFRhYmxlMiwgYm46IFwi4Ka44Kak4KeN4Kav4KaVIOCmuOCmvuCmsOCmo+Cmv1wiLCBlbjogXCJUcnV0aCB0YWJsZXNcIiwgZGV0YWlsQm46IFwi4KaH4Kao4Kaq4KeB4KafIOCmpeCnh+CmleCnhyDgpobgpongpp/gpqrgp4Hgpp8g4Kas4KeL4Kad4KeLXCIsIGRldGFpbEVuOiBcIkZvbGxvdyBpbnB1dHMgdG8gdGhlaXIgb3V0cHV0c1wiLCBjb2xvcjogXCJiZy1za3ktNTAgdGV4dC1za3ktNjAwXCIgfSxcbiAgeyBpY29uOiBMYXllcnMzLCBibjogXCLgprDgpr7gprbgpr8g4Ka44Kaw4Kay4KeA4KaV4Kaw4KajXCIsIGVuOiBcIlNpbXBsaWZpY2F0aW9uXCIsIGRldGFpbEJuOiBcIuCmieCmpuCmvuCmueCmsOCmo+CnhyDgprjgp4LgpqTgp43gprDgp4fgprAg4Kas4KeN4Kav4Kas4Ka54Ka+4KawIOCmpuCnh+CmluCni1wiLCBkZXRhaWxFbjogXCJTZWUgdGhlIGxhd3MgaW4gd29ya2VkIGV4YW1wbGVzXCIsIGNvbG9yOiBcImJnLWFtYmVyLTUwIHRleHQtYW1iZXItNzAwXCIgfSxcbiAgeyBpY29uOiBDaXJjdWl0Qm9hcmQsIGJuOiBcIuCmsuCmnOCmv+CmlSDgppfgp4fgpp9cIiwgZW46IFwiTG9naWMgZ2F0ZXNcIiwgZGV0YWlsQm46IFwi4KaH4Kao4Kaq4KeB4KafIOCmrOCmpuCmsuCnhyDgprjgpr7gprDgp43gppXgpr/gpp8g4Kaq4Kaw4KeA4KaV4KeN4Ka34Ka+IOCmleCmsOCni1wiLCBkZXRhaWxFbjogXCJUb2dnbGUgaW5wdXRzIGFuZCBleHBsb3JlIGNpcmN1aXRzXCIsIGNvbG9yOiBcImJnLWVtZXJhbGQtNTAgdGV4dC1lbWVyYWxkLTcwMFwiIH0sXG5dO1xuXG5leHBvcnQgZnVuY3Rpb24gV2VsY29tZUxlYXJuaW5nKHsgb3Blbiwgb25DbG9zZSwgb25FeHBsb3JlLCBibiB9OiB7XG4gIG9wZW46IGJvb2xlYW47IG9uQ2xvc2U6ICgpID0+IHZvaWQ7IG9uRXhwbG9yZTogKGxlc3NvbjogbnVtYmVyKSA9PiB2b2lkOyBibjogYm9vbGVhbjtcbn0pIHtcbiAgcmV0dXJuIDxEaWFsb2cgb3Blbj17b3Blbn0gb25PcGVuQ2hhbmdlPXt2YWx1ZSA9PiB7IGlmICghdmFsdWUpIG9uQ2xvc2UoKTsgfX0+XG4gICAgPERpYWxvZ0NvbnRlbnQgZGF0YS10ZXN0aWQ9XCJsZWFybmluZy13ZWxjb21lXCIgY2xhc3NOYW1lPVwibGVzc29uLWNvbnRyb2xzIHctW2NhbGMoMTAwJS0xLjVyZW0pXSBtYXgtdy0zeGwgbWF4LWgtWzkyZHZoXSBvdmVyZmxvdy15LWF1dG8gcm91bmRlZC0zeGwgYm9yZGVyLXdoaXRlIGJnLXdoaXRlIHAtMCBnYXAtMCBzaGFkb3ctMnhsIHNtOnJvdW5kZWQtM3hsIG1vdGlvbi1yZWR1Y2U6YW5pbWF0ZS1ub25lXCI+XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cInJlbGF0aXZlIG92ZXJmbG93LWhpZGRlbiBib3JkZXItYiBib3JkZXItc2xhdGUtMTAwIGJnLWdyYWRpZW50LXRvLWJyIGZyb20tcm9zZS01MCB2aWEtd2hpdGUgdG8tZW1lcmFsZC01MCBweC02IHBiLTcgcHQtOCBzbTpweC05XCI+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWItNiBmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMiB0ZXh0LXhzIGZvbnQtc2VtaWJvbGQgdHJhY2tpbmctd2lkZSB0ZXh0LXNsYXRlLTUwMFwiPjxzcGFuIGNsYXNzTmFtZT1cImZsZXggaC04IHctOCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgcm91bmRlZC14bCBiZy1kZXN0cnVjdGl2ZSB0ZXh0LXdoaXRlXCI+PENpcmN1aXRCb2FyZCBjbGFzc05hbWU9XCJoLTQgdy00XCIgLz48L3NwYW4+IExPR0lDTEFCIDxzcGFuIGNsYXNzTmFtZT1cIm1sLTIgYm9yZGVyLWwgcGwtM1wiPntibiA/IFwi4Kak4KeL4Kau4Ka+4KawIOCmtuCnh+CmluCmvuCmsCDgprjgppngp43gppfgp4BcIiA6IFwiWW91ciBsZWFybmluZyBjb21wYW5pb25cIn08L3NwYW4+PC9kaXY+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ3JpZCBpdGVtcy1jZW50ZXIgZ2FwLTUgc206Z3JpZC1jb2xzLVsxZnJfMTYwcHhdXCI+XG4gICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgIDxEaWFsb2dUaXRsZSBjbGFzc05hbWU9XCJ0ZXh0LTN4bCBmb250LWJvbGQgbGVhZGluZy1bMS40XSB0cmFja2luZy10aWdodCB0ZXh0LXNsYXRlLTkwMCBzbTp0ZXh0LTR4bFwiPntibiA/IFwi4Ka44KeN4Kas4Ka+4KaX4Kak4KauLCDgpq/gp4HgppXgp43gpqTgpr/gprAg4Kac4KaX4Kak4KeHIVwiIDogXCJXZWxjb21lIHRvIGEgd29ybGQgb2YgbG9naWMhXCJ9PC9EaWFsb2dUaXRsZT5cbiAgICAgICAgICAgIDxEaWFsb2dEZXNjcmlwdGlvbiBjbGFzc05hbWU9XCJtdC0zIG1heC13LWxnIHRleHQtc20gbGVhZGluZy03IHRleHQtc2xhdGUtNjAwXCI+e2JuID8gXCLgppvgp4vgpp8g4Kab4KeL4KafIOCmquCmvuCmoOCnhyDgpqfgpr7gprDgpqPgpr4g4Kas4KeB4Kad4KeHIOCmqOCmvuCmkywg4Kaa4Ka/4Kak4KeN4Kaw4KeHIOCmquCmsOCngOCmleCnjeCmt+CmviDgppXgprDgp4ssIOCmpOCmvuCmsOCmquCmsCDgprjgprngppwg4Kaq4KeN4Kaw4Ka24KeN4Kao4KeHIOCmqOCmv+CmnOCnh+CmleCnhyDgpq/gpr7gpprgpr7gpocg4KaV4Kaw4KeL4KWkIOCmqOCmv+CmnOCnh+CmsCDgppfgpqTgpr/gpqTgp4fgpocg4KaP4KaX4Ka/4Kav4Ka84KeHIOCmmuCmsuCni+ClpFwiIDogXCJMZWFybiBpbiBzbWFsbCBsZXNzb25zLCBleHBsb3JlIGlkZWFzIHRocm91Z2ggZGlhZ3JhbXMsIHRoZW4gdHJ5IGEgZmV3IHF1ZXN0aW9ucy4gTWFrZSBwcm9ncmVzcyBhdCB5b3VyIG93biBwYWNlLlwifTwvRGlhbG9nRGVzY3JpcHRpb24+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPHN2ZyB2aWV3Qm94PVwiMCAwIDE4MCAxNTBcIiBhcmlhLWhpZGRlbj1cInRydWVcIiBjbGFzc05hbWU9XCJoaWRkZW4gdy1mdWxsIHNtOmJsb2NrXCI+XG4gICAgICAgICAgICA8cGF0aCBkPVwiTTI4IDQzSDY2VjYySDg4IE0yOCAxMTBINjZWOTBIODggTTEzOSA3NkgxNjRcIiBmaWxsPVwibm9uZVwiIHN0cm9rZT1cIiMxNmEzNGFcIiBzdHJva2VXaWR0aD1cIjNcIiBzdHJva2VMaW5lY2FwPVwicm91bmRcIiAvPlxuICAgICAgICAgICAgPHJlY3QgeD1cIjNcIiB5PVwiMjdcIiB3aWR0aD1cIjQyXCIgaGVpZ2h0PVwiMzJcIiByeD1cIjEwXCIgZmlsbD1cIndoaXRlXCIgc3Ryb2tlPVwiI2UyZThmMFwiIC8+PHJlY3QgeD1cIjNcIiB5PVwiOTRcIiB3aWR0aD1cIjQyXCIgaGVpZ2h0PVwiMzJcIiByeD1cIjEwXCIgZmlsbD1cIndoaXRlXCIgc3Ryb2tlPVwiI2UyZThmMFwiIC8+XG4gICAgICAgICAgICA8dGV4dCB4PVwiMjRcIiB5PVwiNDhcIiB0ZXh0QW5jaG9yPVwibWlkZGxlXCIgZmlsbD1cIiMzMzQxNTVcIiBmb250U2l6ZT1cIjE1XCI+MTwvdGV4dD48dGV4dCB4PVwiMjRcIiB5PVwiMTE1XCIgdGV4dEFuY2hvcj1cIm1pZGRsZVwiIGZpbGw9XCIjMzM0MTU1XCIgZm9udFNpemU9XCIxNVwiPjE8L3RleHQ+XG4gICAgICAgICAgICA8cGF0aCBkPVwiTTg4IDQ2SDEwOUEzMCAzMCAwIDAgMSAxMDkgMTA2SDg4WlwiIGZpbGw9XCJ3aGl0ZVwiIHN0cm9rZT1cIiNlMTFkNDhcIiBzdHJva2VXaWR0aD1cIjIuNVwiIC8+PHRleHQgeD1cIjExMFwiIHk9XCI4MVwiIHRleHRBbmNob3I9XCJtaWRkbGVcIiBmaWxsPVwiI2UxMWQ0OFwiIGZvbnRTaXplPVwiMTJcIj5BTkQ8L3RleHQ+XG4gICAgICAgICAgICA8Y2lyY2xlIGN4PVwiMTYzXCIgY3k9XCI3NlwiIHI9XCIxMFwiIGZpbGw9XCIjMTZhMzRhXCIgLz48Y2lyY2xlIGN4PVwiMTYzXCIgY3k9XCI3NlwiIHI9XCIxNlwiIGZpbGw9XCJub25lXCIgc3Ryb2tlPVwiI2JiZjdkMFwiIHN0cm9rZVdpZHRoPVwiM1wiIC8+XG4gICAgICAgICAgPC9zdmc+XG4gICAgICAgIDwvZGl2PlxuICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC01IGZsZXggaXRlbXMtY2VudGVyIGdhcC0yIHRleHQteHMgZm9udC1tZWRpdW0gdGV4dC1zbGF0ZS01MDBcIj48Qm9va09wZW4gY2xhc3NOYW1lPVwiaC00IHctNFwiIC8+e2JuID8gXCLgp6rgpp/gpr8g4Kaq4Ka+4KagIMK3IOCmquCnjeCmsOCmpOCmvyDgpqrgpr7gpqDgp4cg4Ker4Kaf4Ka/IOCmquCnjeCmsOCmtuCnjeCmqCDCtyDgprngpr7gpqTgp4cg4KaV4Kay4Kau4KeHIOCmtuCnh+CmluCmvlwiIDogXCI0IGxlc3NvbnMgwrcgNSBxdWVzdGlvbnMgZWFjaCDCtyBMZWFybiBieSBkb2luZ1wifTwvcD5cbiAgICAgIDwvZGl2PlxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJweC02IHB5LTYgc206cHgtOVwiPlxuICAgICAgICA8aDMgY2xhc3NOYW1lPVwibWItNCB0ZXh0LXNtIGZvbnQtc2VtaWJvbGQgdGV4dC1zbGF0ZS04MDBcIj57Ym4gPyBcIuCmleCni+CmqCDgpqzgpr/gprfgpq/gprzgpp/gpr8g4KaG4KaX4KeHIOCmpuCnh+CmluCnhyDgpqjgpr/gpqTgp4cg4Kaa4Ka+4KaTP1wiIDogXCJXaGF0IHdvdWxkIHlvdSBsaWtlIHRvIGV4cGxvcmU/XCJ9PC9oMz5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJncmlkIGdhcC0zIHNtOmdyaWQtY29scy0yXCI+XG4gICAgICAgICAge3RvcGljcy5tYXAoKHRvcGljLCBpbmRleCkgPT4gPGJ1dHRvbiB0eXBlPVwiYnV0dG9uXCIga2V5PXt0b3BpYy5lbn0gb25DbGljaz17KCkgPT4gb25FeHBsb3JlKGluZGV4KX0gY2xhc3NOYW1lPVwiZ3JvdXAgZmxleCBtaW4taC0yNCBpdGVtcy1jZW50ZXIgZ2FwLTMgcm91bmRlZC0yeGwgYm9yZGVyIGJvcmRlci1zbGF0ZS0yMDAgYmctd2hpdGUgcC00IHRleHQtbGVmdCB0cmFuc2l0aW9uLWNvbG9ycyBob3Zlcjpib3JkZXItcm9zZS0zMDAgaG92ZXI6Ymctcm9zZS01MC8zMCBmb2N1cy12aXNpYmxlOm91dGxpbmUgZm9jdXMtdmlzaWJsZTpvdXRsaW5lLTIgZm9jdXMtdmlzaWJsZTpvdXRsaW5lLWRlc3RydWN0aXZlXCI+XG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9e2BmbGV4IGgtMTEgdy0xMSBzaHJpbmstMCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgcm91bmRlZC14bCAke3RvcGljLmNvbG9yfWB9Pjx0b3BpYy5pY29uIGNsYXNzTmFtZT1cImgtNSB3LTVcIiAvPjwvc3Bhbj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1pbi13LTAgZmxleC0xXCI+PHNwYW4gY2xhc3NOYW1lPVwiYmxvY2sgdGV4dC1zbSBmb250LWJvbGQgbGVhZGluZy02IHRleHQtc2xhdGUtOTAwXCI+e2JuID8gdG9waWMuYm4gOiB0b3BpYy5lbn08L3NwYW4+PHNwYW4gY2xhc3NOYW1lPVwibXQtMSBibG9jayB0ZXh0LXhzIGxlYWRpbmctNSB0ZXh0LXNsYXRlLTUwMFwiPntibiA/IHRvcGljLmRldGFpbEJuIDogdG9waWMuZGV0YWlsRW59PC9zcGFuPjwvc3Bhbj5cbiAgICAgICAgICAgIDxBcnJvd1JpZ2h0IGNsYXNzTmFtZT1cImgtNCB3LTQgc2hyaW5rLTAgdGV4dC1zbGF0ZS00MDAgZ3JvdXAtaG92ZXI6dGV4dC1yb3NlLTYwMFwiIC8+XG4gICAgICAgICAgPC9idXR0b24+KX1cbiAgICAgICAgPC9kaXY+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibXQtNiBmbGV4IGZsZXgtY29sIGdhcC0zIGJvcmRlci10IGJvcmRlci1zbGF0ZS0xMDAgcHQtNSBzbTpmbGV4LXJvdyBzbTppdGVtcy1jZW50ZXIgc206anVzdGlmeS1iZXR3ZWVuXCI+XG4gICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC14cyBsZWFkaW5nLTYgdGV4dC1zbGF0ZS01MDBcIj57Ym4gPyBcIuCmj+CmleCmpuCmriDgpqjgpqTgp4Hgpqg/IOCmquCnjeCmsOCmpeCmriDgpqrgpr7gpqAg4Kal4KeH4KaV4KeHIOCmtuCngeCmsOCngSDgppXgprDgp4vgpaRcIiA6IFwiTmV3IHRvIHRoaXM/IFN0YXJ0IHdpdGggdGhlIGZpcnN0IGxlc3Nvbi5cIn08L3A+XG4gICAgICAgICAgPEJ1dHRvbiB2YXJpYW50PVwiZGVzdHJ1Y3RpdmVcIiBvbkNsaWNrPXsoKSA9PiBvbkV4cGxvcmUoMCl9IGNsYXNzTmFtZT1cImgtMTIgcm91bmRlZC14bCBweC01XCI+e2JuID8gXCLgprbgp4fgppbgpr4g4Ka24KeB4Kaw4KeBIOCmleCmsOCmv1wiIDogXCJMZXTigJlzIHN0YXJ0IGxlYXJuaW5nXCJ9PEFycm93UmlnaHQgY2xhc3NOYW1lPVwibWwtMiBoLTQgdy00XCIgLz48L0J1dHRvbj5cbiAgICAgICAgPC9kaXY+XG4gICAgICAgIDxidXR0b24gdHlwZT1cImJ1dHRvblwiIG9uQ2xpY2s9e29uQ2xvc2V9IGNsYXNzTmFtZT1cIm10LTQgdy1mdWxsIHJvdW5kZWQtbGcgcHktMiB0ZXh0LWNlbnRlciB0ZXh0LXhzIHRleHQtc2xhdGUtNTAwIHVuZGVybGluZSB1bmRlcmxpbmUtb2Zmc2V0LTQgaG92ZXI6dGV4dC1zbGF0ZS05MDBcIj57Ym4gPyBcIuCmhuCml+CnhyDgpqrgp4HgprDgp4sg4Ka24KeH4KaW4Ka+4KawIOCmquCmpSDgpqbgp4fgppbgpr9cIiA6IFwiU2VlIHRoZSBmdWxsIGxlYXJuaW5nIHBhdGggZmlyc3RcIn08L2J1dHRvbj5cbiAgICAgIDwvZGl2PlxuICAgIDwvRGlhbG9nQ29udGVudD5cbiAgPC9EaWFsb2c+O1xufVxuIl0sImZpbGUiOiJDOi9Vc2Vycy96YXJpbi9sb2dpbGFic2ltdWxhdG9yL3NyYy9jb21wb25lbnRzL1dlbGNvbWVMZWFybmluZy50c3gifQ==

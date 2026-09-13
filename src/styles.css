@@ -563,7 +563,35 @@ svg.react-flow__connectionline {
 
 /* Bengali numerals use the same legible Bengali face as the lesson text. */
 .lesson-controls { font-family: "Noto Sans Bengali", "Inter", sans-serif; }
+.concept-table-example { display: grid; gap: 1.25rem; align-content: start; min-width: 0; }
+.concept-table-example > * { min-width: 0; margin: 0; }
+@media (min-width: 1024px) {
+  .concept-table-example { grid-row: span 6; grid-template-rows: subgrid; }
+  .concept-table-example > details { align-self: start; }
+}
+.concept-chapter > h2 { border-bottom: 1px solid var(--border); padding-bottom: 1.25rem; }
 .driver-popover { max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; }
+
+/* Keep practice guidance outside the interactive canvas, with a stable size. */
+.practice-guide { max-height: 135px; overflow-y: auto; }
+.practice-guide > div > div:first-child { flex: none; }
+.builder-workspace { touch-action: pan-y; }
+.builder-workspace > [data-tour="builder-canvas"] { flex: 1 0 52dvh; min-height: 240px; }
+@media (max-height: 600px), (max-width: 767px) {
+  .practice-guide { max-height: 100px; padding: 6px 10px; }
+  .practice-guide svg[role="img"] { display: none; }
+  .practice-guide button { height: 28px; padding: 0 6px; font-size: 10px; }
+  .builder-truth { padding: 8px 12px; }
+  .sandbox-container aside { width: 11rem; }
+  .sandbox-container [data-tour="builder-canvas"] { min-height: 160px; }
+  .app-header-inner { grid-template-columns: minmax(0, 1fr) auto !important; }
+  .app-header-title { display: none; }
+  .app-header-nav { grid-column: 1; }
+  .app-header-actions { grid-column: 2; }
+}
+@media (orientation: portrait) and (max-width: 767px) {
+  .sandbox-container aside { width: 100%; max-height: 24dvh !important; overflow-y: auto !important; }
+}
 @media (pointer: coarse) {
   .react-flow__node { touch-action: none; }
   .sandbox-container .react-flow__handle { min-width: 22px; min-height: 22px; }

@@ -11,8 +11,8 @@ import { BOOLEAN_LAWS, gateValue, inputRows, universalNetwork } from "../logic/l
 
 describe("guided curriculum", () => {
   it("keeps the five-question algebra lesson separate from the following lessons", () => {
-    expect(QUESTION_COUNTS).toEqual([5, 5, 5, 5]);
-    expect([0, 1, 2, 3, 4].map(questionOffset)).toEqual([0, 5, 10, 15, 20]);
+    expect(QUESTION_COUNTS).toEqual([3, 3, 3, 3]);
+    expect([0, 1, 2, 3, 4].map(questionOffset)).toEqual([0, 3, 6, 9, 12]);
     expect(makeIntroQuestion(0, false, () => 0, 4).answer).toBe("A");
   });
   it("scores the four-topic assessment at the boundaries", () => {

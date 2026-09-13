@@ -192,7 +192,7 @@ export function IntroLearning({
             <div className="mb-7 grid gap-3 sm:grid-cols-3">
               {[
                 [
-                  bn ? "০১ · বিষয়ের পরিচিতি" : "01 · Explore the topic",
+                  bn ? "০1 · বিষয়ের পরিচিতি" : "01 · Explore the topic",
                   bn ? "পাঠ ও বিষয়বস্তু দেখে নাও" : "Browse the content and lessons",
                 ],
                 [
@@ -374,7 +374,7 @@ export function IntroLearning({
                           {question.options.map((option) => (
                             <label
                               key={option}
-                              className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 px-4 py-4 text-sm transition ${value === option ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"}`}
+                              className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 px-4 py-4 text-sm transition ${submitted && checkIntroAnswer(question, option) ? "border-emerald-600 bg-emerald-50 text-emerald-900" : submitted && value === option ? "border-red-600 bg-red-50 text-red-900" : value === option ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"}`}
                             >
                               <input
                                 type="radio"

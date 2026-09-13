@@ -1,0 +1,501 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/i18n/index.tsx");const createContext = __vite__cjsImport1_react["createContext"]; const useCallback = __vite__cjsImport1_react["useCallback"]; const useContext = __vite__cjsImport1_react["useContext"]; const useEffect = __vite__cjsImport1_react["useEffect"]; const useState = __vite__cjsImport1_react["useState"];const _jsxDEV = __vite__cjsImport2_react_jsxDevRuntime["jsxDEV"];import { browserStorage } from "/src/lib/browserStorage.ts";
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=e65d69f5";
+var _jsxFileName = "C:/Users/zarin/logilabsimulator/src/i18n/index.tsx";
+import __vite__cjsImport2_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=e65d69f5";
+var _s = $RefreshSig$(), _s2 = $RefreshSig$();
+export const DICT = {
+	classLine: {
+		en: "Class 11–12",
+		bn: "একাদশ–দ্বাদশ শ্রেণি"
+	},
+	chapterLine: {
+		en: "Chapter 3: Number Systems & Digital Devices",
+		bn: "অধ্যায় ৩: সংখ্যা পদ্ধতি ও ডিজিটাল ডিভাইস"
+	},
+	appTitle: {
+		en: "Boolean Logic Simulator",
+		bn: "বুলিয়ান লজিক সিমুলেটর"
+	},
+	tabCircuit: {
+		en: "Expression Simulator",
+		bn: "এক্সপ্রেশন সিমুলেটর"
+	},
+	tabBuild: {
+		en: "Build Your Own Circuit",
+		bn: "নিজের সার্কিট বানাও"
+	},
+	tabLearn: {
+		en: "Learn the Basics",
+		bn: "নিজে শিখি"
+	},
+	tabPractice: {
+		en: "Practice",
+		bn: "প্র্যাকটিস"
+	},
+	tutorial: {
+		en: "Tutorial",
+		bn: "টিউটোরিয়াল"
+	},
+	tutorialTitle: {
+		en: "How to use this app",
+		bn: "অ্যাপটি কীভাবে ব্যবহার করবে"
+	},
+	tutorialIntro: {
+		en: "Follow these steps to go from a Boolean expression to a working circuit.",
+		bn: "একটি বুলিয়ান এক্সপ্রেশন থেকে সম্পূর্ণ সার্কিট বানাতে এই ধাপগুলো অনুসরণ করো।"
+	},
+	step1t: {
+		en: "1. Write the expression",
+		bn: "১. এক্সপ্রেশন লেখো"
+	},
+	step1d: {
+		en: "Type a Boolean expression such as F = XYZ + XY' in the input box on the left. You can also pick a ready-made example.",
+		bn: "বাঁ পাশের ইনপুট বক্সে F = XYZ + XY' এর মতো এক্সপ্রেশন লেখো, অথবা তৈরি উদাহরণ থেকে বেছে নাও।"
+	},
+	step2t: {
+		en: "2. Set the input values",
+		bn: "২. ইনপুট মান ঠিক করো"
+	},
+	step2d: {
+		en: "Toggle each variable between 0 (OFF) and 1 (ON), or use Randomize / All 0 / All 1.",
+		bn: "প্রতিটি ভেরিয়েবলকে ০ (OFF) বা ১ (ON) করো, অথবা Randomize / All 0 / All 1 ব্যবহার করো।"
+	},
+	step3t: {
+		en: "3. Press Generate",
+		bn: "৩. Generate চাপো"
+	},
+	step3d: {
+		en: "The circuit is drawn on the right. Active wires light up so you can trace the signal.",
+		bn: "ডান পাশে সার্কিট আঁকা হবে। চালু তার জ্বলে উঠবে, ফলে সিগন্যাল অনুসরণ করা যাবে।"
+	},
+	step4t: {
+		en: "4. Follow the step-by-step simulation",
+		bn: "৪. ধাপে ধাপে সিমুলেশন দেখো"
+	},
+	step4d: {
+		en: "Every gate evaluation is shown in order underneath the inputs, ending with the final output.",
+		bn: "ইনপুটের নিচে প্রতিটি গেটের হিসাব ক্রমানুসারে দেখানো হয়, শেষে চূড়ান্ত আউটপুট।"
+	},
+	step5t: {
+		en: "5. Check truth table & simplification",
+		bn: "৫. ট্রুথ টেবিল ও সরলীকরণ দেখো"
+	},
+	step5d: {
+		en: "The bottom panel shows the full truth table and the Quine–McCluskey simplification steps.",
+		bn: "নিচের প্যানেলে পূর্ণ ট্রুথ টেবিল এবং কুইন–ম্যাক্লাস্কি সরলীকরণের ধাপ দেখা যায়।"
+	},
+	step6t: {
+		en: "6. Build your own circuit",
+		bn: "৬. নিজের সার্কিট বানাও"
+	},
+	step6d: {
+		en: "In the builder tab, add gates and switches, drag wires between them, click a part to delete it, and read its truth table.",
+		bn: "বিল্ডার ট্যাবে গেট ও সুইচ যোগ করো, তার টেনে সংযোগ দাও, কোনো অংশ মুছতে সেটিতে ক্লিক করো এবং ট্রুথ টেবিল দেখো।"
+	},
+	expression: {
+		en: "Boolean expression",
+		bn: "বুলিয়ান এক্সপ্রেশন"
+	},
+	generate: {
+		en: "Generate",
+		bn: "তৈরি করো"
+	},
+	parse: {
+		en: "Parse",
+		bn: "পার্স"
+	},
+	simplify: {
+		en: "Simplify",
+		bn: "সরলীকরণ"
+	},
+	inputValues: {
+		en: "Input values",
+		bn: "ইনপুট মান"
+	},
+	stepSim: {
+		en: "Step-by-step simulation",
+		bn: "ধাপে ধাপে সিমুলেশন"
+	},
+	examples: {
+		en: "Examples",
+		bn: "উদাহরণ"
+	},
+	settings: {
+		en: "Settings",
+		bn: "সেটিংস"
+	},
+	truthTable: {
+		en: "Truth table",
+		bn: "ট্রুথ টেবিল"
+	},
+	simplification: {
+		en: "Simplification",
+		bn: "সরলীকরণ"
+	},
+	original: {
+		en: "Original",
+		bn: "মূল এক্সপ্রেশন"
+	},
+	simplified: {
+		en: "Simplified",
+		bn: "সরলীকৃত"
+	},
+	preparingSimplification: {
+		en: "Preparing simplified expression...",
+		bn: "সরলীকৃত এক্সপ্রেশন তৈরি হচ্ছে..."
+	},
+	equivalenceVerified: {
+		en: "Equivalence verified on every input combination",
+		bn: "প্রতিটি ইনপুট সমন্বয়ের জন্য সমতা যাচাই করা হয়েছে"
+	},
+	notVerified: {
+		en: "Not verified. Original kept.",
+		bn: "যাচাই করা যায়নি। মূল এক্সপ্রেশন রাখা হয়েছে।"
+	},
+	gates: {
+		en: "gates",
+		bn: "গেট"
+	},
+	depth: {
+		en: "depth",
+		bn: "গভীরতা"
+	},
+	ast: {
+		en: "AST & validation",
+		bn: "AST ও যাচাই"
+	},
+	gate: {
+		en: "Gate",
+		bn: "গেট"
+	},
+	analysis: {
+		en: "Analysis",
+		bn: "বিশ্লেষণ"
+	},
+	circuitCanvas: {
+		en: "Circuit canvas",
+		bn: "সার্কিট ক্যানভাস"
+	},
+	emptyCanvas: {
+		en: "Enter a Boolean expression and press Generate to build the circuit.",
+		bn: "একটি বুলিয়ান এক্সপ্রেশন লিখে Generate চাপলে সার্কিট তৈরি হবে।"
+	},
+	components: {
+		en: "Components",
+		bn: "কম্পোনেন্ট"
+	},
+	mobileMoveInstruction: {
+		en: "Tap an element, then tap an empty canvas spot to move it",
+		bn: "একটি element-এ tap করে canvas-এর খালি জায়গায় tap করলে সেটি সরবে"
+	},
+	builderTruth: {
+		en: "Truth table of your circuit",
+		bn: "তোমার সার্কিটের ট্রুথ টেবিল"
+	},
+	builderTruthEmpty: {
+		en: "Add input switches and an output LED to see the truth table.",
+		bn: "ট্রুথ টেবিল দেখতে ইনপুট সুইচ ও আউটপুট LED যোগ করো।"
+	},
+	randomize: {
+		en: "Randomize",
+		bn: "এলোমেলো"
+	},
+	all0: {
+		en: "All 0",
+		bn: "সব ০"
+	},
+	all1: {
+		en: "All 1",
+		bn: "সব ১"
+	},
+	parseFirst: {
+		en: "Parse an expression to detect its variables.",
+		bn: "ভেরিয়েবল দেখতে একটি এক্সপ্রেশন পার্স করো।"
+	},
+	uploadCircuit: {
+		en: "Upload/Take Photo",
+		bn: "আপলোড/ছবি তুলুন"
+	},
+	processingImage: {
+		en: "Processing image...",
+		bn: "ছবি প্রসেস করা হচ্ছে..."
+	},
+	imageSuccess: {
+		en: "Circuit recognized!",
+		bn: "সার্কিট শনাক্ত করা হয়েছে!"
+	},
+	imageError: {
+		en: "Failed to recognize circuit.",
+		bn: "সার্কিট শনাক্ত করা যায়নি।"
+	},
+	// Practice Challenge 1: AND Gate
+	practiceAnd1Title: {
+		en: "Practice 1: Build an AND gate",
+		bn: "প্রাকটিস ১: AND গেট তৈরি করো"
+	},
+	practiceAnd1Summary: {
+		en: "Create a circuit that outputs 1 only when both inputs are 1.",
+		bn: "এমন সার্কিট বানাও যা শুধুমাত্র যখন দুটি ইনপুট ১ হয় তখনই আউটপুট ১ দেয়।"
+	},
+	practiceAnd1Hint: {
+		en: "The output should be 1 only when both A and B are 1.",
+		bn: "আউটপুট শুধুমাত্র তখনই ১ হবে যখন A এবং B দুটোই ১ হয়।"
+	},
+	practiceAnd1Inst0: {
+		en: "Add two input switches labeled A and B.",
+		bn: "A এবং B নামের দুটি ইনপুট সুইচ যোগ করো।"
+	},
+	practiceAnd1Inst1: {
+		en: "Add one AND gate and one output LED.",
+		bn: "একটি AND গেট এবং একটি আউটপুট LED যোগ করো।"
+	},
+	practiceAnd1Inst2: {
+		en: "Connect A and B to the AND gate, then connect the gate output to the LED.",
+		bn: "A এবং B কে AND গেটের সাথে সংযুক্ত করো, তারপর গেটের আউটপুট LED তে সংযুক্ত করো।"
+	},
+	practiceAnd1Guide0Msg: {
+		en: "Choose this element: AND gate.",
+		bn: "এই উপাদান বেছে নাও: AND গেট।"
+	},
+	practiceAnd1Guide0Detail: {
+		en: "Select the AND gate from the component section first.",
+		bn: "প্রথমে কম্পোনেন্ট সেকশন থেকে AND গেট নির্বাচন করো।"
+	},
+	practiceAnd1Guide1Msg: {
+		en: "Now choose this element: Input switch.",
+		bn: "এখন এই উপাদান বেছে নাও: ইনপুট সুইচ।"
+	},
+	practiceAnd1Guide1Detail: {
+		en: "Add the first signal source that represents input A.",
+		bn: "প্রথম সিগন্যাল সোর্স যোগ করো যা ইনপুট A প্রতিনিধিত্ব করে।"
+	},
+	practiceAnd1Guide2Msg: {
+		en: "Add another input switch for B.",
+		bn: "B এর জন্য আরেকটি ইনপুট সুইচ যোগ করো।"
+	},
+	practiceAnd1Guide2Detail: {
+		en: "You need two input switches for A and B.",
+		bn: "তোমার A এবং B এর জন্য দুটি ইনপুট সুইচ প্রয়োজন।"
+	},
+	practiceAnd1Guide3Msg: {
+		en: "Choose this element: Output LED.",
+		bn: "এই উপাদান বেছে নাও: আউটপুট LED।"
+	},
+	practiceAnd1Guide3Detail: {
+		en: "Add the output LED that will show the final result.",
+		bn: "আউটপুট LED যোগ করো যা চূড়ান্ত ফলাফল দেখাবে।"
+	},
+	practiceAnd1Guide4Msg: {
+		en: "Complete all three wire connections.",
+		bn: "তিনটি তারের সংযোগ সম্পূর্ণ করো।"
+	},
+	practiceAnd1Guide4Detail: {
+		en: "Connect A and B to the AND gate, then connect the AND gate to the output LED.",
+		bn: "A ও B থেকে AND গেটে তার দাও, তারপর AND গেট থেকে আউটপুট LED-তে তার দাও।"
+	},
+	practiceAnd1Guide5Msg: {
+		en: "Toggle the input values and check the result.",
+		bn: "ইনপুট মান টগল করো এবং ফলাফল দেখো।"
+	},
+	practiceAnd1Guide5Detail: {
+		en: "Set inputs to 1 and 1 to see the LED turn on.",
+		bn: "ইনপুট ১ এবং ১ করো LED চালু হতে দেখার জন্য।"
+	},
+	// Practice Challenge 2: OR Gate
+	practiceOr2Title: {
+		en: "Practice 2: Build an OR gate",
+		bn: "প্রাকটিস ২: OR গেট তৈরি করো"
+	},
+	practiceOr2Summary: {
+		en: "Create a circuit that outputs 1 when either input is 1.",
+		bn: "এমন সার্কিট বানাও যা যেকোনো ইনপুট ১ হলে আউটপুট ১ দেয়।"
+	},
+	practiceOr2Hint: {
+		en: "The output should be 0 only when both inputs are 0.",
+		bn: "আউটপুট শুধুমাত্র তখনই ০ হবে যখন উভয় ইনপুট ০ হয়।"
+	},
+	practiceOr2Inst0: {
+		en: "Place two input switches and one OR gate.",
+		bn: "দুটি ইনপুট সুইচ এবং একটি OR গেট রাখো।"
+	},
+	practiceOr2Inst1: {
+		en: "Wire both inputs to the OR gate.",
+		bn: "উভয় ইনপুট OR গেটে তার সংযুক্ত করো।"
+	},
+	practiceOr2Inst2: {
+		en: "Connect the OR output to the output LED.",
+		bn: "OR গেটের আউটপুট আউটপুট LED তে সংযুক্ত করো।"
+	},
+	practiceOr2Guide0Msg: {
+		en: "Choose this element: OR gate.",
+		bn: "এই উপাদান বেছে নাও: OR গেট।"
+	},
+	practiceOr2Guide0Detail: {
+		en: "Select the OR gate from the component section.",
+		bn: "কম্পোনেন্ট সেকশন থেকে OR গেট নির্বাচন করো।"
+	},
+	practiceOr2Guide1Msg: {
+		en: "Add input switch A.",
+		bn: "ইনপুট সুইচ A যোগ করো।"
+	},
+	practiceOr2Guide1Detail: {
+		en: "The OR gate needs both inputs connected.",
+		bn: "OR গেটের উভয় ইনপুট সংযুক্ত দরকার।"
+	},
+	practiceOr2Guide2Msg: {
+		en: "Add input switch B.",
+		bn: "ইনপুট সুইচ B যোগ করো।"
+	},
+	practiceOr2Guide2Detail: {
+		en: "The OR gate needs both inputs connected.",
+		bn: "OR গেটের উভয় ইনপুট সংযুক্ত দরকার।"
+	},
+	practiceOr2Guide3Msg: {
+		en: "Choose this element: Output LED.",
+		bn: "এই উপাদান বেছে নাও: আউটপুট LED।"
+	},
+	practiceOr2Guide3Detail: {
+		en: "Attach the LED to the OR output to read the final value.",
+		bn: "চূড়ান্ত মান পড়ার জন্য LED কে OR আউটপুটে সংযুক্ত করো।"
+	},
+	practiceOr2Guide4Msg: {
+		en: "Complete all three wire connections.",
+		bn: "তিনটি তারের সংযোগ সম্পূর্ণ করো।"
+	},
+	practiceOr2Guide4Detail: {
+		en: "Connect A and B to the OR gate, then connect the OR gate to the output LED.",
+		bn: "A ও B থেকে OR গেটে তার দাও, তারপর OR গেট থেকে আউটপুট LED-তে তার দাও।"
+	},
+	// Practice Challenge 3: XOR Gate
+	practiceXor3Title: {
+		en: "Practice 3: Build an XOR gate",
+		bn: "প্রাকটিস ৩: XOR গেট তৈরি করো"
+	},
+	practiceXor3Summary: {
+		en: "Create a circuit that outputs 1 when exactly one input is on.",
+		bn: "এমন সার্কিট বানাও যা ঠিক একটি ইনপুট ১ হলে আউটপুট ১ দেয়।"
+	},
+	practiceXor3Hint: {
+		en: "XOR is true when the two inputs differ.",
+		bn: "XOR সত্য তখনই যখন দুটি ইনপুট আলাদা হয়।"
+	},
+	practiceXor3Inst0: {
+		en: "Use two input switches and one XOR gate.",
+		bn: "দুটি ইনপুট সুইচ এবং একটি XOR গেট ব্যবহার করো।"
+	},
+	practiceXor3Inst1: {
+		en: "Connect each input to the XOR gate.",
+		bn: "প্রতিটি ইনপুট XOR গেটে সংযুক্ত করো।"
+	},
+	practiceXor3Inst2: {
+		en: "Route the XOR result to the output LED.",
+		bn: "XOR ফলাফল আউটপুট LED তে পাঠাও।"
+	},
+	practiceXor3Guide0Msg: {
+		en: "Choose this element: XOR gate.",
+		bn: "এই উপাদান বেছে নাও: XOR গেট।"
+	},
+	practiceXor3Guide0Detail: {
+		en: "This gate outputs 1 only when the two inputs differ.",
+		bn: "এই গেট শুধুমাত্র তখনই ১ দেয় যখন দুটি ইনপুট আলাদা হয়।"
+	},
+	practiceXor3Guide1Msg: {
+		en: "Add input switch A.",
+		bn: "ইনপুট সুইচ A যোগ করো।"
+	},
+	practiceXor3Guide1Detail: {
+		en: "You need one signal for A and one for B.",
+		bn: "তোমার A এর জন্য একটি এবং B এর জন্য একটি সিগন্যাল দরকার।"
+	},
+	practiceXor3Guide2Msg: {
+		en: "Add input switch B.",
+		bn: "ইনপুট সুইচ B যোগ করো।"
+	},
+	practiceXor3Guide2Detail: {
+		en: "You need one signal for A and one for B.",
+		bn: "তোমার A এর জন্য একটি এবং B এর জন্য একটি সিগন্যাল দরকার।"
+	},
+	practiceXor3Guide3Msg: {
+		en: "Choose this element: Output LED.",
+		bn: "এই উপাদান বেছে নাও: আউটপুট LED।"
+	},
+	practiceXor3Guide3Detail: {
+		en: "This will show whether exactly one input is on.",
+		bn: "এটি দেখাবে যে ঠিক একটি ইনপুট চালু আছে কিনা।"
+	},
+	practiceXor3Guide4Msg: {
+		en: "Complete all three wire connections.",
+		bn: "তিনটি তারের সংযোগ সম্পূর্ণ করো।"
+	},
+	practiceXor3Guide4Detail: {
+		en: "Connect A and B to the XOR gate, then connect the XOR gate to the output LED.",
+		bn: "A ও B থেকে XOR গেটে তার দাও, তারপর XOR গেট থেকে আউটপুট LED-তে তার দাও।"
+	}
+};
+const LangContext = createContext({
+	lang: "bn",
+	setLang: () => {},
+	t: (k) => DICT[k]?.bn ?? String(k)
+});
+_c = LangContext;
+export function LanguageProvider({ children }) {
+	_s();
+	const [lang, setLangState] = useState("bn");
+	useEffect(() => {
+		const stored = browserStorage.getItem("logiclab-lang");
+		if (stored === "bn" || stored === "en") setLangState(stored);
+	}, []);
+	const setLang = useCallback((l) => {
+		setLangState(l);
+		browserStorage.setItem("logiclab-lang", l);
+		document.documentElement.lang = l;
+	}, []);
+	const t = useCallback((key) => DICT[key]?.[lang] ?? String(key), [lang]);
+	return /* @__PURE__ */ _jsxDEV(LangContext.Provider, {
+		value: {
+			lang,
+			setLang,
+			t
+		},
+		"data-tsd-source": "/src/i18n/index.tsx:270:10",
+		children
+	}, void 0, false, {
+		fileName: _jsxFileName,
+		lineNumber: 270,
+		columnNumber: 10
+	}, this);
+}
+_s(LanguageProvider, "HXvsvrdlwJsTi3XWOiKLqTZmk6c=");
+_c2 = LanguageProvider;
+export function useLang() {
+	_s2();
+	return useContext(LangContext);
+}
+_s2(useLang, "gDsCjeeItUuvgOWf1v4qoK9RF6k=");
+var _c, _c2;
+$RefreshReg$(_c, "LangContext");
+$RefreshReg$(_c2, "LanguageProvider");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+import * as __vite_react_currentExports from "/src/i18n/index.tsx?t=1789154438895";
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+
+  const currentExports = __vite_react_currentExports;
+  queueMicrotask(() => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/zarin/logilabsimulator/src/i18n/index.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/zarin/logilabsimulator/src/i18n/index.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/zarin/logilabsimulator/src/i18n/index.tsx" + ' ' + id); }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTs7OztBQU1BO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUFBO0VBQUE7Q0FBQTs7Q0FFQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7O0NBRUE7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7O0NBRUE7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FDQTtFQUFBO0VBQUE7Q0FBQTtDQUNBO0VBQ0E7RUFDQTtDQUNBO0NBQ0E7RUFBQTtFQUFBO0NBQUE7Q0FDQTtFQUNBO0VBQ0E7Q0FDQTtDQUNBO0VBQUE7RUFBQTtDQUFBO0NBQ0E7RUFDQTtFQUNBO0NBQ0E7QUFDQTtBQVFBO0NBQUE7Q0FBQTtDQUFBO0FBQUE7O0FBRUE7O0NBQ0E7Q0FFQTtFQUNBO0VBQ0E7Q0FDQTtDQUVBO0VBQ0E7RUFDQTtFQUNBO0NBQ0E7Q0FFQTtDQUVBO0VBQUE7R0FBQTtHQUFBO0dBQUE7RUFBQTtFQUFBO0VBQTJEO0NBQUE7Ozs7O0FBQzNEOzs7QUFFQTs7Q0FDQTtBQUNBIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJpbmRleC50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgYnJvd3NlclN0b3JhZ2UgfSBmcm9tIFwiQC9saWIvYnJvd3NlclN0b3JhZ2VcIjtcclxuaW1wb3J0IHsgY3JlYXRlQ29udGV4dCwgdXNlQ2FsbGJhY2ssIHVzZUNvbnRleHQsIHVzZUVmZmVjdCwgdXNlU3RhdGUsIHR5cGUgUmVhY3ROb2RlIH0gZnJvbSBcInJlYWN0XCI7XHJcblxyXG5leHBvcnQgdHlwZSBMYW5nID0gXCJlblwiIHwgXCJiblwiO1xyXG5cclxudHlwZSBEaWN0ID0gUmVjb3JkPHN0cmluZywgeyBlbjogc3RyaW5nOyBibjogc3RyaW5nIH0+O1xyXG5cclxuZXhwb3J0IGNvbnN0IERJQ1Q6IERpY3QgPSB7XHJcbiAgY2xhc3NMaW5lOiB7IGVuOiBcIkNsYXNzIDEx4oCTMTJcIiwgYm46IFwi4KaP4KaV4Ka+4Kam4Ka24oCT4Kam4KeN4Kas4Ka+4Kam4Ka2IOCmtuCnjeCmsOCnh+Cmo+Cmv1wiIH0sXHJcbiAgY2hhcHRlckxpbmU6IHtcclxuICAgIGVuOiBcIkNoYXB0ZXIgMzogTnVtYmVyIFN5c3RlbXMgJiBEaWdpdGFsIERldmljZXNcIixcclxuICAgIGJuOiBcIuCmheCmp+CnjeCmr+CmvuCmr+CmvCDgp6k6IOCmuOCmguCmluCnjeCmr+CmviDgpqrgpqbgp43gpqfgpqTgpr8g4KaTIOCmoeCmv+CmnOCmv+Cmn+CmvuCmsiDgpqHgpr/gpq3gpr7gpofgprhcIixcclxuICB9LFxyXG4gIGFwcFRpdGxlOiB7IGVuOiBcIkJvb2xlYW4gTG9naWMgU2ltdWxhdG9yXCIsIGJuOiBcIuCmrOCngeCmsuCmv+Cmr+CmvOCmvuCmqCDgprLgppzgpr/gppUg4Ka44Ka/4Kau4KeB4Kay4KeH4Kaf4KawXCIgfSxcclxuICB0YWJDaXJjdWl0OiB7IGVuOiBcIkV4cHJlc3Npb24gU2ltdWxhdG9yXCIsIGJuOiBcIuCmj+CmleCnjeCmuOCmquCnjeCmsOCnh+CmtuCmqCDgprjgpr/gpq7gp4HgprLgp4fgpp/gprBcIiB9LFxyXG4gIHRhYkJ1aWxkOiB7IGVuOiBcIkJ1aWxkIFlvdXIgT3duIENpcmN1aXRcIiwgYm46IFwi4Kao4Ka/4Kac4KeH4KawIOCmuOCmvuCmsOCnjeCmleCmv+CmnyDgpqzgpr7gpqjgpr7gppNcIiB9LFxyXG4gIHRhYkxlYXJuOiB7IGVuOiBcIkxlYXJuIHRoZSBCYXNpY3NcIiwgYm46IFwi4Kao4Ka/4Kac4KeHIOCmtuCmv+CmluCmv1wiIH0sXHJcbiAgdGFiUHJhY3RpY2U6IHsgZW46IFwiUHJhY3RpY2VcIiwgYm46IFwi4Kaq4KeN4Kaw4KeN4Kav4Ka+4KaV4Kaf4Ka/4Ka4XCIgfSxcclxuICB0dXRvcmlhbDogeyBlbjogXCJUdXRvcmlhbFwiLCBibjogXCLgpp/gpr/gpongpp/gp4vgprDgpr/gpq/gprzgpr7gprJcIiB9LFxyXG4gIHR1dG9yaWFsVGl0bGU6IHsgZW46IFwiSG93IHRvIHVzZSB0aGlzIGFwcFwiLCBibjogXCLgpoXgp43gpq/gpr7gpqrgpp/gpr8g4KaV4KeA4Kat4Ka+4Kas4KeHIOCmrOCnjeCmr+CmrOCmueCmvuCmsCDgppXgprDgpqzgp4dcIiB9LFxyXG4gIHR1dG9yaWFsSW50cm86IHtcclxuICAgIGVuOiBcIkZvbGxvdyB0aGVzZSBzdGVwcyB0byBnbyBmcm9tIGEgQm9vbGVhbiBleHByZXNzaW9uIHRvIGEgd29ya2luZyBjaXJjdWl0LlwiLFxyXG4gICAgYm46IFwi4KaP4KaV4Kaf4Ka/IOCmrOCngeCmsuCmv+Cmr+CmvOCmvuCmqCDgpo/gppXgp43gprjgpqrgp43gprDgp4fgprbgpqgg4Kal4KeH4KaV4KeHIOCmuOCmruCnjeCmquCnguCmsOCnjeCmoyDgprjgpr7gprDgp43gppXgpr/gpp8g4Kas4Ka+4Kao4Ka+4Kak4KeHIOCmj+CmhyDgpqfgpr7gpqrgppfgp4HgprLgp4sg4KaF4Kao4KeB4Ka44Kaw4KajIOCmleCmsOCni+ClpFwiLFxyXG4gIH0sXHJcbiAgc3RlcDF0OiB7IGVuOiBcIjEuIFdyaXRlIHRoZSBleHByZXNzaW9uXCIsIGJuOiBcIuCnpy4g4KaP4KaV4KeN4Ka44Kaq4KeN4Kaw4KeH4Ka24KaoIOCmsuCnh+CmluCni1wiIH0sXHJcbiAgc3RlcDFkOiB7XHJcbiAgICBlbjogXCJUeXBlIGEgQm9vbGVhbiBleHByZXNzaW9uIHN1Y2ggYXMgRiA9IFhZWiArIFhZJyBpbiB0aGUgaW5wdXQgYm94IG9uIHRoZSBsZWZ0LiBZb3UgY2FuIGFsc28gcGljayBhIHJlYWR5LW1hZGUgZXhhbXBsZS5cIixcclxuICAgIGJuOiBcIuCmrOCmvuCmgSDgpqrgpr7gprbgp4fgprAg4KaH4Kao4Kaq4KeB4KafIOCmrOCmleCnjeCmuOCnhyBGID0gWFlaICsgWFknIOCmj+CmsCDgpq7gpqTgp4sg4KaP4KaV4KeN4Ka44Kaq4KeN4Kaw4KeH4Ka24KaoIOCmsuCnh+CmluCniywg4KaF4Kal4Kas4Ka+IOCmpOCniOCmsOCmvyDgpongpqbgpr7gprngprDgpqMg4Kal4KeH4KaV4KeHIOCmrOCnh+Cmm+CnhyDgpqjgpr7gppPgpaRcIixcclxuICB9LFxyXG4gIHN0ZXAydDogeyBlbjogXCIyLiBTZXQgdGhlIGlucHV0IHZhbHVlc1wiLCBibjogXCLgp6guIOCmh+CmqOCmquCngeCmnyDgpq7gpr7gpqgg4Kag4Ka/4KaVIOCmleCmsOCni1wiIH0sXHJcbiAgc3RlcDJkOiB7XHJcbiAgICBlbjogXCJUb2dnbGUgZWFjaCB2YXJpYWJsZSBiZXR3ZWVuIDAgKE9GRikgYW5kIDEgKE9OKSwgb3IgdXNlIFJhbmRvbWl6ZSAvIEFsbCAwIC8gQWxsIDEuXCIsXHJcbiAgICBibjogXCLgpqrgp43gprDgpqTgpr/gpp/gpr8g4Kat4KeH4Kaw4Ka/4Kav4Ka84KeH4Kas4Kay4KaV4KeHIOCnpiAoT0ZGKSDgpqzgpr4g4KenIChPTikg4KaV4Kaw4KeLLCDgpoXgpqXgpqzgpr4gUmFuZG9taXplIC8gQWxsIDAgLyBBbGwgMSDgpqzgp43gpq/gpqzgprngpr7gprAg4KaV4Kaw4KeL4KWkXCIsXHJcbiAgfSxcclxuICBzdGVwM3Q6IHsgZW46IFwiMy4gUHJlc3MgR2VuZXJhdGVcIiwgYm46IFwi4KepLiBHZW5lcmF0ZSDgpprgpr7gpqrgp4tcIiB9LFxyXG4gIHN0ZXAzZDoge1xyXG4gICAgZW46IFwiVGhlIGNpcmN1aXQgaXMgZHJhd24gb24gdGhlIHJpZ2h0LiBBY3RpdmUgd2lyZXMgbGlnaHQgdXAgc28geW91IGNhbiB0cmFjZSB0aGUgc2lnbmFsLlwiLFxyXG4gICAgYm46IFwi4Kah4Ka+4KaoIOCmquCmvuCmtuCnhyDgprjgpr7gprDgp43gppXgpr/gpp8g4KaG4KaB4KaV4Ka+IOCmueCmrOCnh+ClpCDgpprgpr7gprLgp4Eg4Kak4Ka+4KawIOCmnOCnjeCmrOCmsuCnhyDgpongpqDgpqzgp4csIOCmq+CmsuCnhyDgprjgpr/gppfgpqjgp43gpq/gpr7gprIg4KaF4Kao4KeB4Ka44Kaw4KajIOCmleCmsOCmviDgpq/gpr7gpqzgp4fgpaRcIixcclxuICB9LFxyXG4gIHN0ZXA0dDogeyBlbjogXCI0LiBGb2xsb3cgdGhlIHN0ZXAtYnktc3RlcCBzaW11bGF0aW9uXCIsIGJuOiBcIuCnqi4g4Kan4Ka+4Kaq4KeHIOCmp+CmvuCmquCnhyDgprjgpr/gpq7gp4HgprLgp4fgprbgpqgg4Kam4KeH4KaW4KeLXCIgfSxcclxuICBzdGVwNGQ6IHtcclxuICAgIGVuOiBcIkV2ZXJ5IGdhdGUgZXZhbHVhdGlvbiBpcyBzaG93biBpbiBvcmRlciB1bmRlcm5lYXRoIHRoZSBpbnB1dHMsIGVuZGluZyB3aXRoIHRoZSBmaW5hbCBvdXRwdXQuXCIsXHJcbiAgICBibjogXCLgpofgpqjgpqrgp4Hgpp/gp4fgprAg4Kao4Ka/4Kaa4KeHIOCmquCnjeCmsOCmpOCmv+Cmn+CmvyDgppfgp4fgpp/gp4fgprAg4Ka54Ka/4Ka44Ka+4KasIOCmleCnjeCmsOCmruCmvuCmqOCngeCmuOCmvuCmsOCnhyDgpqbgp4fgppbgpr7gpqjgp4sg4Ka54Kav4Ka8LCDgprbgp4fgprfgp4cg4Kaa4KeC4Kah4Ka84Ka+4Kao4KeN4KakIOCmhuCmieCmn+CmquCngeCmn+ClpFwiLFxyXG4gIH0sXHJcbiAgc3RlcDV0OiB7IGVuOiBcIjUuIENoZWNrIHRydXRoIHRhYmxlICYgc2ltcGxpZmljYXRpb25cIiwgYm46IFwi4KerLiDgpp/gp43gprDgp4HgpqUg4Kaf4KeH4Kas4Ka/4KayIOCmkyDgprjgprDgprLgp4DgppXgprDgpqMg4Kam4KeH4KaW4KeLXCIgfSxcclxuICBzdGVwNWQ6IHtcclxuICAgIGVuOiBcIlRoZSBib3R0b20gcGFuZWwgc2hvd3MgdGhlIGZ1bGwgdHJ1dGggdGFibGUgYW5kIHRoZSBRdWluZeKAk01jQ2x1c2tleSBzaW1wbGlmaWNhdGlvbiBzdGVwcy5cIixcclxuICAgIGJuOiBcIuCmqOCmv+CmmuCnh+CmsCDgpqrgp43gpq/gpr7gpqjgp4fgprLgp4cg4Kaq4KeC4Kaw4KeN4KajIOCmn+CnjeCmsOCngeCmpSDgpp/gp4fgpqzgpr/gprIg4KaP4Kas4KaCIOCmleCngeCmh+CmqOKAk+CmruCnjeCmr+CmvuCmleCnjeCmsuCmvuCmuOCnjeCmleCmvyDgprjgprDgprLgp4DgppXgprDgpqPgp4fgprAg4Kan4Ka+4KaqIOCmpuCnh+CmluCmviDgpq/gpr7gpq/gprzgpaRcIixcclxuICB9LFxyXG4gIHN0ZXA2dDogeyBlbjogXCI2LiBCdWlsZCB5b3VyIG93biBjaXJjdWl0XCIsIGJuOiBcIuCnrC4g4Kao4Ka/4Kac4KeH4KawIOCmuOCmvuCmsOCnjeCmleCmv+CmnyDgpqzgpr7gpqjgpr7gppNcIiB9LFxyXG4gIHN0ZXA2ZDoge1xyXG4gICAgZW46IFwiSW4gdGhlIGJ1aWxkZXIgdGFiLCBhZGQgZ2F0ZXMgYW5kIHN3aXRjaGVzLCBkcmFnIHdpcmVzIGJldHdlZW4gdGhlbSwgY2xpY2sgYSBwYXJ0IHRvIGRlbGV0ZSBpdCwgYW5kIHJlYWQgaXRzIHRydXRoIHRhYmxlLlwiLFxyXG4gICAgYm46IFwi4Kas4Ka/4Kay4KeN4Kah4Ka+4KawIOCmn+CnjeCmr+CmvuCmrOCnhyDgppfgp4fgpp8g4KaTIOCmuOCngeCmh+CmmiDgpq/gp4vgppcg4KaV4Kaw4KeLLCDgpqTgpr7gprAg4Kaf4KeH4Kao4KeHIOCmuOCmguCmr+Cni+CmlyDgpqbgpr7gppMsIOCmleCni+CmqOCniyDgpoXgpoLgprYg4Kau4KeB4Kab4Kak4KeHIOCmuOCnh+Cmn+Cmv+CmpOCnhyDgppXgp43gprLgpr/gppUg4KaV4Kaw4KeLIOCmj+CmrOCmgiDgpp/gp43gprDgp4HgpqUg4Kaf4KeH4Kas4Ka/4KayIOCmpuCnh+CmluCni+ClpFwiLFxyXG4gIH0sXHJcbiAgZXhwcmVzc2lvbjogeyBlbjogXCJCb29sZWFuIGV4cHJlc3Npb25cIiwgYm46IFwi4Kas4KeB4Kay4Ka/4Kav4Ka84Ka+4KaoIOCmj+CmleCnjeCmuOCmquCnjeCmsOCnh+CmtuCmqFwiIH0sXHJcbiAgZ2VuZXJhdGU6IHsgZW46IFwiR2VuZXJhdGVcIiwgYm46IFwi4Kak4KeI4Kaw4Ka/IOCmleCmsOCni1wiIH0sXHJcbiAgcGFyc2U6IHsgZW46IFwiUGFyc2VcIiwgYm46IFwi4Kaq4Ka+4Kaw4KeN4Ka4XCIgfSxcclxuICBzaW1wbGlmeTogeyBlbjogXCJTaW1wbGlmeVwiLCBibjogXCLgprjgprDgprLgp4DgppXgprDgpqNcIiB9LFxyXG4gIGlucHV0VmFsdWVzOiB7IGVuOiBcIklucHV0IHZhbHVlc1wiLCBibjogXCLgpofgpqjgpqrgp4Hgpp8g4Kau4Ka+4KaoXCIgfSxcclxuICBzdGVwU2ltOiB7IGVuOiBcIlN0ZXAtYnktc3RlcCBzaW11bGF0aW9uXCIsIGJuOiBcIuCmp+CmvuCmquCnhyDgpqfgpr7gpqrgp4cg4Ka44Ka/4Kau4KeB4Kay4KeH4Ka24KaoXCIgfSxcclxuICBleGFtcGxlczogeyBlbjogXCJFeGFtcGxlc1wiLCBibjogXCLgpongpqbgpr7gprngprDgpqNcIiB9LFxyXG4gIHNldHRpbmdzOiB7IGVuOiBcIlNldHRpbmdzXCIsIGJuOiBcIuCmuOCnh+Cmn+Cmv+CmguCmuFwiIH0sXHJcbiAgdHJ1dGhUYWJsZTogeyBlbjogXCJUcnV0aCB0YWJsZVwiLCBibjogXCLgpp/gp43gprDgp4HgpqUg4Kaf4KeH4Kas4Ka/4KayXCIgfSxcclxuICBzaW1wbGlmaWNhdGlvbjogeyBlbjogXCJTaW1wbGlmaWNhdGlvblwiLCBibjogXCLgprjgprDgprLgp4DgppXgprDgpqNcIiB9LFxyXG4gIG9yaWdpbmFsOiB7IGVuOiBcIk9yaWdpbmFsXCIsIGJuOiBcIuCmruCnguCmsiDgpo/gppXgp43gprjgpqrgp43gprDgp4fgprbgpqhcIiB9LFxyXG4gIHNpbXBsaWZpZWQ6IHsgZW46IFwiU2ltcGxpZmllZFwiLCBibjogXCLgprjgprDgprLgp4DgppXgp4PgpqRcIiB9LFxyXG4gIHByZXBhcmluZ1NpbXBsaWZpY2F0aW9uOiB7IGVuOiBcIlByZXBhcmluZyBzaW1wbGlmaWVkIGV4cHJlc3Npb24uLi5cIiwgYm46IFwi4Ka44Kaw4Kay4KeA4KaV4KeD4KakIOCmj+CmleCnjeCmuOCmquCnjeCmsOCnh+CmtuCmqCDgpqTgp4jgprDgpr8g4Ka54Kaa4KeN4Kab4KeHLi4uXCIgfSxcclxuICBlcXVpdmFsZW5jZVZlcmlmaWVkOiB7IGVuOiBcIkVxdWl2YWxlbmNlIHZlcmlmaWVkIG9uIGV2ZXJ5IGlucHV0IGNvbWJpbmF0aW9uXCIsIGJuOiBcIuCmquCnjeCmsOCmpOCmv+Cmn+CmvyDgpofgpqjgpqrgp4Hgpp8g4Ka44Kau4Kao4KeN4Kas4Kav4Ka84KeH4KawIOCmnOCmqOCnjeCmryDgprjgpq7gpqTgpr4g4Kav4Ka+4Kaa4Ka+4KaHIOCmleCmsOCmviDgprngpq/gprzgp4fgppvgp4dcIiB9LFxyXG4gIG5vdFZlcmlmaWVkOiB7IGVuOiBcIk5vdCB2ZXJpZmllZC4gT3JpZ2luYWwga2VwdC5cIiwgYm46IFwi4Kav4Ka+4Kaa4Ka+4KaHIOCmleCmsOCmviDgpq/gpr7gpq/gprzgpqjgpr/gpaQg4Kau4KeC4KayIOCmj+CmleCnjeCmuOCmquCnjeCmsOCnh+CmtuCmqCDgprDgpr7gppbgpr4g4Ka54Kav4Ka84KeH4Kab4KeH4KWkXCIgfSxcclxuICBnYXRlczogeyBlbjogXCJnYXRlc1wiLCBibjogXCLgppfgp4fgpp9cIiB9LFxyXG4gIGRlcHRoOiB7IGVuOiBcImRlcHRoXCIsIGJuOiBcIuCml+CmreCngOCmsOCmpOCmvlwiIH0sXHJcbiAgYXN0OiB7IGVuOiBcIkFTVCAmIHZhbGlkYXRpb25cIiwgYm46IFwiQVNUIOCmkyDgpq/gpr7gpprgpr7gpodcIiB9LFxyXG4gIGdhdGU6IHsgZW46IFwiR2F0ZVwiLCBibjogXCLgppfgp4fgpp9cIiB9LFxyXG4gIGFuYWx5c2lzOiB7IGVuOiBcIkFuYWx5c2lzXCIsIGJuOiBcIuCmrOCmv+CmtuCnjeCmsuCnh+Cmt+Cmo1wiIH0sXHJcbiAgY2lyY3VpdENhbnZhczogeyBlbjogXCJDaXJjdWl0IGNhbnZhc1wiLCBibjogXCLgprjgpr7gprDgp43gppXgpr/gpp8g4KaV4KeN4Kav4Ka+4Kao4Kat4Ka+4Ka4XCIgfSxcclxuICBlbXB0eUNhbnZhczoge1xyXG4gICAgZW46IFwiRW50ZXIgYSBCb29sZWFuIGV4cHJlc3Npb24gYW5kIHByZXNzIEdlbmVyYXRlIHRvIGJ1aWxkIHRoZSBjaXJjdWl0LlwiLFxyXG4gICAgYm46IFwi4KaP4KaV4Kaf4Ka/IOCmrOCngeCmsuCmv+Cmr+CmvOCmvuCmqCDgpo/gppXgp43gprjgpqrgp43gprDgp4fgprbgpqgg4Kay4Ka/4KaW4KeHIEdlbmVyYXRlIOCmmuCmvuCmquCmsuCnhyDgprjgpr7gprDgp43gppXgpr/gpp8g4Kak4KeI4Kaw4Ka/IOCmueCmrOCnh+ClpFwiLFxyXG4gIH0sXHJcbiAgY29tcG9uZW50czogeyBlbjogXCJDb21wb25lbnRzXCIsIGJuOiBcIuCmleCmruCnjeCmquCni+CmqOCnh+CmqOCnjeCmn1wiIH0sXHJcbiAgbW9iaWxlTW92ZUluc3RydWN0aW9uOiB7XHJcbiAgICBlbjogXCJUYXAgYW4gZWxlbWVudCwgdGhlbiB0YXAgYW4gZW1wdHkgY2FudmFzIHNwb3QgdG8gbW92ZSBpdFwiLFxyXG4gICAgYm46IFwi4KaP4KaV4Kaf4Ka/IGVsZW1lbnQt4KaPIHRhcCDgppXgprDgp4cgY2FudmFzLeCmj+CmsCDgppbgpr7gprLgpr8g4Kac4Ka+4Kef4KaX4Ka+4KefIHRhcCDgppXgprDgprLgp4cg4Ka44KeH4Kaf4Ka/IOCmuOCmsOCmrOCnh1wiLFxyXG4gIH0sXHJcbiAgYnVpbGRlclRydXRoOiB7IGVuOiBcIlRydXRoIHRhYmxlIG9mIHlvdXIgY2lyY3VpdFwiLCBibjogXCLgpqTgp4vgpq7gpr7gprAg4Ka44Ka+4Kaw4KeN4KaV4Ka/4Kaf4KeH4KawIOCmn+CnjeCmsOCngeCmpSDgpp/gp4fgpqzgpr/gprJcIiB9LFxyXG4gIGJ1aWxkZXJUcnV0aEVtcHR5OiB7XHJcbiAgICBlbjogXCJBZGQgaW5wdXQgc3dpdGNoZXMgYW5kIGFuIG91dHB1dCBMRUQgdG8gc2VlIHRoZSB0cnV0aCB0YWJsZS5cIixcclxuICAgIGJuOiBcIuCmn+CnjeCmsOCngeCmpSDgpp/gp4fgpqzgpr/gprIg4Kam4KeH4KaW4Kak4KeHIOCmh+CmqOCmquCngeCmnyDgprjgp4Hgpofgppog4KaTIOCmhuCmieCmn+CmquCngeCmnyBMRUQg4Kav4KeL4KaXIOCmleCmsOCni+ClpFwiLFxyXG4gIH0sXHJcbiAgcmFuZG9taXplOiB7IGVuOiBcIlJhbmRvbWl6ZVwiLCBibjogXCLgpo/gprLgp4vgpq7gp4fgprLgp4tcIiB9LFxyXG4gIGFsbDA6IHsgZW46IFwiQWxsIDBcIiwgYm46IFwi4Ka44KasIOCnplwiIH0sXHJcbiAgYWxsMTogeyBlbjogXCJBbGwgMVwiLCBibjogXCLgprjgpqwg4KenXCIgfSxcclxuICBwYXJzZUZpcnN0OiB7IGVuOiBcIlBhcnNlIGFuIGV4cHJlc3Npb24gdG8gZGV0ZWN0IGl0cyB2YXJpYWJsZXMuXCIsIGJuOiBcIuCmreCnh+CmsOCmv+Cmr+CmvOCnh+CmrOCmsiDgpqbgp4fgppbgpqTgp4cg4KaP4KaV4Kaf4Ka/IOCmj+CmleCnjeCmuOCmquCnjeCmsOCnh+CmtuCmqCDgpqrgpr7gprDgp43gprgg4KaV4Kaw4KeL4KWkXCIgfSxcclxuICB1cGxvYWRDaXJjdWl0OiB7IGVuOiBcIlVwbG9hZC9UYWtlIFBob3RvXCIsIGJuOiBcIuCmhuCmquCmsuCni+CmoS/gppvgpqzgpr8g4Kak4KeB4Kay4KeB4KaoXCIgfSxcclxuICBwcm9jZXNzaW5nSW1hZ2U6IHsgZW46IFwiUHJvY2Vzc2luZyBpbWFnZS4uLlwiLCBibjogXCLgppvgpqzgpr8g4Kaq4KeN4Kaw4Ka44KeH4Ka4IOCmleCmsOCmviDgprngpprgp43gppvgp4cuLi5cIiB9LFxyXG4gIGltYWdlU3VjY2VzczogeyBlbjogXCJDaXJjdWl0IHJlY29nbml6ZWQhXCIsIGJuOiBcIuCmuOCmvuCmsOCnjeCmleCmv+CmnyDgprbgpqjgpr7gppXgp43gpqQg4KaV4Kaw4Ka+IOCmueCmr+CmvOCnh+Cmm+CnhyFcIiB9LFxyXG4gIGltYWdlRXJyb3I6IHsgZW46IFwiRmFpbGVkIHRvIHJlY29nbml6ZSBjaXJjdWl0LlwiLCBibjogXCLgprjgpr7gprDgp43gppXgpr/gpp8g4Ka24Kao4Ka+4KaV4KeN4KakIOCmleCmsOCmviDgpq/gpr7gpq/gprzgpqjgpr/gpaRcIiB9LFxyXG4gIC8vIFByYWN0aWNlIENoYWxsZW5nZSAxOiBBTkQgR2F0ZVxyXG4gIHByYWN0aWNlQW5kMVRpdGxlOiB7IGVuOiBcIlByYWN0aWNlIDE6IEJ1aWxkIGFuIEFORCBnYXRlXCIsIGJuOiBcIuCmquCnjeCmsOCmvuCmleCmn+Cmv+CmuCDgp6c6IEFORCDgppfgp4fgpp8g4Kak4KeI4Kaw4Ka/IOCmleCmsOCni1wiIH0sXHJcbiAgcHJhY3RpY2VBbmQxU3VtbWFyeToge1xyXG4gICAgZW46IFwiQ3JlYXRlIGEgY2lyY3VpdCB0aGF0IG91dHB1dHMgMSBvbmx5IHdoZW4gYm90aCBpbnB1dHMgYXJlIDEuXCIsXHJcbiAgICBibjogXCLgpo/gpq7gpqgg4Ka44Ka+4Kaw4KeN4KaV4Ka/4KafIOCmrOCmvuCmqOCmvuCmkyDgpq/gpr4g4Ka24KeB4Kan4KeB4Kau4Ka+4Kak4KeN4KawIOCmr+CmluCmqCDgpqbgp4Hgpp/gpr8g4KaH4Kao4Kaq4KeB4KafIOCnpyDgprngpq/gprwg4Kak4KaW4Kao4KaHIOCmhuCmieCmn+CmquCngeCmnyDgp6cg4Kam4KeH4Kav4Ka84KWkXCIsXHJcbiAgfSxcclxuICBwcmFjdGljZUFuZDFIaW50OiB7XHJcbiAgICBlbjogXCJUaGUgb3V0cHV0IHNob3VsZCBiZSAxIG9ubHkgd2hlbiBib3RoIEEgYW5kIEIgYXJlIDEuXCIsXHJcbiAgICBibjogXCLgpobgpongpp/gpqrgp4Hgpp8g4Ka24KeB4Kan4KeB4Kau4Ka+4Kak4KeN4KawIOCmpOCmluCmqOCmhyDgp6cg4Ka54Kas4KeHIOCmr+CmluCmqCBBIOCmj+CmrOCmgiBCIOCmpuCngeCmn+Cni+CmhyDgp6cg4Ka54Kav4Ka84KWkXCIsXHJcbiAgfSxcclxuICBwcmFjdGljZUFuZDFJbnN0MDoge1xyXG4gICAgZW46IFwiQWRkIHR3byBpbnB1dCBzd2l0Y2hlcyBsYWJlbGVkIEEgYW5kIEIuXCIsXHJcbiAgICBibjogXCJBIOCmj+CmrOCmgiBCIOCmqOCmvuCmruCnh+CmsCDgpqbgp4Hgpp/gpr8g4KaH4Kao4Kaq4KeB4KafIOCmuOCngeCmh+CmmiDgpq/gp4vgppcg4KaV4Kaw4KeL4KWkXCIsXHJcbiAgfSxcclxuICBwcmFjdGljZUFuZDFJbnN0MToge1xyXG4gICAgZW46IFwiQWRkIG9uZSBBTkQgZ2F0ZSBhbmQgb25lIG91dHB1dCBMRUQuXCIsXHJcbiAgICBibjogXCLgpo/gppXgpp/gpr8gQU5EIOCml+Cnh+CmnyDgpo/gpqzgpoIg4KaP4KaV4Kaf4Ka/IOCmhuCmieCmn+CmquCngeCmnyBMRUQg4Kav4KeL4KaXIOCmleCmsOCni+ClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VBbmQxSW5zdDI6IHtcclxuICAgIGVuOiBcIkNvbm5lY3QgQSBhbmQgQiB0byB0aGUgQU5EIGdhdGUsIHRoZW4gY29ubmVjdCB0aGUgZ2F0ZSBvdXRwdXQgdG8gdGhlIExFRC5cIixcclxuICAgIGJuOiBcIkEg4KaP4Kas4KaCIEIg4KaV4KeHIEFORCDgppfgp4fgpp/gp4fgprAg4Ka44Ka+4Kal4KeHIOCmuOCmguCmr+CngeCmleCnjeCmpCDgppXgprDgp4ssIOCmpOCmvuCmsOCmquCmsCDgppfgp4fgpp/gp4fgprAg4KaG4KaJ4Kaf4Kaq4KeB4KafIExFRCDgpqTgp4cg4Ka44KaC4Kav4KeB4KaV4KeN4KakIOCmleCmsOCni+ClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VBbmQxR3VpZGUwTXNnOiB7IGVuOiBcIkNob29zZSB0aGlzIGVsZW1lbnQ6IEFORCBnYXRlLlwiLCBibjogXCLgpo/gpocg4KaJ4Kaq4Ka+4Kam4Ka+4KaoIOCmrOCnh+Cmm+CnhyDgpqjgpr7gppM6IEFORCDgppfgp4fgpp/gpaRcIiB9LFxyXG4gIHByYWN0aWNlQW5kMUd1aWRlMERldGFpbDoge1xyXG4gICAgZW46IFwiU2VsZWN0IHRoZSBBTkQgZ2F0ZSBmcm9tIHRoZSBjb21wb25lbnQgc2VjdGlvbiBmaXJzdC5cIixcclxuICAgIGJuOiBcIuCmquCnjeCmsOCmpeCmruCnhyDgppXgpq7gp43gpqrgp4vgpqjgp4fgpqjgp43gpp8g4Ka44KeH4KaV4Ka24KaoIOCmpeCnh+CmleCnhyBBTkQg4KaX4KeH4KafIOCmqOCmv+CmsOCnjeCmrOCmvuCmmuCmqCDgppXgprDgp4vgpaRcIixcclxuICB9LFxyXG4gIHByYWN0aWNlQW5kMUd1aWRlMU1zZzogeyBlbjogXCJOb3cgY2hvb3NlIHRoaXMgZWxlbWVudDogSW5wdXQgc3dpdGNoLlwiLCBibjogXCLgpo/gppbgpqgg4KaP4KaHIOCmieCmquCmvuCmpuCmvuCmqCDgpqzgp4fgppvgp4cg4Kao4Ka+4KaTOiDgpofgpqjgpqrgp4Hgpp8g4Ka44KeB4KaH4Kaa4KWkXCIgfSxcclxuICBwcmFjdGljZUFuZDFHdWlkZTFEZXRhaWw6IHtcclxuICAgIGVuOiBcIkFkZCB0aGUgZmlyc3Qgc2lnbmFsIHNvdXJjZSB0aGF0IHJlcHJlc2VudHMgaW5wdXQgQS5cIixcclxuICAgIGJuOiBcIuCmquCnjeCmsOCmpeCmriDgprjgpr/gppfgpqjgp43gpq/gpr7gprIg4Ka44KeL4Kaw4KeN4Ka4IOCmr+Cni+CmlyDgppXgprDgp4sg4Kav4Ka+IOCmh+CmqOCmquCngeCmnyBBIOCmquCnjeCmsOCmpOCmv+CmqOCmv+Cmp+Cmv+CmpOCnjeCmrCDgppXgprDgp4fgpaRcIixcclxuICB9LFxyXG4gIHByYWN0aWNlQW5kMUd1aWRlMk1zZzogeyBlbjogXCJBZGQgYW5vdGhlciBpbnB1dCBzd2l0Y2ggZm9yIEIuXCIsIGJuOiBcIkIg4KaP4KawIOCmnOCmqOCnjeCmryDgpobgprDgp4fgppXgpp/gpr8g4KaH4Kao4Kaq4KeB4KafIOCmuOCngeCmh+CmmiDgpq/gp4vgppcg4KaV4Kaw4KeL4KWkXCIgfSxcclxuICBwcmFjdGljZUFuZDFHdWlkZTJEZXRhaWw6IHtcclxuICAgIGVuOiBcIllvdSBuZWVkIHR3byBpbnB1dCBzd2l0Y2hlcyBmb3IgQSBhbmQgQi5cIixcclxuICAgIGJuOiBcIuCmpOCni+CmruCmvuCmsCBBIOCmj+CmrOCmgiBCIOCmj+CmsCDgppzgpqjgp43gpq8g4Kam4KeB4Kaf4Ka/IOCmh+CmqOCmquCngeCmnyDgprjgp4Hgpofgppog4Kaq4KeN4Kaw4Kav4Ka84KeL4Kac4Kao4KWkXCIsXHJcbiAgfSxcclxuICBwcmFjdGljZUFuZDFHdWlkZTNNc2c6IHsgZW46IFwiQ2hvb3NlIHRoaXMgZWxlbWVudDogT3V0cHV0IExFRC5cIiwgYm46IFwi4KaP4KaHIOCmieCmquCmvuCmpuCmvuCmqCDgpqzgp4fgppvgp4cg4Kao4Ka+4KaTOiDgpobgpongpp/gpqrgp4Hgpp8gTEVE4KWkXCIgfSxcclxuICBwcmFjdGljZUFuZDFHdWlkZTNEZXRhaWw6IHtcclxuICAgIGVuOiBcIkFkZCB0aGUgb3V0cHV0IExFRCB0aGF0IHdpbGwgc2hvdyB0aGUgZmluYWwgcmVzdWx0LlwiLFxyXG4gICAgYm46IFwi4KaG4KaJ4Kaf4Kaq4KeB4KafIExFRCDgpq/gp4vgppcg4KaV4Kaw4KeLIOCmr+CmviDgpprgp4LgpqHgprzgpr7gpqjgp43gpqQg4Kar4Kay4Ka+4Kar4KayIOCmpuCnh+CmluCmvuCmrOCnh+ClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VBbmQxR3VpZGU0TXNnOiB7IGVuOiBcIkNvbXBsZXRlIGFsbCB0aHJlZSB3aXJlIGNvbm5lY3Rpb25zLlwiLCBibjogXCLgpqTgpr/gpqjgpp/gpr8g4Kak4Ka+4Kaw4KeH4KawIOCmuOCmguCmr+Cni+CmlyDgprjgpq7gp43gpqrgp4LgprDgp43gpqMg4KaV4Kaw4KeL4KWkXCIgfSxcclxuICBwcmFjdGljZUFuZDFHdWlkZTREZXRhaWw6IHtcclxuICAgIGVuOiBcIkNvbm5lY3QgQSBhbmQgQiB0byB0aGUgQU5EIGdhdGUsIHRoZW4gY29ubmVjdCB0aGUgQU5EIGdhdGUgdG8gdGhlIG91dHB1dCBMRUQuXCIsXHJcbiAgICBibjogXCJBIOCmkyBCIOCmpeCnh+CmleCnhyBBTkQg4KaX4KeH4Kaf4KeHIOCmpOCmvuCmsCDgpqbgpr7gppMsIOCmpOCmvuCmsOCmquCmsCBBTkQg4KaX4KeH4KafIOCmpeCnh+CmleCnhyDgpobgpongpp/gpqrgp4Hgpp8gTEVELeCmpOCnhyDgpqTgpr7gprAg4Kam4Ka+4KaT4KWkXCIsXHJcbiAgfSxcclxuICBwcmFjdGljZUFuZDFHdWlkZTVNc2c6IHsgZW46IFwiVG9nZ2xlIHRoZSBpbnB1dCB2YWx1ZXMgYW5kIGNoZWNrIHRoZSByZXN1bHQuXCIsIGJuOiBcIuCmh+CmqOCmquCngeCmnyDgpq7gpr7gpqgg4Kaf4KaX4KayIOCmleCmsOCniyDgpo/gpqzgpoIg4Kar4Kay4Ka+4Kar4KayIOCmpuCnh+CmluCni+ClpFwiIH0sXHJcbiAgcHJhY3RpY2VBbmQxR3VpZGU1RGV0YWlsOiB7XHJcbiAgICBlbjogXCJTZXQgaW5wdXRzIHRvIDEgYW5kIDEgdG8gc2VlIHRoZSBMRUQgdHVybiBvbi5cIixcclxuICAgIGJuOiBcIuCmh+CmqOCmquCngeCmnyDgp6cg4KaP4Kas4KaCIOCnpyDgppXgprDgp4sgTEVEIOCmmuCmvuCmsuCngSDgprngpqTgp4cg4Kam4KeH4KaW4Ka+4KawIOCmnOCmqOCnjeCmr+ClpFwiLFxyXG4gIH0sXHJcbiAgLy8gUHJhY3RpY2UgQ2hhbGxlbmdlIDI6IE9SIEdhdGVcclxuICBwcmFjdGljZU9yMlRpdGxlOiB7IGVuOiBcIlByYWN0aWNlIDI6IEJ1aWxkIGFuIE9SIGdhdGVcIiwgYm46IFwi4Kaq4KeN4Kaw4Ka+4KaV4Kaf4Ka/4Ka4IOCnqDogT1Ig4KaX4KeH4KafIOCmpOCniOCmsOCmvyDgppXgprDgp4tcIiB9LFxyXG4gIHByYWN0aWNlT3IyU3VtbWFyeToge1xyXG4gICAgZW46IFwiQ3JlYXRlIGEgY2lyY3VpdCB0aGF0IG91dHB1dHMgMSB3aGVuIGVpdGhlciBpbnB1dCBpcyAxLlwiLFxyXG4gICAgYm46IFwi4KaP4Kau4KaoIOCmuOCmvuCmsOCnjeCmleCmv+CmnyDgpqzgpr7gpqjgpr7gppMg4Kav4Ka+IOCmr+Cnh+CmleCni+CmqOCniyDgpofgpqjgpqrgp4Hgpp8g4KenIOCmueCmsuCnhyDgpobgpongpp/gpqrgp4Hgpp8g4KenIOCmpuCnh+Cmr+CmvOClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VPcjJIaW50OiB7XHJcbiAgICBlbjogXCJUaGUgb3V0cHV0IHNob3VsZCBiZSAwIG9ubHkgd2hlbiBib3RoIGlucHV0cyBhcmUgMC5cIixcclxuICAgIGJuOiBcIuCmhuCmieCmn+CmquCngeCmnyDgprbgp4Hgpqfgp4Hgpq7gpr7gpqTgp43gprAg4Kak4KaW4Kao4KaHIOCnpiDgprngpqzgp4cg4Kav4KaW4KaoIOCmieCmreCmr+CmvCDgpofgpqjgpqrgp4Hgpp8g4KemIOCmueCmr+CmvOClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VPcjJJbnN0MDoge1xyXG4gICAgZW46IFwiUGxhY2UgdHdvIGlucHV0IHN3aXRjaGVzIGFuZCBvbmUgT1IgZ2F0ZS5cIixcclxuICAgIGJuOiBcIuCmpuCngeCmn+CmvyDgpofgpqjgpqrgp4Hgpp8g4Ka44KeB4KaH4KaaIOCmj+CmrOCmgiDgpo/gppXgpp/gpr8gT1Ig4KaX4KeH4KafIOCmsOCmvuCmluCni+ClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VPcjJJbnN0MToge1xyXG4gICAgZW46IFwiV2lyZSBib3RoIGlucHV0cyB0byB0aGUgT1IgZ2F0ZS5cIixcclxuICAgIGJuOiBcIuCmieCmreCmr+CmvCDgpofgpqjgpqrgp4Hgpp8gT1Ig4KaX4KeH4Kaf4KeHIOCmpOCmvuCmsCDgprjgpoLgpq/gp4HgppXgp43gpqQg4KaV4Kaw4KeL4KWkXCIsXHJcbiAgfSxcclxuICBwcmFjdGljZU9yMkluc3QyOiB7XHJcbiAgICBlbjogXCJDb25uZWN0IHRoZSBPUiBvdXRwdXQgdG8gdGhlIG91dHB1dCBMRUQuXCIsXHJcbiAgICBibjogXCJPUiDgppfgp4fgpp/gp4fgprAg4KaG4KaJ4Kaf4Kaq4KeB4KafIOCmhuCmieCmn+CmquCngeCmnyBMRUQg4Kak4KeHIOCmuOCmguCmr+CngeCmleCnjeCmpCDgppXgprDgp4vgpaRcIixcclxuICB9LFxyXG4gIHByYWN0aWNlT3IyR3VpZGUwTXNnOiB7IGVuOiBcIkNob29zZSB0aGlzIGVsZW1lbnQ6IE9SIGdhdGUuXCIsIGJuOiBcIuCmj+CmhyDgpongpqrgpr7gpqbgpr7gpqgg4Kas4KeH4Kab4KeHIOCmqOCmvuCmkzogT1Ig4KaX4KeH4Kaf4KWkXCIgfSxcclxuICBwcmFjdGljZU9yMkd1aWRlMERldGFpbDoge1xyXG4gICAgZW46IFwiU2VsZWN0IHRoZSBPUiBnYXRlIGZyb20gdGhlIGNvbXBvbmVudCBzZWN0aW9uLlwiLFxyXG4gICAgYm46IFwi4KaV4Kau4KeN4Kaq4KeL4Kao4KeH4Kao4KeN4KafIOCmuOCnh+CmleCmtuCmqCDgpqXgp4fgppXgp4cgT1Ig4KaX4KeH4KafIOCmqOCmv+CmsOCnjeCmrOCmvuCmmuCmqCDgppXgprDgp4vgpaRcIixcclxuICB9LFxyXG4gIHByYWN0aWNlT3IyR3VpZGUxTXNnOiB7IGVuOiBcIkFkZCBpbnB1dCBzd2l0Y2ggQS5cIiwgYm46IFwi4KaH4Kao4Kaq4KeB4KafIOCmuOCngeCmh+CmmiBBIOCmr+Cni+CmlyDgppXgprDgp4vgpaRcIiB9LFxyXG4gIHByYWN0aWNlT3IyR3VpZGUxRGV0YWlsOiB7XHJcbiAgICBlbjogXCJUaGUgT1IgZ2F0ZSBuZWVkcyBib3RoIGlucHV0cyBjb25uZWN0ZWQuXCIsXHJcbiAgICBibjogXCJPUiDgppfgp4fgpp/gp4fgprAg4KaJ4Kat4Kav4Ka8IOCmh+CmqOCmquCngeCmnyDgprjgpoLgpq/gp4HgppXgp43gpqQg4Kam4Kaw4KaV4Ka+4Kaw4KWkXCIsXHJcbiAgfSxcclxuICBwcmFjdGljZU9yMkd1aWRlMk1zZzogeyBlbjogXCJBZGQgaW5wdXQgc3dpdGNoIEIuXCIsIGJuOiBcIuCmh+CmqOCmquCngeCmnyDgprjgp4HgpofgppogQiDgpq/gp4vgppcg4KaV4Kaw4KeL4KWkXCIgfSxcclxuICBwcmFjdGljZU9yMkd1aWRlMkRldGFpbDoge1xyXG4gICAgZW46IFwiVGhlIE9SIGdhdGUgbmVlZHMgYm90aCBpbnB1dHMgY29ubmVjdGVkLlwiLFxyXG4gICAgYm46IFwiT1Ig4KaX4KeH4Kaf4KeH4KawIOCmieCmreCmr+CmvCDgpofgpqjgpqrgp4Hgpp8g4Ka44KaC4Kav4KeB4KaV4KeN4KakIOCmpuCmsOCmleCmvuCmsOClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VPcjJHdWlkZTNNc2c6IHsgZW46IFwiQ2hvb3NlIHRoaXMgZWxlbWVudDogT3V0cHV0IExFRC5cIiwgYm46IFwi4KaP4KaHIOCmieCmquCmvuCmpuCmvuCmqCDgpqzgp4fgppvgp4cg4Kao4Ka+4KaTOiDgpobgpongpp/gpqrgp4Hgpp8gTEVE4KWkXCIgfSxcclxuICBwcmFjdGljZU9yMkd1aWRlM0RldGFpbDoge1xyXG4gICAgZW46IFwiQXR0YWNoIHRoZSBMRUQgdG8gdGhlIE9SIG91dHB1dCB0byByZWFkIHRoZSBmaW5hbCB2YWx1ZS5cIixcclxuICAgIGJuOiBcIuCmmuCnguCmoeCmvOCmvuCmqOCnjeCmpCDgpq7gpr7gpqgg4Kaq4Kah4Ka84Ka+4KawIOCmnOCmqOCnjeCmryBMRUQg4KaV4KeHIE9SIOCmhuCmieCmn+CmquCngeCmn+CnhyDgprjgpoLgpq/gp4HgppXgp43gpqQg4KaV4Kaw4KeL4KWkXCIsXHJcbiAgfSxcclxuICBwcmFjdGljZU9yMkd1aWRlNE1zZzogeyBlbjogXCJDb21wbGV0ZSBhbGwgdGhyZWUgd2lyZSBjb25uZWN0aW9ucy5cIiwgYm46IFwi4Kak4Ka/4Kao4Kaf4Ka/IOCmpOCmvuCmsOCnh+CmsCDgprjgpoLgpq/gp4vgppcg4Ka44Kau4KeN4Kaq4KeC4Kaw4KeN4KajIOCmleCmsOCni+ClpFwiIH0sXHJcbiAgcHJhY3RpY2VPcjJHdWlkZTREZXRhaWw6IHtcclxuICAgIGVuOiBcIkNvbm5lY3QgQSBhbmQgQiB0byB0aGUgT1IgZ2F0ZSwgdGhlbiBjb25uZWN0IHRoZSBPUiBnYXRlIHRvIHRoZSBvdXRwdXQgTEVELlwiLFxyXG4gICAgYm46IFwiQSDgppMgQiDgpqXgp4fgppXgp4cgT1Ig4KaX4KeH4Kaf4KeHIOCmpOCmvuCmsCDgpqbgpr7gppMsIOCmpOCmvuCmsOCmquCmsCBPUiDgppfgp4fgpp8g4Kal4KeH4KaV4KeHIOCmhuCmieCmn+CmquCngeCmnyBMRUQt4Kak4KeHIOCmpOCmvuCmsCDgpqbgpr7gppPgpaRcIixcclxuICB9LFxyXG4gIC8vIFByYWN0aWNlIENoYWxsZW5nZSAzOiBYT1IgR2F0ZVxyXG4gIHByYWN0aWNlWG9yM1RpdGxlOiB7IGVuOiBcIlByYWN0aWNlIDM6IEJ1aWxkIGFuIFhPUiBnYXRlXCIsIGJuOiBcIuCmquCnjeCmsOCmvuCmleCmn+Cmv+CmuCDgp6k6IFhPUiDgppfgp4fgpp8g4Kak4KeI4Kaw4Ka/IOCmleCmsOCni1wiIH0sXHJcbiAgcHJhY3RpY2VYb3IzU3VtbWFyeToge1xyXG4gICAgZW46IFwiQ3JlYXRlIGEgY2lyY3VpdCB0aGF0IG91dHB1dHMgMSB3aGVuIGV4YWN0bHkgb25lIGlucHV0IGlzIG9uLlwiLFxyXG4gICAgYm46IFwi4KaP4Kau4KaoIOCmuOCmvuCmsOCnjeCmleCmv+CmnyDgpqzgpr7gpqjgpr7gppMg4Kav4Ka+IOCmoOCmv+CmlSDgpo/gppXgpp/gpr8g4KaH4Kao4Kaq4KeB4KafIOCnpyDgprngprLgp4cg4KaG4KaJ4Kaf4Kaq4KeB4KafIOCnpyDgpqbgp4fgpq/gprzgpaRcIixcclxuICB9LFxyXG4gIHByYWN0aWNlWG9yM0hpbnQ6IHtcclxuICAgIGVuOiBcIlhPUiBpcyB0cnVlIHdoZW4gdGhlIHR3byBpbnB1dHMgZGlmZmVyLlwiLFxyXG4gICAgYm46IFwiWE9SIOCmuOCmpOCnjeCmryDgpqTgppbgpqjgpocg4Kav4KaW4KaoIOCmpuCngeCmn+CmvyDgpofgpqjgpqrgp4Hgpp8g4KaG4Kay4Ka+4Kam4Ka+IOCmueCmr+CmvOClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VYb3IzSW5zdDA6IHtcclxuICAgIGVuOiBcIlVzZSB0d28gaW5wdXQgc3dpdGNoZXMgYW5kIG9uZSBYT1IgZ2F0ZS5cIixcclxuICAgIGJuOiBcIuCmpuCngeCmn+CmvyDgpofgpqjgpqrgp4Hgpp8g4Ka44KeB4KaH4KaaIOCmj+CmrOCmgiDgpo/gppXgpp/gpr8gWE9SIOCml+Cnh+CmnyDgpqzgp43gpq/gpqzgprngpr7gprAg4KaV4Kaw4KeL4KWkXCIsXHJcbiAgfSxcclxuICBwcmFjdGljZVhvcjNJbnN0MToge1xyXG4gICAgZW46IFwiQ29ubmVjdCBlYWNoIGlucHV0IHRvIHRoZSBYT1IgZ2F0ZS5cIixcclxuICAgIGJuOiBcIuCmquCnjeCmsOCmpOCmv+Cmn+CmvyDgpofgpqjgpqrgp4Hgpp8gWE9SIOCml+Cnh+Cmn+CnhyDgprjgpoLgpq/gp4HgppXgp43gpqQg4KaV4Kaw4KeL4KWkXCIsXHJcbiAgfSxcclxuICBwcmFjdGljZVhvcjNJbnN0Mjoge1xyXG4gICAgZW46IFwiUm91dGUgdGhlIFhPUiByZXN1bHQgdG8gdGhlIG91dHB1dCBMRUQuXCIsXHJcbiAgICBibjogXCJYT1Ig4Kar4Kay4Ka+4Kar4KayIOCmhuCmieCmn+CmquCngeCmnyBMRUQg4Kak4KeHIOCmquCmvuCmoOCmvuCmk+ClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VYb3IzR3VpZGUwTXNnOiB7IGVuOiBcIkNob29zZSB0aGlzIGVsZW1lbnQ6IFhPUiBnYXRlLlwiLCBibjogXCLgpo/gpocg4KaJ4Kaq4Ka+4Kam4Ka+4KaoIOCmrOCnh+Cmm+CnhyDgpqjgpr7gppM6IFhPUiDgppfgp4fgpp/gpaRcIiB9LFxyXG4gIHByYWN0aWNlWG9yM0d1aWRlMERldGFpbDoge1xyXG4gICAgZW46IFwiVGhpcyBnYXRlIG91dHB1dHMgMSBvbmx5IHdoZW4gdGhlIHR3byBpbnB1dHMgZGlmZmVyLlwiLFxyXG4gICAgYm46IFwi4KaP4KaHIOCml+Cnh+CmnyDgprbgp4Hgpqfgp4Hgpq7gpr7gpqTgp43gprAg4Kak4KaW4Kao4KaHIOCnpyDgpqbgp4fgpq/gprwg4Kav4KaW4KaoIOCmpuCngeCmn+CmvyDgpofgpqjgpqrgp4Hgpp8g4KaG4Kay4Ka+4Kam4Ka+IOCmueCmr+CmvOClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VYb3IzR3VpZGUxTXNnOiB7IGVuOiBcIkFkZCBpbnB1dCBzd2l0Y2ggQS5cIiwgYm46IFwi4KaH4Kao4Kaq4KeB4KafIOCmuOCngeCmh+CmmiBBIOCmr+Cni+CmlyDgppXgprDgp4vgpaRcIiB9LFxyXG4gIHByYWN0aWNlWG9yM0d1aWRlMURldGFpbDoge1xyXG4gICAgZW46IFwiWW91IG5lZWQgb25lIHNpZ25hbCBmb3IgQSBhbmQgb25lIGZvciBCLlwiLFxyXG4gICAgYm46IFwi4Kak4KeL4Kau4Ka+4KawIEEg4KaP4KawIOCmnOCmqOCnjeCmryDgpo/gppXgpp/gpr8g4KaP4Kas4KaCIEIg4KaP4KawIOCmnOCmqOCnjeCmryDgpo/gppXgpp/gpr8g4Ka44Ka/4KaX4Kao4KeN4Kav4Ka+4KayIOCmpuCmsOCmleCmvuCmsOClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VYb3IzR3VpZGUyTXNnOiB7IGVuOiBcIkFkZCBpbnB1dCBzd2l0Y2ggQi5cIiwgYm46IFwi4KaH4Kao4Kaq4KeB4KafIOCmuOCngeCmh+CmmiBCIOCmr+Cni+CmlyDgppXgprDgp4vgpaRcIiB9LFxyXG4gIHByYWN0aWNlWG9yM0d1aWRlMkRldGFpbDoge1xyXG4gICAgZW46IFwiWW91IG5lZWQgb25lIHNpZ25hbCBmb3IgQSBhbmQgb25lIGZvciBCLlwiLFxyXG4gICAgYm46IFwi4Kak4KeL4Kau4Ka+4KawIEEg4KaP4KawIOCmnOCmqOCnjeCmryDgpo/gppXgpp/gpr8g4KaP4Kas4KaCIEIg4KaP4KawIOCmnOCmqOCnjeCmryDgpo/gppXgpp/gpr8g4Ka44Ka/4KaX4Kao4KeN4Kav4Ka+4KayIOCmpuCmsOCmleCmvuCmsOClpFwiLFxyXG4gIH0sXHJcbiAgcHJhY3RpY2VYb3IzR3VpZGUzTXNnOiB7IGVuOiBcIkNob29zZSB0aGlzIGVsZW1lbnQ6IE91dHB1dCBMRUQuXCIsIGJuOiBcIuCmj+CmhyDgpongpqrgpr7gpqbgpr7gpqgg4Kas4KeH4Kab4KeHIOCmqOCmvuCmkzog4KaG4KaJ4Kaf4Kaq4KeB4KafIExFROClpFwiIH0sXHJcbiAgcHJhY3RpY2VYb3IzR3VpZGUzRGV0YWlsOiB7XHJcbiAgICBlbjogXCJUaGlzIHdpbGwgc2hvdyB3aGV0aGVyIGV4YWN0bHkgb25lIGlucHV0IGlzIG9uLlwiLFxyXG4gICAgYm46IFwi4KaP4Kaf4Ka/IOCmpuCnh+CmluCmvuCmrOCnhyDgpq/gp4cg4Kag4Ka/4KaVIOCmj+CmleCmn+CmvyDgpofgpqjgpqrgp4Hgpp8g4Kaa4Ka+4Kay4KeBIOCmhuCmm+CnhyDgppXgpr/gpqjgpr7gpaRcIixcclxuICB9LFxyXG4gIHByYWN0aWNlWG9yM0d1aWRlNE1zZzogeyBlbjogXCJDb21wbGV0ZSBhbGwgdGhyZWUgd2lyZSBjb25uZWN0aW9ucy5cIiwgYm46IFwi4Kak4Ka/4Kao4Kaf4Ka/IOCmpOCmvuCmsOCnh+CmsCDgprjgpoLgpq/gp4vgppcg4Ka44Kau4KeN4Kaq4KeC4Kaw4KeN4KajIOCmleCmsOCni+ClpFwiIH0sXHJcbiAgcHJhY3RpY2VYb3IzR3VpZGU0RGV0YWlsOiB7XHJcbiAgICBlbjogXCJDb25uZWN0IEEgYW5kIEIgdG8gdGhlIFhPUiBnYXRlLCB0aGVuIGNvbm5lY3QgdGhlIFhPUiBnYXRlIHRvIHRoZSBvdXRwdXQgTEVELlwiLFxyXG4gICAgYm46IFwiQSDgppMgQiDgpqXgp4fgppXgp4cgWE9SIOCml+Cnh+Cmn+CnhyDgpqTgpr7gprAg4Kam4Ka+4KaTLCDgpqTgpr7gprDgpqrgprAgWE9SIOCml+Cnh+CmnyDgpqXgp4fgppXgp4cg4KaG4KaJ4Kaf4Kaq4KeB4KafIExFRC3gpqTgp4cg4Kak4Ka+4KawIOCmpuCmvuCmk+ClpFwiLFxyXG4gIH0sXHJcbn07XHJcblxyXG5pbnRlcmZhY2UgQ3R4IHtcclxuICBsYW5nOiBMYW5nO1xyXG4gIHNldExhbmc6IChsOiBMYW5nKSA9PiB2b2lkO1xyXG4gIHQ6IChrZXk6IGtleW9mIHR5cGVvZiBESUNUKSA9PiBzdHJpbmc7XHJcbn1cclxuXHJcbmNvbnN0IExhbmdDb250ZXh0ID0gY3JlYXRlQ29udGV4dDxDdHg+KHsgbGFuZzogXCJiblwiLCBzZXRMYW5nOiAoKSA9PiB7fSwgdDogKGspID0+IERJQ1Rba10/LmJuID8/IFN0cmluZyhrKSB9KTtcclxuXHJcbmV4cG9ydCBmdW5jdGlvbiBMYW5ndWFnZVByb3ZpZGVyKHsgY2hpbGRyZW4gfTogeyBjaGlsZHJlbjogUmVhY3ROb2RlIH0pIHtcclxuICBjb25zdCBbbGFuZywgc2V0TGFuZ1N0YXRlXSA9IHVzZVN0YXRlPExhbmc+KFwiYm5cIik7XHJcblxyXG4gIHVzZUVmZmVjdCgoKSA9PiB7XHJcbiAgICBjb25zdCBzdG9yZWQgPSBicm93c2VyU3RvcmFnZS5nZXRJdGVtKFwibG9naWNsYWItbGFuZ1wiKTtcclxuICAgIGlmIChzdG9yZWQgPT09IFwiYm5cIiB8fCBzdG9yZWQgPT09IFwiZW5cIikgc2V0TGFuZ1N0YXRlKHN0b3JlZCk7XHJcbiAgfSwgW10pO1xyXG5cclxuICBjb25zdCBzZXRMYW5nID0gdXNlQ2FsbGJhY2soKGw6IExhbmcpID0+IHtcclxuICAgIHNldExhbmdTdGF0ZShsKTtcclxuICAgIGJyb3dzZXJTdG9yYWdlLnNldEl0ZW0oXCJsb2dpY2xhYi1sYW5nXCIsIGwpO1xyXG4gICAgZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LmxhbmcgPSBsO1xyXG4gIH0sIFtdKTtcclxuXHJcbiAgY29uc3QgdCA9IHVzZUNhbGxiYWNrKChrZXk6IGtleW9mIHR5cGVvZiBESUNUKSA9PiBESUNUW2tleV0/LltsYW5nXSA/PyBTdHJpbmcoa2V5KSwgW2xhbmddKTtcclxuXHJcbiAgcmV0dXJuIDxMYW5nQ29udGV4dC5Qcm92aWRlciB2YWx1ZT17eyBsYW5nLCBzZXRMYW5nLCB0IH19PntjaGlsZHJlbn08L0xhbmdDb250ZXh0LlByb3ZpZGVyPjtcclxufVxyXG5cclxuZXhwb3J0IGZ1bmN0aW9uIHVzZUxhbmcoKSB7XHJcbiAgcmV0dXJuIHVzZUNvbnRleHQoTGFuZ0NvbnRleHQpO1xyXG59XHJcbiJdLCJmaWxlIjoiQzovVXNlcnMvemFyaW4vbG9naWxhYnNpbXVsYXRvci9zcmMvaTE4bi9pbmRleC50c3gifQ==

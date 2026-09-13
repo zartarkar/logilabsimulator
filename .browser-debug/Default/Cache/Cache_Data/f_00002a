@@ -1,0 +1,347 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/MobileLandscapeGate.tsx");const useCallback = __vite__cjsImport0_react["useCallback"]; const useEffect = __vite__cjsImport0_react["useEffect"]; const useRef = __vite__cjsImport0_react["useRef"]; const useState = __vite__cjsImport0_react["useState"];const _jsxDEV = __vite__cjsImport4_react_jsxDevRuntime["jsxDEV"];import __vite__cjsImport0_react from "/node_modules/.vite/deps/react.js?v=e65d69f5";
+import { Button } from "/src/components/ui/button.tsx";
+import { ExternalLink, RotateCw, Smartphone } from "/node_modules/.vite/deps/lucide-react.js?v=e65d69f5";
+import { isLandscape } from "/src/logic/mobileOrientation.ts";
+var _jsxFileName = "C:/Users/zarin/logilabsimulator/src/components/MobileLandscapeGate.tsx";
+import __vite__cjsImport4_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=e65d69f5";
+var _s = $RefreshSig$();
+export function MobileLandscapeGate() {
+	_s();
+	const [needsLandscape, setNeedsLandscape] = useState(false);
+	const [message, setMessage] = useState("");
+	const [canAutoLock, setCanAutoLock] = useState(null);
+	const [isEmbeddedBrowser, setIsEmbeddedBrowser] = useState(false);
+	const [switching, setSwitching] = useState(false);
+	const [dismissed, setDismissed] = useState(false);
+	const ownsLock = useRef(false);
+	const updateViewport = useCallback(() => {
+		// Read the actual layout after rotation; orientationchange can fire before
+		// the browser updates either its media query or viewport dimensions.
+		const width = document.documentElement.clientWidth || window.innerWidth;
+		const height = window.innerHeight;
+		const landscape = isLandscape({
+			width,
+			height,
+			type: screen.orientation?.type,
+			legacyAngle: typeof window.orientation === "number" ? window.orientation : undefined,
+			mediaLandscape: window.matchMedia("(orientation: landscape)").matches
+		});
+		setNeedsLandscape(width <= 900 && !landscape);
+		if (landscape) setMessage("");
+	}, []);
+	useEffect(() => {
+		const mobile = window.matchMedia("(max-width: 900px)");
+		const portrait = window.matchMedia("(orientation: portrait)");
+		const userAgent = navigator.userAgent;
+		setCanAutoLock(typeof screen.orientation?.lock === "function");
+		setIsEmbeddedBrowser(/FBAN|FBAV|Instagram|Messenger/i.test(userAgent));
+		let frame = 0;
+		let settled = 0;
+		const update = () => {
+			cancelAnimationFrame(frame);
+			clearTimeout(settled);
+			frame = requestAnimationFrame(updateViewport);
+			settled = window.setTimeout(updateViewport, 300);
+		};
+		updateViewport();
+		const subscribe = (query) => {
+			if (query.addEventListener) {
+				query.addEventListener("change", update);
+				return () => query.removeEventListener("change", update);
+			}
+			query.addListener(update);
+			return () => query.removeListener(update);
+		};
+		const unsubscribeMobile = subscribe(mobile);
+		const unsubscribePortrait = subscribe(portrait);
+		window.addEventListener("orientationchange", update);
+		window.addEventListener("resize", update);
+		window.addEventListener("pageshow", update);
+		screen.orientation?.addEventListener?.("change", update);
+		window.visualViewport?.addEventListener("resize", update);
+		document.addEventListener("fullscreenchange", update);
+		document.addEventListener("visibilitychange", update);
+		return () => {
+			unsubscribeMobile();
+			unsubscribePortrait();
+			window.removeEventListener("orientationchange", update);
+			window.removeEventListener("resize", update);
+			window.removeEventListener("pageshow", update);
+			screen.orientation?.removeEventListener?.("change", update);
+			window.visualViewport?.removeEventListener("resize", update);
+			document.removeEventListener("fullscreenchange", update);
+			document.removeEventListener("visibilitychange", update);
+			cancelAnimationFrame(frame);
+			clearTimeout(settled);
+			if (ownsLock.current) screen.orientation?.unlock?.();
+		};
+	}, [updateViewport]);
+	useEffect(() => {
+		if (!needsLandscape || dismissed) return;
+		// Embedded browsers sometimes omit rotation/resize events entirely.
+		const timer = window.setInterval(updateViewport, 500);
+		return () => window.clearInterval(timer);
+	}, [
+		needsLandscape,
+		dismissed,
+		updateViewport
+	]);
+	const enterLandscape = async () => {
+		if (switching) return;
+		setSwitching(true);
+		setMessage("");
+		let enteredFullscreen = false;
+		try {
+			const orientation = screen.orientation;
+			if (!orientation?.lock) throw new Error("unsupported");
+			try {
+				await orientation.lock("landscape");
+			} catch {
+				// Some Android browsers require fullscreen before allowing a lock.
+				if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+					await document.documentElement.requestFullscreen();
+					enteredFullscreen = true;
+				}
+				await orientation.lock("landscape");
+			}
+			ownsLock.current = true;
+			updateViewport();
+		} catch {
+			if (enteredFullscreen && document.fullscreenElement) {
+				await document.exitFullscreen().catch(() => {});
+			}
+			setMessage("এই browser থেকে সরাসরি ঘোরানো যাচ্ছে না। ফোনের Auto Rotation চালু করে Rotation Lock বন্ধ করো, তারপর ফোনটি পাশে ঘোরাও।\nTurn on Auto Rotation, turn off Rotation Lock, then rotate your phone sideways.");
+		} finally {
+			setSwitching(false);
+		}
+	};
+	if (!needsLandscape || dismissed) return null;
+	return /* @__PURE__ */ _jsxDEV("div", {
+		className: "fixed inset-0 z-[1000000001] flex h-dvh items-center justify-center overflow-y-auto bg-background/95 p-3 backdrop-blur-md",
+		role: "dialog",
+		"aria-modal": "true",
+		"aria-labelledby": "landscape-title",
+		"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:119:5",
+		children: /* @__PURE__ */ _jsxDEV("div", {
+			className: "max-h-full w-full max-w-sm overflow-y-auto overscroll-contain rounded-2xl border border-primary/30 bg-card p-6 text-center shadow-2xl",
+			"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:120:7",
+			children: [
+				/* @__PURE__ */ _jsxDEV(Button, {
+					variant: "outline",
+					className: "mb-4 h-auto min-h-11 w-full whitespace-normal py-3",
+					onClick: () => setDismissed(true),
+					"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:121:9",
+					children: "অ্যাপে প্রবেশ করি · Continue to app"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 121,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ _jsxDEV("div", {
+					className: "relative mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary",
+					"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:124:9",
+					children: [/* @__PURE__ */ _jsxDEV(Smartphone, {
+						className: "h-10 w-10",
+						"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:125:11"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 125,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ _jsxDEV(RotateCw, {
+						className: "absolute -right-1 top-0 h-7 w-7 animate-pulse",
+						"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:126:11"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 126,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 124,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ _jsxDEV("h2", {
+					id: "landscape-title",
+					className: "text-xl font-bold leading-snug",
+					"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:128:9",
+					children: "আপনার মোবাইলের Auto Rotation চালু করে Landscape Mode-এ নিন"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 128,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ _jsxDEV("p", {
+					className: "mt-2 text-sm font-medium leading-relaxed text-foreground/75",
+					"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:131:9",
+					children: "Turn on Auto Rotation and rotate your phone to Landscape Mode"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 131,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ _jsxDEV("div", {
+					className: "mx-auto mt-4 h-px w-16 bg-border",
+					"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:134:9"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 134,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ _jsxDEV("div", {
+					className: "mt-4 space-y-1.5 text-sm leading-relaxed text-muted-foreground",
+					"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:135:9",
+					children: [/* @__PURE__ */ _jsxDEV("p", {
+						"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:136:11",
+						children: canAutoLock ? "নিচের button চাপলে supported browser স্বয়ংক্রিয়ভাবে Landscape Mode চালু করার চেষ্টা করবে।" : "Auto Rotation চালু করে মোবাইলটি ঘুরিয়ে নিলেই simulator খুলবে।"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 136,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ _jsxDEV("p", {
+						className: "text-xs",
+						"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:137:11",
+						children: canAutoLock ? "Tap the button below to let supported browsers switch automatically." : "Turn on Auto Rotation, then rotate your phone to open the simulator."
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 137,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 135,
+					columnNumber: 9
+				}, this),
+				canAutoLock ? /* @__PURE__ */ _jsxDEV(Button, {
+					disabled: switching,
+					className: "mt-5 h-auto min-h-11 w-full whitespace-normal py-3",
+					onClick: enterLandscape,
+					"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:140:11",
+					children: [/* @__PURE__ */ _jsxDEV(RotateCw, {
+						className: "mr-2 h-4 w-4",
+						"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:141:13"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 141,
+						columnNumber: 13
+					}, this), " Landscape Mode-এ নিন · Enter Landscape Mode"]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 140,
+					columnNumber: 11
+				}, this) : /* @__PURE__ */ _jsxDEV("div", {
+					className: "mt-5 rounded-xl border border-amber-300 bg-amber-50 p-3 text-left text-xs leading-relaxed text-amber-900",
+					"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:144:11",
+					children: [
+						/* @__PURE__ */ _jsxDEV("strong", {
+							className: "block",
+							"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:145:13",
+							children: "যেভাবে খুলবেন · How to continue"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 145,
+							columnNumber: 13
+						}, this),
+						/* @__PURE__ */ _jsxDEV("span", {
+							className: "mt-1 block",
+							"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:146:13",
+							children: "Control Center থেকে Rotation Lock বন্ধ করে মোবাইলটি পাশে ঘুরিয়ে নিন।"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 146,
+							columnNumber: 13
+						}, this),
+						/* @__PURE__ */ _jsxDEV("span", {
+							className: "mt-1 block",
+							"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:147:13",
+							children: "Turn off Rotation Lock in Control Center, then rotate your phone sideways."
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 147,
+							columnNumber: 13
+						}, this),
+						isEmbeddedBrowser && /* @__PURE__ */ _jsxDEV("span", {
+							className: "mt-2 flex items-start gap-1.5",
+							"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:148:35",
+							children: [/* @__PURE__ */ _jsxDEV(ExternalLink, {
+								className: "mt-0.5 h-3.5 w-3.5 shrink-0",
+								"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:148:83"
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 148,
+								columnNumber: 148
+							}, this), /* @__PURE__ */ _jsxDEV("span", {
+								"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:148:139",
+								children: [
+									"Messenger menu থেকে Open in Browser নির্বাচন করলে layout আরও ভালো কাজ করবে।",
+									/* @__PURE__ */ _jsxDEV("br", { "data-tsd-source": "/src/components/MobileLandscapeGate.tsx:148:220" }, void 0, false, {
+										fileName: _jsxFileName,
+										lineNumber: 148,
+										columnNumber: 416
+									}, this),
+									"For a better layout, select Open in Browser from the Messenger menu."
+								]
+							}, void 0, true, {
+								fileName: _jsxFileName,
+								lineNumber: 148,
+								columnNumber: 269
+							}, this)]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 148,
+							columnNumber: 35
+						}, this)
+					]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 144,
+					columnNumber: 11
+				}, this),
+				message && /* @__PURE__ */ _jsxDEV("p", {
+					className: "mt-3 whitespace-pre-line rounded-lg bg-muted p-2 text-xs text-muted-foreground",
+					"data-tsd-source": "/src/components/MobileLandscapeGate.tsx:151:21",
+					children: message
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 151,
+					columnNumber: 21
+				}, this)
+			]
+		}, void 0, true, {
+			fileName: _jsxFileName,
+			lineNumber: 120,
+			columnNumber: 7
+		}, this)
+	}, void 0, false, {
+		fileName: _jsxFileName,
+		lineNumber: 119,
+		columnNumber: 5
+	}, this);
+}
+_s(MobileLandscapeGate, "FZFMWvOaAtyXiVZCcndSD0bocW0=");
+_c = MobileLandscapeGate;
+var _c;
+$RefreshReg$(_c, "MobileLandscapeGate");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+import * as __vite_react_currentExports from "/src/components/MobileLandscapeGate.tsx?t=1789226236823";
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+
+  const currentExports = __vite_react_currentExports;
+  queueMicrotask(() => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/zarin/logilabsimulator/src/components/MobileLandscapeGate.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/zarin/logilabsimulator/src/components/MobileLandscapeGate.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) { return RefreshRuntime.register(type, "C:/Users/zarin/logilabsimulator/src/components/MobileLandscapeGate.tsx" + ' ' + id); }
+function $RefreshSig$() { return RefreshRuntime.createSignatureFunctionForTransform(); }
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0E7Ozs7QUFNQTs7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTtDQUNBO0NBQ0E7Q0FDQTtDQUVBOzs7RUFHQTtFQUNBO0VBQ0E7R0FBQTtHQUFBO0dBQUE7R0FDQTtHQUNBO0VBQUE7RUFDQTtFQUNBO0NBQ0E7Q0FFQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7R0FDQTtHQUNBO0dBQ0E7R0FDQTtFQUNBO0VBQ0E7RUFDQTtHQUNBO0lBQ0E7SUFDQTtHQUNBO0dBQ0E7R0FDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7R0FDQTtHQUNBO0dBQ0E7R0FDQTtHQUNBO0dBQ0E7R0FDQTtHQUNBO0dBQ0E7R0FDQTtHQUNBO0dBQ0E7RUFDQTtDQUNBO0NBRUE7RUFDQTs7RUFFQTtFQUNBO0NBQ0E7RUFBQTtFQUFBO0VBQUE7Q0FBQTtDQUVBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtHQUNBO0dBQ0E7R0FDQTtJQUNBO0dBQ0E7O0lBRUE7S0FDQTtLQUNBO0lBQ0E7SUFDQTtHQUNBO0dBQ0E7R0FDQTtFQUNBO0dBQ0E7SUFDQTtHQUNBO0dBQ0E7RUFDQTtHQUNBO0VBQ0E7Q0FDQTtDQUVBO0NBRUEsT0FDQTtFQUFBO0VBQUE7RUFBQTtFQUFBO0VBQUE7WUFDQTtHQUFBO0dBQUE7YUFBQTtJQUNBO0tBQUE7S0FBQTtLQUFBO0tBQUE7ZUFBbUk7SUFFbkk7Ozs7O0lBQ0E7S0FBQTtLQUFBO2VBQUEsQ0FDQTtNQUFBO01BQUE7S0FBNEM7Ozs7ZUFDNUM7TUFBQTtNQUFBO0tBQThFOzs7O2FBQzlFOzs7Ozs7SUFDQTtLQUFBO0tBQUE7S0FBQTtlQUEyRTtJQUUzRTs7Ozs7SUFDQTtLQUFBO0tBQUE7ZUFBa0Y7SUFFbEY7Ozs7O0lBQ0E7S0FBQTtLQUFBO0lBQTBEOzs7OztJQUMxRDtLQUFBO0tBQUE7ZUFBQSxDQUNBO01BQUE7Z0JBQVk7S0FBQTs7OztlQUNaO01BQUE7TUFBQTtnQkFBZ0M7S0FBQTs7OzthQUNoQzs7Ozs7O0lBQ0EsY0FDQTtLQUFBO0tBQUE7S0FBQTtLQUFBO2VBQUEsQ0FDQTtNQUFBO01BQUE7S0FBK0M7Ozs7ZUFBQSw4Q0FDL0M7Ozs7O2VBRUE7S0FBQTtLQUFBO2VBQUE7TUFDQTtPQUFBO09BQUE7aUJBQXFDO01BQUE7Ozs7O01BQ3JDO09BQUE7T0FBQTtpQkFBd0M7TUFBQTs7Ozs7TUFDeEM7T0FBQTtPQUFBO2lCQUF3QztNQUFBOzs7OztNQUN4QztPQUFBO09BQUE7aUJBQUEsQ0FBaUY7UUFBQTtRQUFBO09BQXVEOzs7O2lCQUFBO1FBQUE7a0JBQUE7U0FBTztTQUFBLHFHQUFnRjs7Ozs7U0FBQTtRQUFBOzs7OztlQUFBOzs7Ozs7S0FDL047Ozs7OztJQUVBO0tBQUE7S0FBQTtlQUFpSDtJQUFBOzs7OztHQUNqSDs7Ozs7O0NBQ0E7Ozs7O0FBRUEiLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIk1vYmlsZUxhbmRzY2FwZUdhdGUudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IHVzZUNhbGxiYWNrLCB1c2VFZmZlY3QsIHVzZVJlZiwgdXNlU3RhdGUgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCB7IEJ1dHRvbiB9IGZyb20gXCJAL2NvbXBvbmVudHMvdWkvYnV0dG9uXCI7XHJcbmltcG9ydCB7IEV4dGVybmFsTGluaywgUm90YXRlQ3csIFNtYXJ0cGhvbmUgfSBmcm9tIFwibHVjaWRlLXJlYWN0XCI7XG5pbXBvcnQgeyBpc0xhbmRzY2FwZSB9IGZyb20gXCJAL2xvZ2ljL21vYmlsZU9yaWVudGF0aW9uXCI7XG5cclxudHlwZSBMb2NrYWJsZU9yaWVudGF0aW9uID0gU2NyZWVuT3JpZW50YXRpb24gJiB7XHJcbiAgbG9jaz86IChvcmllbnRhdGlvbjogXCJsYW5kc2NhcGVcIikgPT4gUHJvbWlzZTx2b2lkPjtcclxufTtcclxuXHJcbmV4cG9ydCBmdW5jdGlvbiBNb2JpbGVMYW5kc2NhcGVHYXRlKCkge1xyXG4gIGNvbnN0IFtuZWVkc0xhbmRzY2FwZSwgc2V0TmVlZHNMYW5kc2NhcGVdID0gdXNlU3RhdGUoZmFsc2UpO1xyXG4gIGNvbnN0IFttZXNzYWdlLCBzZXRNZXNzYWdlXSA9IHVzZVN0YXRlKFwiXCIpO1xyXG4gIGNvbnN0IFtjYW5BdXRvTG9jaywgc2V0Q2FuQXV0b0xvY2tdID0gdXNlU3RhdGU8Ym9vbGVhbiB8IG51bGw+KG51bGwpO1xyXG4gIGNvbnN0IFtpc0VtYmVkZGVkQnJvd3Nlciwgc2V0SXNFbWJlZGRlZEJyb3dzZXJdID0gdXNlU3RhdGUoZmFsc2UpO1xuICBjb25zdCBbc3dpdGNoaW5nLCBzZXRTd2l0Y2hpbmddID0gdXNlU3RhdGUoZmFsc2UpO1xuICBjb25zdCBbZGlzbWlzc2VkLCBzZXREaXNtaXNzZWRdID0gdXNlU3RhdGUoZmFsc2UpO1xuICBjb25zdCBvd25zTG9jayA9IHVzZVJlZihmYWxzZSk7XG5cbiAgY29uc3QgdXBkYXRlVmlld3BvcnQgPSB1c2VDYWxsYmFjaygoKSA9PiB7XG4gICAgLy8gUmVhZCB0aGUgYWN0dWFsIGxheW91dCBhZnRlciByb3RhdGlvbjsgb3JpZW50YXRpb25jaGFuZ2UgY2FuIGZpcmUgYmVmb3JlXG4gICAgLy8gdGhlIGJyb3dzZXIgdXBkYXRlcyBlaXRoZXIgaXRzIG1lZGlhIHF1ZXJ5IG9yIHZpZXdwb3J0IGRpbWVuc2lvbnMuXG4gICAgY29uc3Qgd2lkdGggPSBkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQuY2xpZW50V2lkdGggfHwgd2luZG93LmlubmVyV2lkdGg7XG4gICAgY29uc3QgaGVpZ2h0ID0gd2luZG93LmlubmVySGVpZ2h0O1xuICAgIGNvbnN0IGxhbmRzY2FwZSA9IGlzTGFuZHNjYXBlKHsgd2lkdGgsIGhlaWdodCwgdHlwZTogc2NyZWVuLm9yaWVudGF0aW9uPy50eXBlLFxuICAgICAgbGVnYWN5QW5nbGU6IHR5cGVvZiB3aW5kb3cub3JpZW50YXRpb24gPT09IFwibnVtYmVyXCIgPyB3aW5kb3cub3JpZW50YXRpb24gOiB1bmRlZmluZWQsXG4gICAgICBtZWRpYUxhbmRzY2FwZTogd2luZG93Lm1hdGNoTWVkaWEoXCIob3JpZW50YXRpb246IGxhbmRzY2FwZSlcIikubWF0Y2hlcyB9KTtcbiAgICBzZXROZWVkc0xhbmRzY2FwZSh3aWR0aCA8PSA5MDAgJiYgIWxhbmRzY2FwZSk7XG4gICAgaWYgKGxhbmRzY2FwZSkgc2V0TWVzc2FnZShcIlwiKTtcbiAgfSwgW10pO1xuXHJcbiAgdXNlRWZmZWN0KCgpID0+IHtcclxuICAgIGNvbnN0IG1vYmlsZSA9IHdpbmRvdy5tYXRjaE1lZGlhKFwiKG1heC13aWR0aDogOTAwcHgpXCIpO1xyXG4gICAgY29uc3QgcG9ydHJhaXQgPSB3aW5kb3cubWF0Y2hNZWRpYShcIihvcmllbnRhdGlvbjogcG9ydHJhaXQpXCIpO1xyXG4gICAgY29uc3QgdXNlckFnZW50ID0gbmF2aWdhdG9yLnVzZXJBZ2VudDtcclxuICAgIHNldENhbkF1dG9Mb2NrKHR5cGVvZiAoc2NyZWVuLm9yaWVudGF0aW9uIGFzIExvY2thYmxlT3JpZW50YXRpb24gfCB1bmRlZmluZWQpPy5sb2NrID09PSBcImZ1bmN0aW9uXCIpO1xyXG4gICAgc2V0SXNFbWJlZGRlZEJyb3dzZXIoL0ZCQU58RkJBVnxJbnN0YWdyYW18TWVzc2VuZ2VyL2kudGVzdCh1c2VyQWdlbnQpKTtcclxuICAgIGxldCBmcmFtZSA9IDA7XG4gICAgbGV0IHNldHRsZWQgPSAwO1xuICAgIGNvbnN0IHVwZGF0ZSA9ICgpID0+IHtcbiAgICAgIGNhbmNlbEFuaW1hdGlvbkZyYW1lKGZyYW1lKTtcbiAgICAgIGNsZWFyVGltZW91dChzZXR0bGVkKTtcbiAgICAgIGZyYW1lID0gcmVxdWVzdEFuaW1hdGlvbkZyYW1lKHVwZGF0ZVZpZXdwb3J0KTtcbiAgICAgIHNldHRsZWQgPSB3aW5kb3cuc2V0VGltZW91dCh1cGRhdGVWaWV3cG9ydCwgMzAwKTtcbiAgICB9O1xuICAgIHVwZGF0ZVZpZXdwb3J0KCk7XG4gICAgY29uc3Qgc3Vic2NyaWJlID0gKHF1ZXJ5OiBNZWRpYVF1ZXJ5TGlzdCkgPT4ge1xuICAgICAgaWYgKHF1ZXJ5LmFkZEV2ZW50TGlzdGVuZXIpIHtcbiAgICAgICAgcXVlcnkuYWRkRXZlbnRMaXN0ZW5lcihcImNoYW5nZVwiLCB1cGRhdGUpO1xuICAgICAgICByZXR1cm4gKCkgPT4gcXVlcnkucmVtb3ZlRXZlbnRMaXN0ZW5lcihcImNoYW5nZVwiLCB1cGRhdGUpO1xuICAgICAgfVxuICAgICAgcXVlcnkuYWRkTGlzdGVuZXIodXBkYXRlKTtcbiAgICAgIHJldHVybiAoKSA9PiBxdWVyeS5yZW1vdmVMaXN0ZW5lcih1cGRhdGUpO1xuICAgIH07XG4gICAgY29uc3QgdW5zdWJzY3JpYmVNb2JpbGUgPSBzdWJzY3JpYmUobW9iaWxlKTtcbiAgICBjb25zdCB1bnN1YnNjcmliZVBvcnRyYWl0ID0gc3Vic2NyaWJlKHBvcnRyYWl0KTtcbiAgICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcihcIm9yaWVudGF0aW9uY2hhbmdlXCIsIHVwZGF0ZSk7XG4gICAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoXCJyZXNpemVcIiwgdXBkYXRlKTtcbiAgICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcihcInBhZ2VzaG93XCIsIHVwZGF0ZSk7XG4gICAgc2NyZWVuLm9yaWVudGF0aW9uPy5hZGRFdmVudExpc3RlbmVyPy4oXCJjaGFuZ2VcIiwgdXBkYXRlKTtcbiAgICB3aW5kb3cudmlzdWFsVmlld3BvcnQ/LmFkZEV2ZW50TGlzdGVuZXIoXCJyZXNpemVcIiwgdXBkYXRlKTtcbiAgICBkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKFwiZnVsbHNjcmVlbmNoYW5nZVwiLCB1cGRhdGUpO1xuICAgIGRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoXCJ2aXNpYmlsaXR5Y2hhbmdlXCIsIHVwZGF0ZSk7XG4gICAgcmV0dXJuICgpID0+IHtcclxuICAgICAgdW5zdWJzY3JpYmVNb2JpbGUoKTtcbiAgICAgIHVuc3Vic2NyaWJlUG9ydHJhaXQoKTtcbiAgICAgIHdpbmRvdy5yZW1vdmVFdmVudExpc3RlbmVyKFwib3JpZW50YXRpb25jaGFuZ2VcIiwgdXBkYXRlKTtcbiAgICAgIHdpbmRvdy5yZW1vdmVFdmVudExpc3RlbmVyKFwicmVzaXplXCIsIHVwZGF0ZSk7XG4gICAgICB3aW5kb3cucmVtb3ZlRXZlbnRMaXN0ZW5lcihcInBhZ2VzaG93XCIsIHVwZGF0ZSk7XG4gICAgICBzY3JlZW4ub3JpZW50YXRpb24/LnJlbW92ZUV2ZW50TGlzdGVuZXI/LihcImNoYW5nZVwiLCB1cGRhdGUpO1xuICAgICAgd2luZG93LnZpc3VhbFZpZXdwb3J0Py5yZW1vdmVFdmVudExpc3RlbmVyKFwicmVzaXplXCIsIHVwZGF0ZSk7XG4gICAgICBkb2N1bWVudC5yZW1vdmVFdmVudExpc3RlbmVyKFwiZnVsbHNjcmVlbmNoYW5nZVwiLCB1cGRhdGUpO1xuICAgICAgZG9jdW1lbnQucmVtb3ZlRXZlbnRMaXN0ZW5lcihcInZpc2liaWxpdHljaGFuZ2VcIiwgdXBkYXRlKTtcbiAgICAgIGNhbmNlbEFuaW1hdGlvbkZyYW1lKGZyYW1lKTtcbiAgICAgIGNsZWFyVGltZW91dChzZXR0bGVkKTtcbiAgICAgIGlmIChvd25zTG9jay5jdXJyZW50KSBzY3JlZW4ub3JpZW50YXRpb24/LnVubG9jaz8uKCk7XG4gICAgfTtcbiAgfSwgW3VwZGF0ZVZpZXdwb3J0XSk7XG5cbiAgdXNlRWZmZWN0KCgpID0+IHtcbiAgICBpZiAoIW5lZWRzTGFuZHNjYXBlIHx8IGRpc21pc3NlZCkgcmV0dXJuO1xuICAgIC8vIEVtYmVkZGVkIGJyb3dzZXJzIHNvbWV0aW1lcyBvbWl0IHJvdGF0aW9uL3Jlc2l6ZSBldmVudHMgZW50aXJlbHkuXG4gICAgY29uc3QgdGltZXIgPSB3aW5kb3cuc2V0SW50ZXJ2YWwodXBkYXRlVmlld3BvcnQsIDUwMCk7XG4gICAgcmV0dXJuICgpID0+IHdpbmRvdy5jbGVhckludGVydmFsKHRpbWVyKTtcbiAgfSwgW25lZWRzTGFuZHNjYXBlLCBkaXNtaXNzZWQsIHVwZGF0ZVZpZXdwb3J0XSk7XG5cclxuICBjb25zdCBlbnRlckxhbmRzY2FwZSA9IGFzeW5jICgpID0+IHtcbiAgICBpZiAoc3dpdGNoaW5nKSByZXR1cm47XG4gICAgc2V0U3dpdGNoaW5nKHRydWUpO1xuICAgIHNldE1lc3NhZ2UoXCJcIik7XG4gICAgbGV0IGVudGVyZWRGdWxsc2NyZWVuID0gZmFsc2U7XG4gICAgdHJ5IHtcbiAgICAgIGNvbnN0IG9yaWVudGF0aW9uID0gc2NyZWVuLm9yaWVudGF0aW9uIGFzIExvY2thYmxlT3JpZW50YXRpb24gfCB1bmRlZmluZWQ7XG4gICAgICBpZiAoIW9yaWVudGF0aW9uPy5sb2NrKSB0aHJvdyBuZXcgRXJyb3IoXCJ1bnN1cHBvcnRlZFwiKTtcbiAgICAgIHRyeSB7XG4gICAgICAgIGF3YWl0IG9yaWVudGF0aW9uLmxvY2soXCJsYW5kc2NhcGVcIik7XG4gICAgICB9IGNhdGNoIHtcbiAgICAgICAgLy8gU29tZSBBbmRyb2lkIGJyb3dzZXJzIHJlcXVpcmUgZnVsbHNjcmVlbiBiZWZvcmUgYWxsb3dpbmcgYSBsb2NrLlxuICAgICAgICBpZiAoIWRvY3VtZW50LmZ1bGxzY3JlZW5FbGVtZW50ICYmIGRvY3VtZW50LmRvY3VtZW50RWxlbWVudC5yZXF1ZXN0RnVsbHNjcmVlbikge1xuICAgICAgICAgIGF3YWl0IGRvY3VtZW50LmRvY3VtZW50RWxlbWVudC5yZXF1ZXN0RnVsbHNjcmVlbigpO1xuICAgICAgICAgIGVudGVyZWRGdWxsc2NyZWVuID0gdHJ1ZTtcbiAgICAgICAgfVxuICAgICAgICBhd2FpdCBvcmllbnRhdGlvbi5sb2NrKFwibGFuZHNjYXBlXCIpO1xuICAgICAgfVxuICAgICAgb3duc0xvY2suY3VycmVudCA9IHRydWU7XG4gICAgICB1cGRhdGVWaWV3cG9ydCgpO1xuICAgIH0gY2F0Y2gge1xuICAgICAgaWYgKGVudGVyZWRGdWxsc2NyZWVuICYmIGRvY3VtZW50LmZ1bGxzY3JlZW5FbGVtZW50KSB7XG4gICAgICAgIGF3YWl0IGRvY3VtZW50LmV4aXRGdWxsc2NyZWVuKCkuY2F0Y2goKCkgPT4ge30pO1xuICAgICAgfVxuICAgICAgc2V0TWVzc2FnZShcIuCmj+CmhyBicm93c2VyIOCmpeCnh+CmleCnhyDgprjgprDgpr7gprjgprDgpr8g4KaY4KeL4Kaw4Ka+4Kao4KeLIOCmr+CmvuCmmuCnjeCmm+CnhyDgpqjgpr7gpaQg4Kar4KeL4Kao4KeH4KawIEF1dG8gUm90YXRpb24g4Kaa4Ka+4Kay4KeBIOCmleCmsOCnhyBSb3RhdGlvbiBMb2NrIOCmrOCmqOCnjeCmpyDgppXgprDgp4ssIOCmpOCmvuCmsOCmquCmsCDgpqvgp4vgpqjgpp/gpr8g4Kaq4Ka+4Ka24KeHIOCmmOCni+CmsOCmvuCmk+ClpFxcblR1cm4gb24gQXV0byBSb3RhdGlvbiwgdHVybiBvZmYgUm90YXRpb24gTG9jaywgdGhlbiByb3RhdGUgeW91ciBwaG9uZSBzaWRld2F5cy5cIik7XG4gICAgfSBmaW5hbGx5IHtcbiAgICAgIHNldFN3aXRjaGluZyhmYWxzZSk7XG4gICAgfVxyXG4gIH07XHJcblxyXG4gIGlmICghbmVlZHNMYW5kc2NhcGUgfHwgZGlzbWlzc2VkKSByZXR1cm4gbnVsbDtcblxyXG4gIHJldHVybiAoXHJcbiAgICA8ZGl2IGNsYXNzTmFtZT1cImZpeGVkIGluc2V0LTAgei1bMTAwMDAwMDAwMV0gZmxleCBoLWR2aCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgb3ZlcmZsb3cteS1hdXRvIGJnLWJhY2tncm91bmQvOTUgcC0zIGJhY2tkcm9wLWJsdXItbWRcIiByb2xlPVwiZGlhbG9nXCIgYXJpYS1tb2RhbD1cInRydWVcIiBhcmlhLWxhYmVsbGVkYnk9XCJsYW5kc2NhcGUtdGl0bGVcIj5cclxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJtYXgtaC1mdWxsIHctZnVsbCBtYXgtdy1zbSBvdmVyZmxvdy15LWF1dG8gb3ZlcnNjcm9sbC1jb250YWluIHJvdW5kZWQtMnhsIGJvcmRlciBib3JkZXItcHJpbWFyeS8zMCBiZy1jYXJkIHAtNiB0ZXh0LWNlbnRlciBzaGFkb3ctMnhsXCI+XG4gICAgICAgIDxCdXR0b24gdmFyaWFudD1cIm91dGxpbmVcIiBjbGFzc05hbWU9XCJtYi00IGgtYXV0byBtaW4taC0xMSB3LWZ1bGwgd2hpdGVzcGFjZS1ub3JtYWwgcHktM1wiIG9uQ2xpY2s9eygpID0+IHNldERpc21pc3NlZCh0cnVlKX0+XG4gICAgICAgICAg4KaF4KeN4Kav4Ka+4Kaq4KeHIOCmquCnjeCmsOCmrOCnh+CmtiDgppXgprDgpr8gwrcgQ29udGludWUgdG8gYXBwXG4gICAgICAgIDwvQnV0dG9uPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInJlbGF0aXZlIG14LWF1dG8gbWItNCBmbGV4IGgtMjAgdy0yMCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgcm91bmRlZC1mdWxsIGJnLXByaW1hcnkvMTAgdGV4dC1wcmltYXJ5XCI+XHJcbiAgICAgICAgICA8U21hcnRwaG9uZSBjbGFzc05hbWU9XCJoLTEwIHctMTBcIiAvPlxyXG4gICAgICAgICAgPFJvdGF0ZUN3IGNsYXNzTmFtZT1cImFic29sdXRlIC1yaWdodC0xIHRvcC0wIGgtNyB3LTcgYW5pbWF0ZS1wdWxzZVwiIC8+XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgPGgyIGlkPVwibGFuZHNjYXBlLXRpdGxlXCIgY2xhc3NOYW1lPVwidGV4dC14bCBmb250LWJvbGQgbGVhZGluZy1zbnVnXCI+XHJcbiAgICAgICAgICDgpobgpqrgpqjgpr7gprAg4Kau4KeL4Kas4Ka+4KaH4Kay4KeH4KawIEF1dG8gUm90YXRpb24g4Kaa4Ka+4Kay4KeBIOCmleCmsOCnhyBMYW5kc2NhcGUgTW9kZS3gpo8g4Kao4Ka/4KaoXHJcbiAgICAgICAgPC9oMj5cclxuICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC0yIHRleHQtc20gZm9udC1tZWRpdW0gbGVhZGluZy1yZWxheGVkIHRleHQtZm9yZWdyb3VuZC83NVwiPlxyXG4gICAgICAgICAgVHVybiBvbiBBdXRvIFJvdGF0aW9uIGFuZCByb3RhdGUgeW91ciBwaG9uZSB0byBMYW5kc2NhcGUgTW9kZVxyXG4gICAgICAgIDwvcD5cclxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm14LWF1dG8gbXQtNCBoLXB4IHctMTYgYmctYm9yZGVyXCIgLz5cclxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm10LTQgc3BhY2UteS0xLjUgdGV4dC1zbSBsZWFkaW5nLXJlbGF4ZWQgdGV4dC1tdXRlZC1mb3JlZ3JvdW5kXCI+XHJcbiAgICAgICAgICA8cD57Y2FuQXV0b0xvY2sgPyBcIuCmqOCmv+CmmuCnh+CmsCBidXR0b24g4Kaa4Ka+4Kaq4Kay4KeHIHN1cHBvcnRlZCBicm93c2VyIOCmuOCnjeCmrOCnn+CmguCmleCnjeCmsOCmv+Cnn+CmreCmvuCmrOCnhyBMYW5kc2NhcGUgTW9kZSDgpprgpr7gprLgp4Eg4KaV4Kaw4Ka+4KawIOCmmuCnh+Cmt+CnjeCmn+CmviDgppXgprDgpqzgp4fgpaRcIiA6IFwiQXV0byBSb3RhdGlvbiDgpprgpr7gprLgp4Eg4KaV4Kaw4KeHIOCmruCni+CmrOCmvuCmh+CmsuCmn+CmvyDgppjgp4HgprDgpr/gp5/gp4cg4Kao4Ka/4Kay4KeH4KaHIHNpbXVsYXRvciDgppbgp4HgprLgpqzgp4fgpaRcIn08L3A+XHJcbiAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXhzXCI+e2NhbkF1dG9Mb2NrID8gXCJUYXAgdGhlIGJ1dHRvbiBiZWxvdyB0byBsZXQgc3VwcG9ydGVkIGJyb3dzZXJzIHN3aXRjaCBhdXRvbWF0aWNhbGx5LlwiIDogXCJUdXJuIG9uIEF1dG8gUm90YXRpb24sIHRoZW4gcm90YXRlIHlvdXIgcGhvbmUgdG8gb3BlbiB0aGUgc2ltdWxhdG9yLlwifTwvcD5cclxuICAgICAgICA8L2Rpdj5cclxuICAgICAgICB7Y2FuQXV0b0xvY2sgPyAoXHJcbiAgICAgICAgICA8QnV0dG9uIGRpc2FibGVkPXtzd2l0Y2hpbmd9IGNsYXNzTmFtZT1cIm10LTUgaC1hdXRvIG1pbi1oLTExIHctZnVsbCB3aGl0ZXNwYWNlLW5vcm1hbCBweS0zXCIgb25DbGljaz17ZW50ZXJMYW5kc2NhcGV9PlxuICAgICAgICAgICAgPFJvdGF0ZUN3IGNsYXNzTmFtZT1cIm1yLTIgaC00IHctNFwiIC8+IExhbmRzY2FwZSBNb2RlLeCmjyDgpqjgpr/gpqggwrcgRW50ZXIgTGFuZHNjYXBlIE1vZGVcclxuICAgICAgICAgIDwvQnV0dG9uPlxyXG4gICAgICAgICkgOiAoXHJcbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm10LTUgcm91bmRlZC14bCBib3JkZXIgYm9yZGVyLWFtYmVyLTMwMCBiZy1hbWJlci01MCBwLTMgdGV4dC1sZWZ0IHRleHQteHMgbGVhZGluZy1yZWxheGVkIHRleHQtYW1iZXItOTAwXCI+XHJcbiAgICAgICAgICAgIDxzdHJvbmcgY2xhc3NOYW1lPVwiYmxvY2tcIj7gpq/gp4fgpq3gpr7gpqzgp4cg4KaW4KeB4Kay4Kas4KeH4KaoIMK3IEhvdyB0byBjb250aW51ZTwvc3Ryb25nPlxyXG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtdC0xIGJsb2NrXCI+Q29udHJvbCBDZW50ZXIg4Kal4KeH4KaV4KeHIFJvdGF0aW9uIExvY2sg4Kas4Kao4KeN4KanIOCmleCmsOCnhyDgpq7gp4vgpqzgpr7gpofgprLgpp/gpr8g4Kaq4Ka+4Ka24KeHIOCmmOCngeCmsOCmv+Cnn+CnhyDgpqjgpr/gpqjgpaQ8L3NwYW4+XHJcbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm10LTEgYmxvY2tcIj5UdXJuIG9mZiBSb3RhdGlvbiBMb2NrIGluIENvbnRyb2wgQ2VudGVyLCB0aGVuIHJvdGF0ZSB5b3VyIHBob25lIHNpZGV3YXlzLjwvc3Bhbj5cclxuICAgICAgICAgICAge2lzRW1iZWRkZWRCcm93c2VyICYmIDxzcGFuIGNsYXNzTmFtZT1cIm10LTIgZmxleCBpdGVtcy1zdGFydCBnYXAtMS41XCI+PEV4dGVybmFsTGluayBjbGFzc05hbWU9XCJtdC0wLjUgaC0zLjUgdy0zLjUgc2hyaW5rLTBcIiAvPjxzcGFuPk1lc3NlbmdlciBtZW51IOCmpeCnh+CmleCnhyBPcGVuIGluIEJyb3dzZXIg4Kao4Ka/4Kaw4KeN4Kas4Ka+4Kaa4KaoIOCmleCmsOCmsuCnhyBsYXlvdXQg4KaG4Kaw4KaTIOCmreCmvuCmsuCniyDgppXgpr7gppwg4KaV4Kaw4Kas4KeH4KWkPGJyIC8+Rm9yIGEgYmV0dGVyIGxheW91dCwgc2VsZWN0IE9wZW4gaW4gQnJvd3NlciBmcm9tIHRoZSBNZXNzZW5nZXIgbWVudS48L3NwYW4+PC9zcGFuPn1cclxuICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICl9XHJcbiAgICAgICAge21lc3NhZ2UgJiYgPHAgY2xhc3NOYW1lPVwibXQtMyB3aGl0ZXNwYWNlLXByZS1saW5lIHJvdW5kZWQtbGcgYmctbXV0ZWQgcC0yIHRleHQteHMgdGV4dC1tdXRlZC1mb3JlZ3JvdW5kXCI+e21lc3NhZ2V9PC9wPn1cclxuICAgICAgPC9kaXY+XHJcbiAgICA8L2Rpdj5cclxuICApO1xyXG59XHJcbiJdLCJmaWxlIjoiQzovVXNlcnMvemFyaW4vbG9naWxhYnNpbXVsYXRvci9zcmMvY29tcG9uZW50cy9Nb2JpbGVMYW5kc2NhcGVHYXRlLnRzeCJ9

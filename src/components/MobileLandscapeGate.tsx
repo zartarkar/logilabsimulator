@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, RotateCw, Smartphone } from "lucide-react";
+import { isLandscape } from "@/logic/mobileOrientation";
 
 type LockableOrientation = ScreenOrientation & {
   lock?: (orientation: "landscape") => Promise<void>;
@@ -12,6 +13,7 @@ export function MobileLandscapeGate() {
   const [canAutoLock, setCanAutoLock] = useState<boolean | null>(null);
   const [isEmbeddedBrowser, setIsEmbeddedBrowser] = useState(false);
   const [switching, setSwitching] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
   const ownsLock = useRef(false);
 
   const updateViewport = useCallback(() => {
@@ -19,9 +21,11 @@ export function MobileLandscapeGate() {
     // the browser updates either its media query or viewport dimensions.
     const width = document.documentElement.clientWidth || window.innerWidth;
     const height = window.innerHeight;
-    const portrait = height > width;
-    setNeedsLandscape(width <= 900 && portrait);
-    if (!portrait) setMessage("");
+    const landscape = isLandscape({ width, height, type: screen.orientation?.type,
+      legacyAngle: typeof window.orientation === "number" ? window.orientation : undefined,
+      mediaLandscape: window.matchMedia("(orientation: landscape)").matches });
+    setNeedsLandscape(width <= 900 && !landscape);
+    if (landscape) setMessage("");
   }, []);
 
   useEffect(() => {
@@ -39,28 +43,45 @@ export function MobileLandscapeGate() {
       settled = window.setTimeout(updateViewport, 300);
     };
     updateViewport();
-    mobile.addEventListener("change", update);
-    portrait.addEventListener("change", update);
+    const subscribe = (query: MediaQueryList) => {
+      if (query.addEventListener) {
+        query.addEventListener("change", update);
+        return () => query.removeEventListener("change", update);
+      }
+      query.addListener(update);
+      return () => query.removeListener(update);
+    };
+    const unsubscribeMobile = subscribe(mobile);
+    const unsubscribePortrait = subscribe(portrait);
     window.addEventListener("orientationchange", update);
     window.addEventListener("resize", update);
     window.addEventListener("pageshow", update);
     screen.orientation?.addEventListener?.("change", update);
     window.visualViewport?.addEventListener("resize", update);
     document.addEventListener("fullscreenchange", update);
+    document.addEventListener("visibilitychange", update);
     return () => {
-      mobile.removeEventListener("change", update);
-      portrait.removeEventListener("change", update);
+      unsubscribeMobile();
+      unsubscribePortrait();
       window.removeEventListener("orientationchange", update);
       window.removeEventListener("resize", update);
       window.removeEventListener("pageshow", update);
       screen.orientation?.removeEventListener?.("change", update);
       window.visualViewport?.removeEventListener("resize", update);
       document.removeEventListener("fullscreenchange", update);
+      document.removeEventListener("visibilitychange", update);
       cancelAnimationFrame(frame);
       clearTimeout(settled);
       if (ownsLock.current) screen.orientation?.unlock?.();
     };
   }, [updateViewport]);
+
+  useEffect(() => {
+    if (!needsLandscape || dismissed) return;
+    // Embedded browsers sometimes omit rotation/resize events entirely.
+    const timer = window.setInterval(updateViewport, 500);
+    return () => window.clearInterval(timer);
+  }, [needsLandscape, dismissed, updateViewport]);
 
   const enterLandscape = async () => {
     if (switching) return;
@@ -92,11 +113,14 @@ export function MobileLandscapeGate() {
     }
   };
 
-  if (!needsLandscape) return null;
+  if (!needsLandscape || dismissed) return null;
 
   return (
     <div className="fixed inset-0 z-[1000000001] flex h-dvh items-center justify-center overflow-y-auto bg-background/95 p-3 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="landscape-title">
       <div className="max-h-full w-full max-w-sm overflow-y-auto overscroll-contain rounded-2xl border border-primary/30 bg-card p-6 text-center shadow-2xl">
+        <Button variant="outline" className="mb-4 h-auto min-h-11 w-full whitespace-normal py-3" onClick={() => setDismissed(true)}>
+          অ্যাপে প্রবেশ করি · Continue to app
+        </Button>
         <div className="relative mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Smartphone className="h-10 w-10" />
           <RotateCw className="absolute -right-1 top-0 h-7 w-7 animate-pulse" />

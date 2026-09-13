@@ -111,7 +111,7 @@ export const BOOLEAN_LAWS = [
   },
   {
     name: "De Morgan I",
-    bn: "ডি মর্গ্যান ১",
+    bn: "ডি মর্গ্যান 1",
     forms: ["(A + B)′ = A′B′"],
     example: "(0 + 1)′ = 0; 0′·1′ = 1·0 = 0",
     en: "NOT an OR means AND of the inverted inputs.",

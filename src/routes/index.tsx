@@ -26,6 +26,7 @@ import { TruthTablePanel } from "@/components/panels/TruthTablePanel";
 import { SimplifyPanel } from "@/components/panels/SimplifyPanel";
 import { AstPanel } from "@/components/panels/AstPanel";
 import { SandboxBuilder } from "@/components/builder/SandboxBuilder";
+import { ConceptsPage } from "@/components/ConceptsPage";
 import { MobileLandscapeGate } from "@/components/MobileLandscapeGate";
 import { OnboardingLanding, type Familiarity } from "@/components/OnboardingLanding";
 import { TutorialDialog, type TutorialHandle } from "@/components/TutorialDialog";
@@ -40,7 +41,7 @@ import bgAsset from "@/assets/background.jpg.asset.json";
 
 const searchSchema = z.object({
   q: z.string().catch("").optional(),
-  tab: z.enum(["simulator", "builder", "learn", "practice", "circuit"]).catch("simulator").optional(),
+  tab: z.enum(["concepts", "simulator", "builder", "learn", "practice", "circuit"]).catch("simulator").optional(),
   v: z.string().catch("").optional(),
 });
 
@@ -101,7 +102,7 @@ function App() {
   const [showExamples, setShowExamples] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
   const [autoTourRequested, setAutoTourRequested] = useState(false);
-  const [autoTourEndTab, setAutoTourEndTab] = useState<"simulator">("simulator");
+  const [autoTourEndTab, setAutoTourEndTab] = useState<"concepts">("concepts");
 
   useEffect(() => {
     // The bare site URL is the public landing page. URLs that explicitly name
@@ -112,15 +113,15 @@ function App() {
   const enterApp = (destination: "simulator", familiarity: Familiarity, startGuide = true) => {
     browserStorage.setItem("logiclab-onboarding-complete", "true");
     browserStorage.setItem("logiclab-familiarity", familiarity);
-    setAutoTourEndTab("simulator");
+    setAutoTourEndTab("concepts");
     // Starting a journey explicitly requests guidance, even after an earlier tour.
     setAutoTourRequested(startGuide);
-    s.setTab(destination);
-    navigate({ search: { tab: destination }, replace: true });
+    s.setTab("concepts");
+    navigate({ search: { tab: "concepts" }, replace: true });
     setShowOnboarding(false);
   };
 
-  const selectTourTab = useCallback((tab: "simulator" | "builder") => {
+  const selectTourTab = useCallback((tab: "concepts" | "simulator" | "builder") => {
     useCircuitStore.getState().setTab(tab);
     navigate({ search: { tab }, replace: true });
   }, [navigate]);
@@ -352,7 +353,7 @@ function App() {
 
   return (
     <div className="flex h-dvh flex-col bg-transparent text-foreground">
-      <MobileLandscapeGate />
+      {s.tab !== "concepts" && <MobileLandscapeGate />}
       <Toaster />
       <header className="app-header relative z-50 shrink-0 border-b border-border bg-card sm:sticky sm:top-0 sm:bg-card/90 sm:shadow-sm sm:backdrop-blur-md">
         <div className="app-header-inner flex flex-col gap-2 px-3 py-2 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-center sm:px-4">
@@ -395,6 +396,7 @@ function App() {
           <nav data-tour="navigation" className="app-header-nav flex min-w-0 max-w-full justify-center gap-1.5 overflow-x-auto no-scrollbar sm:col-start-2 sm:row-start-1 sm:justify-center sm:gap-1 sm:overflow-visible" aria-label="Primary navigation">
               {(
                 [
+                  { id: "concepts", label: lang === "bn" ? "কনসেপ্ট ঝালাই করি" : "Concept refresher" },
                   { id: "simulator", label: t("tabCircuit") },
                   { id: "builder", label: t("tabBuild") },
                 ] as const
@@ -419,7 +421,7 @@ function App() {
         </div>
       </header>
 
-      {s.tab === "builder" || s.tab === "practice" ? (
+      {s.tab === "concepts" ? <ConceptsPage /> : s.tab === "builder" || s.tab === "practice" ? (
         <main className="min-h-0 flex-1 overflow-hidden bg-transparent flex flex-col builder-layout">
           <SandboxBuilder isPracticeMode={s.tab === "practice"} />
         </main>
@@ -499,12 +501,12 @@ function App() {
               </div>
 
               {showTruthTable && (
-                <div className="rounded-lg border border-border bg-background/50 overflow-hidden flex flex-col h-[20rem]">
+                <div className="rounded-lg border border-border bg-background/50 overflow-hidden flex flex-col">
                   <div className="bg-muted/50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider border-b border-border flex justify-between items-center">
                     {t("truthTable")}
-                    <Button variant="ghost" size="icon" className="h-4 w-4" onClick={() => setShowTruthTable(false)}>×</Button>
+                    <Button variant="ghost" size="icon" className="h-4 w-4" onClick={() => { setShowTruthTable(false); setShowExamples(true); }}>×</Button>
                   </div>
-                  <div className="flex-1 overflow-hidden">
+                  <div>
                     <TruthTablePanel />
                   </div>
                 </div>
@@ -514,7 +516,7 @@ function App() {
                 <div className="rounded-lg border border-border bg-background/50 overflow-hidden flex flex-col">
                   <div className="bg-muted/50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider border-b border-border flex justify-between items-center">
                     {t("simplification")}
-                    <Button variant="ghost" size="icon" className="h-4 w-4" onClick={() => setShowSimplification(false)}>×</Button>
+                    <Button variant="ghost" size="icon" className="h-4 w-4" onClick={() => { setShowSimplification(false); setShowExamples(true); }}>×</Button>
                   </div>
                   <div className="p-3">
                     <SimplifyPanel />

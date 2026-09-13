@@ -29,7 +29,7 @@ export function WelcomeLearning({ open, onClose, onExplore, bn }: {
             <circle cx="163" cy="76" r="10" fill="#16a34a" /><circle cx="163" cy="76" r="16" fill="none" stroke="#bbf7d0" strokeWidth="3" />
           </svg>
         </div>
-        <p className="mt-5 flex items-center gap-2 text-xs font-medium text-slate-500"><BookOpen className="h-4 w-4" />{bn ? "৪টি পাঠ · প্রতি পাঠে ৫টি প্রশ্ন · হাতে কলমে শেখা" : "4 lessons · 5 questions each · Learn by doing"}</p>
+        <p className="mt-5 flex items-center gap-2 text-xs font-medium text-slate-500"><BookOpen className="h-4 w-4" />{bn ? "৪টি পাঠ · প্রতি পাঠে ৩টি প্রশ্ন · হাতে কলমে শেখা" : "4 lessons · 3 questions each · Learn by doing"}</p>
       </div>
       <div className="px-6 py-6 sm:px-9">
         <h3 className="mb-4 text-sm font-semibold text-slate-800">{bn ? "কোন বিষয়টি আগে দেখে নিতে চাও?" : "What would you like to explore?"}</h3>

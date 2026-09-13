@@ -2,7 +2,7 @@ import { gateValue, type Gate } from "./lessonCurriculum";
 export type Familiarity = "new" | "some" | "confident";
 type Copy = { en: string; bn: string };
 const copy = (en: string, bn: string): Copy => ({ en, bn });
-export const QUESTION_COUNTS = [5, 5, 5, 5] as const;
+export const QUESTION_COUNTS = [3, 3, 3, 3] as const;
 export const questionOffset = (lesson: number) =>
   QUESTION_COUNTS.slice(0, lesson).reduce<number>((sum, count) => sum + count, 0);
 export const INTRO_LESSONS = [
@@ -10,7 +10,7 @@ export const INTRO_LESSONS = [
     title: copy("Boolean algebra", "বুলিয়ান বীজগণিত"),
     contents: copy(
       "Meaning · All essential laws · De Morgan I & II",
-      "পরিচিতি · প্রয়োজনীয় সব সূত্র · ডি মর্গ্যান ১ ও ২",
+      "পরিচিতি · প্রয়োজনীয় সব সূত্র · ডি মর্গ্যান 1 ও ২",
     ),
     practice: copy(
       "Apply laws and recognize equivalent expressions",
@@ -97,7 +97,7 @@ export function makeIntroQuestion(
     );
     explanation = copy(
       `${expressions[step]} = ${answer}. ${["Identity: OR with 0 leaves the input unchanged.", "De Morgan I: invert both inputs and change OR to AND.", "De Morgan II: invert both inputs and change AND to OR.", "Complement: a value and its opposite cannot both be 1.", "Double complement: inverting twice returns the original input."][step]}`,
-      `${expressions[step]} = ${answer}। ${["অভেদ: 0 দিয়ে OR করলে মান বদলায় না।", "ডি মর্গ্যান ১: ইনপুট উল্টে OR বদলে AND করো।", "ডি মর্গ্যান ২: ইনপুট উল্টে AND বদলে OR করো।", "পূরক: একটি মান ও তার বিপরীত একসঙ্গে 1 হতে পারে না।", "দ্বি পূরক: দুবার উল্টালে মূল ইনপুট ফিরে আসে।"][step]}`,
+      `${expressions[step]} = ${answer}। ${["অভেদ: 0 দিয়ে OR করলে মান বদলায় না।", "ডি মর্গ্যান 1: ইনপুট উল্টে OR বদলে AND করো।", "ডি মর্গ্যান ২: ইনপুট উল্টে AND বদলে OR করো।", "পূরক: একটি মান ও তার বিপরীত একসঙ্গে 1 হতে পারে না।", "দ্বি পূরক: দুবার উল্টালে মূল ইনপুট ফিরে আসে।"][step]}`,
     );
   } else if (lesson === 1) {
     kind = "number";

@@ -285,7 +285,7 @@ function TruthBuilder({ bn, n }: { bn: boolean; n: 2 | 3 }) {
     <div className="space-y-5">
       <p className="text-sm leading-7">
         {bn
-          ? "১. আলাদা চলক গুনে 2ⁿটি সারি নাও। ২. বাইনারি ক্রমে ইনপুট লেখো। ৩. NOT, তারপর AND, সবশেষে OR হিসাব করো; বন্ধনী থাকলে আগে সেটি। প্রতিটি মধ্যবর্তী ফলের জন্য কলাম রাখো।"
+          ? "1. আলাদা চলক গুনে 2ⁿটি সারি নাও। ২. বাইনারি ক্রমে ইনপুট লেখো। ৩. NOT, তারপর AND, সবশেষে OR হিসাব করো; বন্ধনী থাকলে আগে সেটি। প্রতিটি মধ্যবর্তী ফলের জন্য কলাম রাখো।"
           : "1. Count distinct variables and make 2ⁿ rows. 2. List inputs in binary order. 3. Evaluate NOT, then AND, then OR; handle parentheses first. Give each intermediate result its own column."}
       </p>
       <p className={box}>
@@ -329,23 +329,23 @@ function TruthBuilder({ bn, n }: { bn: boolean; n: 2 | 3 }) {
 const examples = [
   {
     steps: ["AB + AB′", "A(B + B′)", "A·1", "A"],
-    reasons: ["Distributive: factor A", "Complement: B + B′ = 1", "Identity: A·1 = A"],
-    bn: ["বণ্টন: A সাধারণ নাও", "পূরক: B + B′ = 1", "অভেদ: A·1 = A"],
+    reasons: ["XY + XZ = X(Y + Z)", "B + B′ = 1", "A·1 = A"],
+    bn: ["XY + XZ = X(Y + Z)", "B + B′ = 1", "A·1 = A"],
   },
   {
     steps: ["A + A′B", "(A + A′)(A + B)", "1·(A + B)", "A + B"],
-    reasons: ["Distributive: X + YZ = (X+Y)(X+Z)", "Complement: A + A′ = 1", "Identity"],
-    bn: ["বণ্টন: X + YZ = (X+Y)(X+Z)", "পূরক: A + A′ = 1", "অভেদ"],
+    reasons: ["X + YZ = (X+Y)(X+Z)", "A + A′ = 1", "1·X = X"],
+    bn: ["X + YZ = (X+Y)(X+Z)", "A + A′ = 1", "1·X = X"],
   },
   {
     steps: ["(A + B)(A + B′)", "A + BB′", "A + 0", "A"],
-    reasons: ["Distributive, in reverse", "Complement: BB′ = 0", "Identity"],
-    bn: ["বণ্টন সূত্র উল্টোভাবে", "পূরক: BB′ = 0", "অভেদ"],
+    reasons: ["(X+Y)(X+Z) = X+YZ", "BB′ = 0", "A+0 = A"],
+    bn: ["(X+Y)(X+Z) = X+YZ", "BB′ = 0", "A+0 = A"],
   },
   {
     steps: ["(A + B)′ + A′B", "A′B′ + A′B", "A′(B′ + B)", "A′"],
-    reasons: ["De Morgan I", "Factor A′", "Complement, then identity"],
-    bn: ["ডি মর্গ্যান ১", "A′ সাধারণ নাও", "পূরক, তারপর অভেদ"],
+    reasons: ["(A+B)′ = A′B′", "XY + XZ = X(Y+Z)", "B′+B = 1; A′·1 = A′"],
+    bn: ["(A+B)′ = A′B′", "XY + XZ = X(Y+Z)", "B′+B = 1; A′·1 = A′"],
   },
 ];
 function Simplify({ bn }: { bn: boolean }) {
@@ -413,13 +413,13 @@ const rules: Record<Gate, [string, string, string]> = {
   XNOR: ["AB + A′B′", "1 when the two inputs match.", "দুটি ইনপুট সমান হলে ফল 1।"],
 };
 const gateNotes: Record<Gate, [string, string]> = {
-  AND: ["যৌক্তিক গুণের কাজ করে। সব ইনপুট ১ হলেই আউটপুট ১। যেমন, দুটি সুইচ একসঙ্গে চালু থাকলেই বাতি জ্বলবে।", "Logical multiplication. Every input must be 1. Think of a lamp that needs both switches on."],
-  OR: ["যৌক্তিক যোগের কাজ করে। যেকোনো একটি ইনপুট ১ হলেই আউটপুট ১। সব ইনপুট ০ হলে আউটপুট ০। যেমন, দুটি অ্যালার্মের যেকোনোটি চালু হলেই সংকেত আসবে।", "Logical addition. Any input being 1 is enough; only all zeros give 0. Either alarm can trigger the signal."],
-  NOT: ["একটি ইনপুট ও একটি আউটপুট থাকে। ইনপুটের পূরক বা বিপরীত মান দেয়। তাই একে ইনভার্টার (Inverter) বলা হয়। ০ দিলে ১, আর ১ দিলে ০।", "One input, one output. It returns the complement of the input, so it is also called an inverter: 0 becomes 1 and 1 becomes 0."],
-  NAND: ["AND গেটের আউটপুটে NOT যুক্ত করলে NAND হয়। আগে যৌক্তিক গুণ, তারপর ফলের পূরক। শুধু দুটি ইনপুটই ১ হলে আউটপুট ০।", "Connect NOT after AND to make NAND. Multiply logically, then complement the result. Only two ones produce 0."],
-  NOR: ["OR গেটের আউটপুটে NOT যুক্ত করলে NOR হয়। আগে যৌক্তিক যোগ, তারপর ফলের পূরক। শুধু দুটি ইনপুটই ০ হলে আউটপুট ১।", "Connect NOT after OR to make NOR. Add logically, then complement the result. Only two zeros produce 1."],
-  XOR: ["দুটি ইনপুট অসমান হলে আউটপুট ১; সমান হলে ০। ⊕ চিহ্ন দিয়ে XOR বোঝানো হয়। ০১ ও ১০ অবস্থায় এটি চালু হয়।", "For two inputs, different values give 1 and matching values give 0. The symbol ⊕ means XOR. It detects 01 and 10."],
-  XNOR: ["XOR গেটের আউটপুট উল্টে দিলে XNOR হয়। দুটি ইনপুট সমান হলে আউটপুট ১; অসমান হলে ০। অর্থাৎ ০০ ও ১১ অবস্থায় এটি চালু হয়।", "Invert XOR to get XNOR. Matching inputs give 1; different inputs give 0. It detects 00 and 11."],
+  AND: ["যৌক্তিক গুণের কাজ করে। সব ইনপুট 1 হলেই আউটপুট 1। যেমন, দুটি সুইচ একসঙ্গে চালু থাকলেই বাতি জ্বলবে।", "Logical multiplication. Every input must be 1. Think of a lamp that needs both switches on."],
+  OR: ["যৌক্তিক যোগের কাজ করে। যেকোনো একটি ইনপুট 1 হলেই আউটপুট 1। সব ইনপুট ০ হলে আউটপুট ০। যেমন, দুটি অ্যালার্মের যেকোনোটি চালু হলেই সংকেত আসবে।", "Logical addition. Any input being 1 is enough; only all zeros give 0. Either alarm can trigger the signal."],
+  NOT: ["একটি ইনপুট ও একটি আউটপুট থাকে। ইনপুটের পূরক বা বিপরীত মান দেয়। তাই একে ইনভার্টার (Inverter) বলা হয়। ০ দিলে 1, আর 1 দিলে ০।", "One input, one output. It returns the complement of the input, so it is also called an inverter: 0 becomes 1 and 1 becomes 0."],
+  NAND: ["AND গেটের আউটপুটে NOT যুক্ত করলে NAND হয়। আগে যৌক্তিক গুণ, তারপর ফলের পূরক। শুধু দুটি ইনপুটই 1 হলে আউটপুট ০।", "Connect NOT after AND to make NAND. Multiply logically, then complement the result. Only two ones produce 0."],
+  NOR: ["OR গেটের আউটপুটে NOT যুক্ত করলে NOR হয়। আগে যৌক্তিক যোগ, তারপর ফলের পূরক। শুধু দুটি ইনপুটই ০ হলে আউটপুট 1।", "Connect NOT after OR to make NOR. Add logically, then complement the result. Only two zeros produce 1."],
+  XOR: ["দুটি ইনপুট অসমান হলে আউটপুট 1; সমান হলে ০। ⊕ চিহ্ন দিয়ে XOR বোঝানো হয়। ০1 ও 1০ অবস্থায় এটি চালু হয়।", "For two inputs, different values give 1 and matching values give 0. The symbol ⊕ means XOR. It detects 01 and 10."],
+  XNOR: ["XOR গেটের আউটপুট উল্টে দিলে XNOR হয়। দুটি ইনপুট সমান হলে আউটপুট 1; অসমান হলে ০। অর্থাৎ ০০ ও 11 অবস্থায় এটি চালু হয়।", "Invert XOR to get XNOR. Matching inputs give 1; different inputs give 0. It detects 00 and 11."],
 };
 function GateLesson({ gate, bn }: { gate: Gate; bn: boolean }) {
   const [values, setValues] = useState(gate === "NOT" ? [0] : [0, 1]);
@@ -460,11 +460,13 @@ export function LessonVisual({
   bn,
   onPractice,
   preview = false,
+  conceptsOnly = false,
 }: {
   lesson: number;
   bn: boolean;
   onPractice: () => void;
   preview?: boolean;
+  conceptsOnly?: boolean;
 }) {
   const pages =
     lesson === 0
@@ -572,7 +574,7 @@ export function LessonVisual({
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         ) : (
-          <Button variant="destructive" onClick={onPractice}>
+          <Button className={conceptsOnly ? "hidden" : ""} variant="destructive" onClick={onPractice}>
             {preview
               ? bn
                 ? "চলমান শেখার ধাপে ফিরি"

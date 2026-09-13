@@ -69,12 +69,12 @@ export function BooleanIntroduction({ bn }: { bn: boolean }) {
       </h3>
       <p className="text-sm leading-8">
         {bn
-          ? "বুলিয়ান অ্যালজেবরা মূলত সত্য মিথ্যা, হ্যাঁ না কিংবা চালু বন্ধ, এ ধরনের যৌক্তিক সিদ্ধান্তকে গাণিতিকভাবে প্রকাশ ও বিশ্লেষণের একটি পদ্ধতি। এখানে সাধারণত ১ দ্বারা সত্য (True) বা চালু (ON) এবং ০ দ্বারা মিথ্যা (False) বা বন্ধ (OFF) অবস্থা প্রকাশ করা হয়। কম্পিউটার, স্মার্টফোন, ক্যালকুলেটর, ট্রাফিক সিগন্যাল, অ্যালার্ম সিস্টেমসহ বিভিন্ন ডিজিটাল যন্ত্রের সিদ্ধান্ত গ্রহণ ও নিয়ন্ত্রণে বুলিয়ান অ্যালজেবরা ব্যবহৃত হয়।"
+          ? "বুলিয়ান অ্যালজেবরা মূলত সত্য মিথ্যা, হ্যাঁ না কিংবা চালু বন্ধ, এ ধরনের যৌক্তিক সিদ্ধান্তকে গাণিতিকভাবে প্রকাশ ও বিশ্লেষণের একটি পদ্ধতি। এখানে সাধারণত 1 দ্বারা সত্য (True) বা চালু (ON) এবং ০ দ্বারা মিথ্যা (False) বা বন্ধ (OFF) অবস্থা প্রকাশ করা হয়। কম্পিউটার, স্মার্টফোন, ক্যালকুলেটর, ট্রাফিক সিগন্যাল, অ্যালার্ম সিস্টেমসহ বিভিন্ন ডিজিটাল যন্ত্রের সিদ্ধান্ত গ্রহণ ও নিয়ন্ত্রণে বুলিয়ান অ্যালজেবরা ব্যবহৃত হয়।"
           : "Boolean algebra is a way to express and analyse logical decisions mathematically: true or false, yes or no, on or off. Usually, 1 represents True or ON, while 0 represents False or OFF. It is used for decisions and control in computers, smartphones, calculators, traffic lights, alarm systems and other digital devices."}
       </p>
       <p className="text-sm leading-8">
         {bn
-          ? "বুলিয়ান অ্যালজেবরার প্রধান তিনটি লজিক্যাল অপারেশন হলো AND, OR ও NOT। AND অপারেশনকে · বা পাশাপাশি লিখে (যেমন, A·B বা AB) প্রকাশ করা হয় এবং সব ইনপুট ১ হলেই এর আউটপুট ১ হয়। OR অপারেশনকে + চিহ্ন দিয়ে (যেমন, A+B) প্রকাশ করা হয় এবং যেকোনো একটি ইনপুট ১ হলেই আউটপুট ১ হয়। অন্যদিকে, NOT একটি ইনপুটের বিপরীত মান প্রদান করে এবং একে A̅ বা A′ দ্বারা প্রকাশ করা হয়; অর্থাৎ ইনপুট ১ হলে আউটপুট ০ এবং ইনপুট ০ হলে আউটপুট ১ হয়। এই লজিকগুলো ব্যবহার করেই বিভিন্ন শর্ত অনুযায়ী ডিজিটাল সার্কিটের কার্যক্রম নিয়ন্ত্রণ করা হয়।"
+          ? "বুলিয়ান অ্যালজেবরার প্রধান তিনটি লজিক্যাল অপারেশন হলো AND, OR ও NOT। AND অপারেশনকে · বা পাশাপাশি লিখে (যেমন, A·B বা AB) প্রকাশ করা হয় এবং সব ইনপুট 1 হলেই এর আউটপুট 1 হয়। OR অপারেশনকে + চিহ্ন দিয়ে (যেমন, A+B) প্রকাশ করা হয় এবং যেকোনো একটি ইনপুট 1 হলেই আউটপুট 1 হয়। অন্যদিকে, NOT একটি ইনপুটের বিপরীত মান প্রদান করে এবং একে A̅ বা A′ দ্বারা প্রকাশ করা হয়; অর্থাৎ ইনপুট 1 হলে আউটপুট ০ এবং ইনপুট ০ হলে আউটপুট 1 হয়। এই লজিকগুলো ব্যবহার করেই বিভিন্ন শর্ত অনুযায়ী ডিজিটাল সার্কিটের কার্যক্রম নিয়ন্ত্রণ করা হয়।"
           : "The three main logical operations are AND, OR and NOT. AND is written with · or adjacent letters, such as A·B or AB; its output is 1 only when all inputs are 1. OR is written with +, as in A+B; its output is 1 when at least one input is 1. NOT gives the opposite of its input and is written A̅ or A′: input 1 gives output 0, and input 0 gives output 1. These operations control how digital circuits respond to different conditions."}
       </p>
       <h3 className="border-t pt-6 font-display text-xl font-bold">
@@ -89,8 +89,8 @@ export function BooleanIntroduction({ bn }: { bn: boolean }) {
         {theorems.map((law, i) => (
           <article key={law.en} className="rounded-xl border border-primary/20 bg-primary/5 p-4">
             <h4 className="font-semibold">
-              {bn ? String(i + 1).replace(/\d/g, (d) => "০১২৩৪৫৬৭৮৯"[Number(d)]!) : i + 1}.{" "}
-              {bn ? law.bn : law.en}
+              {bn ? String(i + 1).replace(/\d/g, (d) => "০1২৩৪৫৬৭৮৯"[Number(d)]!) : i + 1}.{" "}
+              {bn ? "?????" : "Identity"}
             </h4>
             <div className="my-3 space-y-2 font-mono text-sm">
               {law.forms.map((form, j) => (
