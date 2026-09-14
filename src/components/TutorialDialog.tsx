@@ -68,8 +68,8 @@ export const TutorialDialog = forwardRef<
             popover: {
               title: bn ? "ইনপুট বদলে গেটের ফল দেখো" : "See how gates respond",
               description: bn
-                ? "A, B, C বদলালে গেটগুলোর ফল বদলাবে। প্রতিটি চিত্রের পাশে তার নিয়ম ও আউটপুট আছে।"
-                : "Change A, B and C to see the gates respond. Each symbol is paired with its rule and output.",
+                ? "প্রতিটি গেটের নিচে তার নিজস্ব ইনপুট বোতাম আছে। A বা B চাপলে শুধু সেই গেটের মান ও আউটপুট বদলাবে। NOT গেটে একটি ইনপুট আছে।"
+                : "Each gate has its own input buttons below it. Tap A or B to change only that gate's inputs and output. NOT has one input.",
               side: "bottom",
             },
           },
@@ -234,6 +234,13 @@ export const TutorialDialog = forwardRef<
                     ) => {
                       onSelectTab(finishTab);
                       options.driver.destroy();
+                      window.setTimeout(
+                        () =>
+                          document
+                            .querySelector<HTMLElement>('[data-tour="concepts"]')
+                            ?.scrollTo({ top: 0, behavior: "instant" }),
+                        450,
+                      );
                     },
                   }
                 : {}),

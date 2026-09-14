@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useLang } from "@/i18n";
 import {
   BOOLEAN_LAWS,
@@ -7,6 +7,8 @@ import {
   universalNetwork,
   type Gate,
 } from "@/logic/lessonCurriculum";
+import { UniversalGateBasics } from "@/components/UniversalGateBasics";
+import { Circuit } from "@/components/LessonVisual";
 import { ConceptIntroduction } from "@/components/ConceptIntroduction";
 import {
   BookOpenCheck,
@@ -85,6 +87,52 @@ const reductions = [
     "(A+B)′=A′B′; XY+XZ=X(Y+Z); B′+B=1; A′·1=A′",
   ],
 ];
+const reductionLaws = [
+  ["Distributive Law · Complement Law · Identity Law", "বণ্টন সূত্র · পূরক সূত্র · অভেদ সূত্র"],
+  ["Distributive Law · Complement Law · Identity Law", "বণ্টন সূত্র · পূরক সূত্র · অভেদ সূত্র"],
+  ["Distributive Law · Complement Law · Identity Law", "বণ্টন সূত্র · পূরক সূত্র · অভেদ সূত্র"],
+  [
+    "De Morgan’s Law · Distributive Law · Complement Law · Identity Law",
+    "ডি মর্গ্যানের সূত্র · বণ্টন সূত্র · পূরক সূত্র · অভেদ সূত্র",
+  ],
+];
+function GateConceptCard({ gate, index, bn }: { gate: Gate; index: number; bn: boolean }) {
+  const [inputs, setInputs] = useState([0, 1]);
+  const output = gateValue(gate, inputs[0]!, inputs[1]!);
+  return (
+    <article className="flex flex-col rounded-xl border bg-white p-5">
+      <GateShape type={gate} active={output === 1} />
+      <h3 className="mt-3 font-bold">
+        {gate}{" "}
+        <span className="font-mono font-normal text-muted-foreground">{formulas[index]}</span>
+      </h3>
+      <p className="mt-3 flex-1 text-sm leading-7">{meanings[index]![bn ? 1 : 0]}</p>
+      <div className="mt-4 border-t pt-3">
+        <p className="mb-2 text-xs text-muted-foreground">
+          {bn ? "ইনপুটে চাপ দিয়ে মান বদলাও" : "Tap an input to change its value"}
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          {inputs.slice(0, gate === "NOT" ? 1 : 2).map((value, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`${gate} input ${i === 0 ? "A" : "B"}`}
+              aria-pressed={value === 1}
+              onClick={() => setInputs(inputs.map((v, j) => (i === j ? 1 - v : v)))}
+              className={`min-h-9 rounded-md border px-3 py-1 font-mono text-xs ${value ? "border-primary/40 bg-primary/5" : "bg-muted/50"}`}
+            >
+              {i === 0 ? "A" : "B"} = {value}
+            </button>
+          ))}
+          <span aria-live="polite" className="ml-auto text-xs">
+            {bn ? "আউটপুট" : "Output"}: <strong className="font-mono">{output}</strong>
+          </span>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 function Table({
   headers,
   rows,
@@ -98,7 +146,7 @@ function Table({
   return (
     <details className="rounded-xl border bg-white">
       <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-primary">
-        {lang === "bn" ? "সারণিতে সব ফল মিলিয়ে দেখি" : "Check every result in the table"}{" "}
+        {lang === "bn" ? "ট্রুথ টেবিল মিলিয়ে দেখি" : "Check the truth table"}{" "}
         <span className="text-xs font-normal text-muted-foreground">
           ({rows.length} {lang === "bn" ? "সারি" : "rows"})
         </span>
@@ -153,12 +201,19 @@ export function ConceptsPage() {
   const bn = lang === "bn";
   const say = (en: string, text: string) => (bn ? text : en);
   const [bits, setBits] = useState([0, 1, 1]);
+  const [twoInputs, setTwoInputs] = useState([0, 1]);
+  const [threeInputs, setThreeInputs] = useState([0, 1, 1]);
+  const scrollRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0 });
+  }, []);
   const [a, b, c] = bits as [number, number, number];
   const [family, setFamily] = useState<"NAND" | "NOR">("NAND");
   const [target, setTarget] = useState<"XOR" | "XNOR">("XOR");
   const network = universalNetwork(family, target, a, b);
   return (
     <main
+      ref={scrollRef}
       data-tour="concepts"
       className="relative min-h-0 flex-1 overflow-y-auto bg-[#f7f8fa] px-5 sm:px-10 lg:px-16 xl:px-24"
     >
@@ -198,7 +253,7 @@ export function ConceptsPage() {
         >
           {[
             ["signals", "Boolean Operations & Logic Gates", "বুলিয়ান অপারেশন ও লজিক গেট"],
-            ["tables", "Truth Tables", "সত্যক সারণি"],
+            ["tables", "Truth Tables", "সত্যক সারণি (Truth Table)"],
             ["laws", "Boolean Laws", "বুলিয়ান বীজগণিতের সূত্র"],
             ["morgan", "De Morgan’s Theorems", "ডি মর্গ্যানের উপপাদ্য"],
             ["reduce", "Boolean Function Simplification", "বুলিয়ান ফাংশন সরলীকরণ"],
@@ -232,33 +287,9 @@ export function ConceptsPage() {
               "বুলিয়ান চলকের মান দুটি: ০ (মিথ্যা) অথবা 1 (সত্য)। এই চলকগুলোর উপর AND, OR ও NOT হলো মৌলিক অপারেশন। বুলিয়ান অপারেশন অনুযায়ী আউটপুট প্রদানকারী ইলেকট্রনিক সার্কিটকে লজিক গেট বলে। যেমন, A ও B দুটি সুইচের অবস্থা নির্দেশ করলে AND গেটে কেবল A=B=1 হলেই F=1 হবে।",
             )}
           </p>
-          <div className="flex flex-wrap items-center gap-3 rounded-xl border bg-white p-5">
-            <span>
-              {say("Follow these inputs throughout the page:", "পাতাজুড়ে এই ইনপুটগুলোর ফল দেখো:")}
-            </span>
-            {bits.map((v, i) => (
-              <button
-                key={i}
-                aria-pressed={v === 1}
-                onClick={() => setBits(bits.map((x, j) => (i === j ? 1 - x : x)))}
-                className={`min-h-11 rounded-lg border px-5 font-mono font-bold ${v ? "border-emerald-600 bg-emerald-50" : "bg-slate-100"}`}
-              >
-                {"ABC"[i]} = {v}
-              </button>
-            ))}
-          </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {gates.map((g, i) => (
-              <article key={g} className="rounded-xl border bg-white p-5">
-                <div className="flex items-center justify-between">
-                  <GateShape type={g} active={gateValue(g, a, b) === 1} />
-                </div>
-                <h3 className="mt-3 font-bold">
-                  {g}{" "}
-                  <span className="font-mono font-normal text-muted-foreground">{formulas[i]}</span>
-                </h3>
-                <p className="mt-3 text-sm leading-7">{meanings[i]![bn ? 1 : 0]}</p>
-              </article>
+              <GateConceptCard key={g} gate={g} index={i} bn={bn} />
             ))}
             <div className="rounded-xl bg-slate-100 p-4">
               <h3 className="font-bold">{say("Read the notation", "চিহ্নগুলো পড়ি")}</h3>
@@ -280,7 +311,7 @@ export function ConceptsPage() {
             )}
           </p>
         </Section>
-        <Section id="tables" title={say("02 / Truth Tables", "০২ / সত্যক সারণি")}>
+        <Section id="tables" title={say("02 / Truth Tables", "০২ / সত্যক সারণি (Truth Table)")}>
           <p>
             {say(
               "A truth table lists the output for every possible input combination of a Boolean expression. Each independent input has two values, so n inputs require 2ⁿ rows. List inputs in binary order, calculate intermediate operations, then determine the final output. Parentheses are evaluated first, followed by NOT, AND and OR.",
@@ -307,9 +338,9 @@ export function ConceptsPage() {
                 {inputRows(2).map((r, i) => (
                   <button
                     key={i}
-                    onClick={() => setBits([r[0]!, r[1]!, c])}
-                    aria-pressed={a * 2 + b === i}
-                    className={`rounded-xl border px-2 py-3 text-center text-xs ${a * 2 + b === i ? "border-primary bg-primary/5" : "bg-white"}`}
+                    onClick={() => setTwoInputs(r)}
+                    aria-pressed={twoInputs[0]! * 2 + twoInputs[1]! === i}
+                    className={`rounded-xl border px-2 py-3 text-center text-xs ${twoInputs[0]! * 2 + twoInputs[1]! === i ? "border-primary bg-primary/5" : "bg-white"}`}
                   >
                     <span className="block font-mono">A={r[0]}</span>
                     <span className="block font-mono">B={r[1]}</span>
@@ -320,9 +351,12 @@ export function ConceptsPage() {
               <Table
                 headers={["A", "B", "B′", "F"]}
                 rows={inputRows(2).map(([x, y]) => [x!, y!, 1 - y!, x! | (1 - y!)])}
-                active={a * 2 + b}
+                active={twoInputs[0]! * 2 + twoInputs[1]!}
               />
-              <p className="font-mono">A=0, B=0 → B′=1 → F=1</p>
+              <p className="font-mono">
+                A={twoInputs[0]}, B={twoInputs[1]} ; NOT B={1 - twoInputs[1]!} ; F=
+                {twoInputs[0]! | (1 - twoInputs[1]!)}
+              </p>
             </div>
             <div className="concept-table-example">
               <h3 className="font-bold">
@@ -341,9 +375,9 @@ export function ConceptsPage() {
                 {inputRows(3).map((r, i) => (
                   <button
                     key={i}
-                    onClick={() => setBits(r)}
-                    aria-pressed={a * 4 + b * 2 + c === i}
-                    className={`rounded-xl border px-2 py-3 text-center font-mono text-xs ${a * 4 + b * 2 + c === i ? "border-primary bg-primary/5" : "bg-white"}`}
+                    onClick={() => setThreeInputs(r)}
+                    aria-pressed={threeInputs[0]! * 4 + threeInputs[1]! * 2 + threeInputs[2]! === i}
+                    className={`rounded-xl border px-2 py-3 text-center font-mono text-xs ${threeInputs[0]! * 4 + threeInputs[1]! * 2 + threeInputs[2]! === i ? "border-primary bg-primary/5" : "bg-white"}`}
                   >
                     {r.map((v, j) => (
                       <span key={j} className="block">
@@ -365,10 +399,12 @@ export function ConceptsPage() {
                   (1 - x!) & z!,
                   (x! & y!) | ((1 - x!) & z!),
                 ])}
-                active={a * 4 + b * 2 + c}
+                active={threeInputs[0]! * 4 + threeInputs[1]! * 2 + threeInputs[2]!}
               />
               <p className="font-mono">
-                AB={a & b}, A′C={(1 - a) & c} → F={(a & b) | ((1 - a) & c)}
+                AB={threeInputs[0]! & threeInputs[1]!}, A′C=
+                {(1 - threeInputs[0]!) & threeInputs[2]!} → F=
+                {(threeInputs[0]! & threeInputs[1]!) | ((1 - threeInputs[0]!) & threeInputs[2]!)}
               </p>
             </div>
           </div>
@@ -385,9 +421,15 @@ export function ConceptsPage() {
           </p>
           <div className="grid gap-6 md:grid-cols-2">
             {BOOLEAN_LAWS.slice(0, 8).map((law, i) => (
-              <article key={law.name} className="space-y-5 rounded-xl border bg-white p-6">
-                <h3 className="font-semibold">
-                  {say("Identity", "সূত্র")} {i + 1}
+              <article
+                key={law.name}
+                className={`law-card space-y-5 rounded-xl border p-6 ${i % 2 === 0 ? "border-rose-100 bg-rose-50/40" : "border-emerald-100 bg-emerald-50/40"}`}
+              >
+                <h3 className="flex items-center gap-3 font-semibold">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-sm text-destructive shadow-sm">
+                    {i + 1}
+                  </span>
+                  {bn ? `${law.bn} সূত্র` : `${law.name} Law`}
                 </h3>
                 <div className="font-mono">
                   {law.forms.map((f) => (
@@ -413,7 +455,8 @@ export function ConceptsPage() {
           </p>
           <div className="grid gap-5 lg:grid-cols-2">
             {([0, 1] as const).map((law) => (
-              <article key={law} className="space-y-4 rounded-xl border bg-white p-5">
+              <article key={law} className={`law-card space-y-4 rounded-xl border p-5 ${law === 0 ? "border-rose-100 bg-rose-50/40" : "border-emerald-100 bg-emerald-50/40"}`}>
+                <h3 className="flex items-center gap-3 font-semibold"><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-sm text-destructive shadow-sm">{law + 9}</span>{bn ? `ডি মর্গ্যানের ${law === 0 ? "প্রথম" : "দ্বিতীয়"} সূত্র` : `De Morgan’s ${law === 0 ? "First" : "Second"} Law`}</h3>
                 <h3 className="font-mono text-lg font-bold">
                   {law === 0 ? "(A+B)′ = A′B′" : "(AB)′ = A′+B′"}
                 </h3>
@@ -473,6 +516,7 @@ export function ConceptsPage() {
                 className="rounded-xl border-l-4 border-l-primary bg-white p-5 shadow-sm"
               >
                 <p className="font-mono font-semibold leading-8">{r[0]}</p>
+                <p className="text-sm font-semibold leading-7">{reductionLaws[i]![bn ? 1 : 0]}</p>
                 <p className="mt-3 text-sm leading-8">
                   {say("Applied identities: ", "ব্যবহৃত সূত্র: ")}
                   {r[bn ? 2 : 1]}
@@ -501,18 +545,23 @@ export function ConceptsPage() {
               "যে গেট ব্যবহার করে একাই যেকোনো বুলিয়ান ফাংশন বাস্তবায়ন করা যায়, তাকে সার্বজনীন গেট বলে। NAND ও NOR উভয়ই সার্বজনীন, কারণ প্রতিটি দিয়ে NOT, AND ও OR তৈরি করা যায়। যেকোনো একটির দুই ইনপুটে A দিলে আউটপুট A′ হয়। নিচের পাঁচ গেটের উদাহরণে P ও Q পূরক, R ও S মধ্যবর্তী পদ এবং Y চূড়ান্ত আউটপুট নির্ণয় করে।",
             )}
           </p>
-          <Table
-            headers={[say("Operation", "অপারেশন"), "NAND (↑)", "NOR (↓)"]}
-            rows={[
-              ["NOT A", "A ↑ A", "A ↓ A"],
-              ["AND", "(A ↑ B) ↑ (A ↑ B)", "(A ↓ A) ↓ (B ↓ B)"],
-              ["OR", "(A ↑ A) ↑ (B ↑ B)", "(A ↓ B) ↓ (A ↓ B)"],
-            ]}
-          />
+          <UniversalGateBasics bn={bn} />
+          <div className="space-y-3 border-t pt-6">
+            <h3 className="text-xl font-bold">
+              {bn
+                ? "NAND / NOR দিয়ে XOR ও XNOR সার্কিট তৈরি"
+                : "Build XOR and XNOR circuits using NAND / NOR"}
+            </h3>
+            <p>
+              {bn
+                ? "প্রথমে কোন ধরনের গেট ব্যবহার করবে, তারপর কোন সার্কিট তৈরি করবে তা বেছে নাও। নিচের চিত্রের প্রতিটি গেট নির্বাচিত একই ধরনের। তারগুলো অনুসরণ করলে বোঝা যাবে প্রতিটি মধ্যবর্তী আউটপুট পরের কোন গেটে যাচ্ছে।"
+                : "Choose the gate type to use, then the circuit to build. Every gate in the diagram uses your selected type. Follow the wires to see how each intermediate output feeds the next gate."}
+            </p>
+          </div>
           <div className="flex flex-wrap gap-4">
             <fieldset className="flex gap-2">
               <legend className="mb-2 text-xs font-bold">
-                {say("Use only", "শুধু ব্যবহার করি")}
+                {say("1. Gate type to use", "1. যে গেট ব্যবহার করব")}
               </legend>
               {(["NAND", "NOR"] as const).map((f) => (
                 <button
@@ -526,7 +575,9 @@ export function ConceptsPage() {
               ))}
             </fieldset>
             <fieldset className="flex gap-2">
-              <legend className="mb-2 text-xs font-bold">{say("Result", "ফল")}</legend>
+              <legend className="mb-2 text-xs font-bold">
+                {say("2. Circuit to build", "2. যে সার্কিট তৈরি করব")}
+              </legend>
               {(["XOR", "XNOR"] as const).map((t) => (
                 <button
                   key={t}
@@ -538,6 +589,31 @@ export function ConceptsPage() {
                 </button>
               ))}
             </fieldset>
+          </div>
+          <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+            <h4 className="font-semibold">
+              {bn
+                ? `শুধু ${family} গেট দিয়ে ${target} সার্কিট`
+                : `${target} circuit using only ${family} gates`}
+            </h4>
+            <p className="mt-2 font-mono">F = {target === "XOR" ? "A′B + AB′" : "AB + A′B′"}</p>
+            <div className="my-3 flex gap-3">
+              {[a, b].map((value, i) => (
+                <button
+                  key={i}
+                  className="rounded-lg border bg-white px-4 py-2 font-mono"
+                  aria-pressed={value === 1}
+                  onClick={() => setBits(bits.map((v, j) => (i === j ? 1 - v : v)))}
+                >
+                  {i === 0 ? "A" : "B"} = {value}
+                </button>
+              ))}
+            </div>
+            <Circuit
+              label={`${target} circuit using five ${family} gates`}
+              values={[a, b]}
+              nodes={network.map((n) => ({ ...n, gate: family }))}
+            />
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             {[network.slice(0, 2), network.slice(2, 4), network.slice(4)].map((stage, i) => (

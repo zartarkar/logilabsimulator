@@ -19,8 +19,8 @@ export function ConceptIntroduction({ bn }: { bn: boolean }) {
         </h2>
         <p className="mt-2 text-sm leading-8 text-muted-foreground">
           {bn
-            ? "সুইচ A ও B ইনপুট নির্দেশ করে; বাতি আউটপুট F নির্দেশ করে। ইনপুট ও অপারেশন পরিবর্তন করে ফল পর্যবেক্ষণ করো।"
-            : "Switches A and B represent inputs; the light represents output F. Change the inputs and operation to observe the result."}
+            ? "1. A ও B বোতামে চাপ দিয়ে ইনপুট চালু বা বন্ধ করো। 2. AND অথবা OR বোতাম বেছে নাও। 3. একই ইনপুটে বাতি ও আউটপুট F কীভাবে বদলায় দেখো।"
+            : "1. Tap A and B to turn the inputs on or off. 2. Choose AND or OR. 3. Compare the light and output F for the same inputs."}
         </p>
       </div>
       <div className="flex items-center justify-center gap-4">
@@ -50,6 +50,9 @@ export function ConceptIntroduction({ bn }: { bn: boolean }) {
         </div>
       </div>
       <div>
+        <h3 className="mb-3 text-sm font-semibold">
+          {bn ? "কোন অপারেশন পরীক্ষা করবে? নিচে চাপো" : "Which operation will you test? Tap below"}
+        </h3>
         <div className="grid grid-cols-2 gap-2">
           {(["AND", "OR"] as const).map((r) => (
             <button
@@ -60,12 +63,15 @@ export function ConceptIntroduction({ bn }: { bn: boolean }) {
             >
               {r === "AND"
                 ? bn
-                  ? "উভয় ইনপুট 1"
-                  : "Both inputs are 1"
+                  ? "উভয় ইনপুট 1 হলে বাতি জ্বলে"
+                  : "Light on only when both inputs are 1"
                 : bn
-                  ? "অন্তত একটি ইনপুট 1"
-                  : "At least one input is 1"}
-              <span className="block text-muted-foreground">{r}</span>
+                  ? "অন্তত একটি ইনপুট 1 হলে বাতি জ্বলে"
+                  : "Light on when at least one input is 1"}
+              <span className="block font-bold">
+                {r}
+                {rule === r ? (bn ? " · নির্বাচিত" : " · Selected") : ""}
+              </span>
             </button>
           ))}
         </div>
@@ -75,6 +81,11 @@ export function ConceptIntroduction({ bn }: { bn: boolean }) {
             {rule === "AND" ? "·" : "+"}
             {Number(switches[1])} = {Number(on)}
           </span>
+        </p>
+        <p className="mt-2 text-xs leading-6 text-muted-foreground" aria-live="polite">
+          {bn
+            ? `এখন ${rule} নির্বাচিত। A=${Number(switches[0])}, B=${Number(switches[1])}; তাই আউটপুট ${Number(on)} এবং বাতি ${on ? "জ্বলছে" : "নিভে আছে"}।`
+            : `${rule} is selected. With A=${Number(switches[0])} and B=${Number(switches[1])}, the output is ${Number(on)} and the light is ${on ? "on" : "off"}.`}
         </p>
       </div>
     </div>

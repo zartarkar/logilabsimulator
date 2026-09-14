@@ -570,20 +570,25 @@ svg.react-flow__connectionline {
   .concept-table-example > details { align-self: start; }
 }
 .concept-chapter > h2 { border-bottom: 1px solid var(--border); padding-bottom: 1.25rem; }
+.law-card { transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .law-card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgb(15 23 42 / .08); border-color: color-mix(in srgb, var(--primary) 30%, var(--border)); }
+}
 .driver-popover { max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; }
 
 /* Keep practice guidance outside the interactive canvas, with a stable size. */
-.practice-guide { max-height: 135px; overflow-y: auto; }
+.practice-guide { overflow: visible; }
 .practice-guide > div > div:first-child { flex: none; }
 .builder-workspace { touch-action: pan-y; }
-.builder-workspace > [data-tour="builder-canvas"] { flex: 1 0 52dvh; min-height: 240px; }
+.builder-workspace > [data-tour="builder-canvas"] { flex: 1 1 0%; min-height: 0; }
+.builder-workspace.truth-open > [data-tour="builder-canvas"] { flex: 0 0 60dvh; min-height: 220px; }
 @media (max-height: 600px), (max-width: 767px) {
-  .practice-guide { max-height: 100px; padding: 6px 10px; }
+  .practice-guide { padding: 8px; }
   .practice-guide svg[role="img"] { display: none; }
   .practice-guide button { height: 28px; padding: 0 6px; font-size: 10px; }
   .builder-truth { padding: 8px 12px; }
   .sandbox-container aside { width: 11rem; }
-  .sandbox-container [data-tour="builder-canvas"] { min-height: 160px; }
+  .sandbox-container [data-tour="builder-canvas"] { min-height: 0; }
   .app-header-inner { grid-template-columns: minmax(0, 1fr) auto !important; }
   .app-header-title { display: none; }
   .app-header-nav { grid-column: 1; }
@@ -602,3 +607,10 @@ svg.react-flow__connectionline {
 .practice-wire-help .react-flow__handle::after { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--foreground); color: var(--background); font: 10px/1.4 sans-serif; padding: 3px 5px; border-radius: 4px; pointer-events: none; }
 .practice-wire-help .react-flow__handle.source::after { content: "OUT"; }
 .practice-wire-help .react-flow__handle.target::after { content: "IN"; }
+
+.practice-guide > div > div:last-child { flex-wrap: wrap; }
+@media (orientation: landscape) and (max-height: 600px) {
+  .sandbox-container { flex-direction: row !important; }
+  .sandbox-container > aside { width: 12rem; max-height: none !important; height: 100%; overflow-y: auto !important; }
+  .sandbox-container .component-palette { flex-direction: column; }
+}

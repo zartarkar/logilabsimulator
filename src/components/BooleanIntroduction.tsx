@@ -90,7 +90,7 @@ export function BooleanIntroduction({ bn }: { bn: boolean }) {
           <article key={law.en} className="rounded-xl border border-primary/20 bg-primary/5 p-4">
             <h4 className="font-semibold">
               {bn ? String(i + 1).replace(/\d/g, (d) => "০1২৩৪৫৬৭৮৯"[Number(d)]!) : i + 1}.{" "}
-              {bn ? "?????" : "Identity"}
+              {bn ? law.bn : law.en}
             </h4>
             <div className="my-3 space-y-2 font-mono text-sm">
               {law.forms.map((form, j) => (

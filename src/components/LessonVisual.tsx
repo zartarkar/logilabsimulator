@@ -72,7 +72,7 @@ function Switches({
     </div>
   );
 }
-function Circuit({ nodes, values, label }: { nodes: Node[]; values: number[]; label: string }) {
+export function Circuit({ nodes, values, label }: { nodes: Node[]; values: number[]; label: string }) {
   const positions: Record<string, { x: number; y: number; value: number }> = {};
   values.forEach((value, i) => {
     positions["ABC"[i]!] = { x: 30, y: 45 + i * 105, value };
@@ -329,23 +329,23 @@ function TruthBuilder({ bn, n }: { bn: boolean; n: 2 | 3 }) {
 const examples = [
   {
     steps: ["AB + AB′", "A(B + B′)", "A·1", "A"],
-    reasons: ["XY + XZ = X(Y + Z)", "B + B′ = 1", "A·1 = A"],
-    bn: ["XY + XZ = X(Y + Z)", "B + B′ = 1", "A·1 = A"],
+    reasons: ["Distributive Law: XY + XZ = X(Y + Z)", "Complement Law: B + B′ = 1", "Identity Law: A·1 = A"],
+    bn: ["বণ্টন সূত্র: XY + XZ = X(Y + Z)", "পূরক সূত্র: B + B′ = 1", "অভেদ সূত্র: A·1 = A"],
   },
   {
     steps: ["A + A′B", "(A + A′)(A + B)", "1·(A + B)", "A + B"],
-    reasons: ["X + YZ = (X+Y)(X+Z)", "A + A′ = 1", "1·X = X"],
-    bn: ["X + YZ = (X+Y)(X+Z)", "A + A′ = 1", "1·X = X"],
+    reasons: ["Distributive Law: X + YZ = (X+Y)(X+Z)", "Complement Law: A + A′ = 1", "Identity Law: 1·X = X"],
+    bn: ["বণ্টন সূত্র: X + YZ = (X+Y)(X+Z)", "পূরক সূত্র: A + A′ = 1", "অভেদ সূত্র: 1·X = X"],
   },
   {
     steps: ["(A + B)(A + B′)", "A + BB′", "A + 0", "A"],
-    reasons: ["(X+Y)(X+Z) = X+YZ", "BB′ = 0", "A+0 = A"],
-    bn: ["(X+Y)(X+Z) = X+YZ", "BB′ = 0", "A+0 = A"],
+    reasons: ["Distributive Law: (X+Y)(X+Z) = X+YZ", "Complement Law: BB′ = 0", "Identity Law: A+0 = A"],
+    bn: ["বণ্টন সূত্র: (X+Y)(X+Z) = X+YZ", "পূরক সূত্র: BB′ = 0", "অভেদ সূত্র: A+0 = A"],
   },
   {
     steps: ["(A + B)′ + A′B", "A′B′ + A′B", "A′(B′ + B)", "A′"],
-    reasons: ["(A+B)′ = A′B′", "XY + XZ = X(Y+Z)", "B′+B = 1; A′·1 = A′"],
-    bn: ["(A+B)′ = A′B′", "XY + XZ = X(Y+Z)", "B′+B = 1; A′·1 = A′"],
+    reasons: ["De Morgan’s Law: (A+B)′ = A′B′", "Distributive Law: XY + XZ = X(Y+Z)", "Complement and Identity Laws: B′+B = 1; A′·1 = A′"],
+    bn: ["ডি মর্গ্যানের সূত্র: (A+B)′ = A′B′", "বণ্টন সূত্র: XY + XZ = X(Y+Z)", "পূরক ও অভেদ সূত্র: B′+B = 1; A′·1 = A′"],
   },
 ];
 function Simplify({ bn }: { bn: boolean }) {
