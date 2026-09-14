@@ -614,3 +614,31 @@ svg.react-flow__connectionline {
   .sandbox-container > aside { width: 12rem; max-height: none !important; height: 100%; overflow-y: auto !important; }
   .sandbox-container .component-palette { flex-direction: column; }
 }
+
+/* The current action lives with its instruction; no palette hunting on phones. */
+.mobile-guided-builder > aside > .practice-panel,
+.mobile-guided-builder > aside > .component-palette { display: none; }
+.mobile-guided-builder > aside {
+  width: 100%; height: auto; max-height: none !important;
+  overflow: visible !important; padding: 8px; flex-shrink: 0;
+}
+.mobile-guided-builder .practice-guide { padding: 10px; width: 100%; }
+.mobile-guided-builder .practice-guide p { font-size: 13px; line-height: 1.5; }
+.mobile-guided-builder .practice-guide p + p { font-size: 12px; }
+.mobile-guided-builder .practice-guide button { min-height: 40px; height: auto; font-size: 12px; padding: 6px 9px; }
+.mobile-guided-builder .practice-guide .guide-add-component { min-height: 44px; font-size: 14px; }
+.mobile-guided-builder .guide-navigation { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+.mobile-guided-builder .guide-navigation button { padding: 5px 3px; }
+.mobile-guided-builder .guide-navigation svg { display: none; }
+.mobile-guided-builder .builder-truth { padding: 4px 8px; }
+@media (orientation: landscape) {
+  .mobile-guided-builder { flex-direction: row !important; }
+  .mobile-guided-builder > aside {
+    width: clamp(220px, 30vw, 280px); height: 100%;
+    overflow-y: auto !important; border-right: 1px solid var(--border);
+  }
+  .mobile-guided-builder .guide-navigation { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (orientation: portrait) {
+  .mobile-guided-builder { flex-direction: column !important; }
+}
