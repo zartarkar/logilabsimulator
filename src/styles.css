@@ -615,30 +615,49 @@ svg.react-flow__connectionline {
   .sandbox-container .component-palette { flex-direction: column; }
 }
 
-/* The current action lives with its instruction; no palette hunting on phones. */
-.mobile-guided-builder > aside > .practice-panel,
-.mobile-guided-builder > aside > .component-palette { display: none; }
-.mobile-guided-builder > aside {
-  width: 100%; height: auto; max-height: none !important;
-  overflow: visible !important; padding: 8px; flex-shrink: 0;
+/* Reserve space for guidance above the canvas, alongside the full palette. */
+.mobile-guided-builder {
+  display: grid !important;
+  grid-template-columns: 140px minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0;
 }
-.mobile-guided-builder .practice-guide { padding: 10px; width: 100%; }
-.mobile-guided-builder .practice-guide p { font-size: 13px; line-height: 1.5; }
-.mobile-guided-builder .practice-guide p + p { font-size: 12px; }
-.mobile-guided-builder .practice-guide button { min-height: 40px; height: auto; font-size: 12px; padding: 6px 9px; }
-.mobile-guided-builder .practice-guide .guide-add-component { min-height: 44px; font-size: 14px; }
-.mobile-guided-builder .guide-navigation { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
-.mobile-guided-builder .guide-navigation button { padding: 5px 3px; }
-.mobile-guided-builder .guide-navigation svg { display: none; }
-.mobile-guided-builder .builder-truth { padding: 4px 8px; }
-@media (orientation: landscape) {
-  .mobile-guided-builder { flex-direction: row !important; }
-  .mobile-guided-builder > aside {
-    width: clamp(220px, 30vw, 280px); height: 100%;
-    overflow-y: auto !important; border-right: 1px solid var(--border);
-  }
-  .mobile-guided-builder .guide-navigation { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mobile-guided-builder > aside { display: contents; }
+.mobile-guided-builder .practice-panel { display: none; }
+.mobile-guided-builder .practice-guide {
+  grid-column: 2; grid-row: 1; margin: 6px; padding: 8px;
+  min-width: 0; border-color: var(--primary); background: var(--card);
 }
+.mobile-guided-builder .practice-guide p { font-size: 12px; line-height: 1.45; }
+.mobile-guided-builder .practice-guide p + p { font-size: 11px; }
+.mobile-guided-builder .guide-navigation { flex-wrap: wrap; gap: 4px; }
+.mobile-guided-builder .guide-navigation button { min-height: 36px; height: auto; font-size: 11px; padding: 4px 7px; }
+.mobile-guided-builder .component-palette {
+  display: flex; flex-direction: column; grid-column: 1; grid-row: 1 / 3;
+  min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 8px;
+  border-right: 1px solid var(--border); background: var(--card); touch-action: pan-y;
+}
+.mobile-guided-builder .component-palette > button { flex-shrink: 0; min-height: 48px; padding: 8px 6px; font-size: 12px; }
+.mobile-guided-builder .component-palette > button:disabled { opacity: .65; }
+.mobile-guided-builder .component-palette svg { max-width: 36px; max-height: 32px; }
+.mobile-guided-builder .component-palette span.absolute { position: static; }
+.mobile-guided-builder .builder-workspace { grid-column: 2; grid-row: 2; min-width: 0; }
+.mobile-guided-builder .builder-truth { padding: 4px; }
+.mobile-guided-builder .builder-truth button { white-space: normal; font-size: 11px; }
 @media (orientation: portrait) {
-  .mobile-guided-builder { flex-direction: column !important; }
+  .mobile-guided-builder { grid-template-columns: 112px minmax(0, 1fr); }
+  .mobile-guided-builder .component-palette > button > span { flex-wrap: wrap; justify-content: center; }
+  .mobile-guided-builder .guide-navigation svg { display: none; }
 }
+.challenge-success { max-height: calc(100dvh - 24px); width: min(32rem, calc(100vw - 24px)); overscroll-behavior: contain; }
+.challenge-success > div:last-child { position: sticky; bottom: 0; background: var(--card); }
+@media (max-height: 500px) {
+  .challenge-success { gap: 8px; }
+  .challenge-success > div:first-of-type { padding: 12px 48px 8px; }
+  .challenge-success > div:first-of-type > div:first-child { display: none; }
+  .challenge-success > div:nth-of-type(2) { padding: 8px 16px; }
+  .challenge-success ul { margin-top: 6px; }
+  .challenge-success li { padding: 6px 8px; }
+  .challenge-success > div:last-child { padding: 8px 16px; }
+}
+

@@ -48,7 +48,6 @@ import {
   CircleAlert,
   Lightbulb,
   MapPin,
-  Plus,
   ToggleLeft,
   Trash2,
   Sparkles,
@@ -1178,6 +1177,21 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     [activeGuide, isPracticeMode],
   );
   const highlightGuide = isPracticeMode ? (activeGuide?.target ?? "") : "";
+  useEffect(() => {
+    if (!isMobile || !highlightGuide.startsWith("component:")) return;
+    const palette = document.querySelector<HTMLElement>('[data-tour="builder-palette"]');
+    const target = palette?.querySelector<HTMLElement>(`[data-practice-target="${highlightGuide}"]`);
+    if (!palette || !target) return;
+    // Scroll only the palette: the instruction and canvas stay in place.
+    palette.scrollTop += target.getBoundingClientRect().top - palette.getBoundingClientRect().top - 8;
+  }, [isMobile, highlightGuide, guideIndex]);
+
+  const closeChallengeSuccess = () => {
+    setShowChallengeSuccess(false);
+    setGuideSkipped(true);
+    setIsPracticeMode(false);
+    setShowTruthTable(false);
+  };
 
   const styledEdges = useMemo(
     () =>
@@ -1250,8 +1264,9 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     <div
       className={`flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-hidden touch-none lg:touch-auto ${isPracticeMode ? "practice-builder" : ""} ${isMobile && activeGuide && isPracticeMode ? "mobile-guided-builder" : ""}`}
     >
-      <AlertDialog open={showChallengeSuccess} onOpenChange={setShowChallengeSuccess}>
-        <AlertDialogContent className="max-w-lg overflow-hidden border-2 border-primary/35 bg-card p-0 text-center shadow-2xl sm:text-center">
+      <AlertDialog open={showChallengeSuccess} onOpenChange={(open) => open ? setShowChallengeSuccess(true) : closeChallengeSuccess()}>
+        <AlertDialogContent className="challenge-success max-w-lg overflow-y-auto border-2 border-primary/35 bg-card p-0 text-center shadow-2xl sm:text-center">
+          <button onClick={closeChallengeSuccess} aria-label="Close and return to circuit" className="absolute right-2 top-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border bg-card"><X className="h-5 w-5" /></button>
           <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 via-primary/10 to-transparent px-6 pb-5 pt-7">
             <span className="absolute left-10 top-8 h-2 w-2 rounded-full bg-amber-400" />
             <span className="absolute right-12 top-12 h-2.5 w-2.5 rotate-45 bg-destructive" />
@@ -1294,8 +1309,8 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             </ul>
           </div>
           <AlertDialogFooter className="border-t border-border bg-muted/30 px-6 py-4 sm:justify-center">
-            <AlertDialogAction className="min-w-36 font-bold">
-              {lang === "bn" ? "চালিয়ে যাও" : "Continue"}
+            <AlertDialogAction className="min-w-36 font-bold" onClick={closeChallengeSuccess}>
+              {lang === "bn" ? "সার্কিটে ফিরে যাও" : "Back to circuit"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -1494,11 +1509,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                     {getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Msg`)}
                   </p>
                   <p className="text-[10px] text-muted-foreground">
-                    {isMobile && highlightGuide.startsWith("component:")
-                      ? (lang === "bn" ? "নিচের বোতামে চাপ দিলে উপাদানটি ক্যানভাসে যোগ হবে।" : "Tap the button below to add this component to your canvas.")
-                      : isMobile && highlightGuide === "canvas:wire"
-                        ? (lang === "bn" ? "প্রথমে OUT বিন্দুতে, তারপর IN বিন্দুতে চাপ দাও। A ও B থেকে গেটে, গেট থেকে LED-তে তার জোড়ো।" : "Tap OUT, then IN. Connect A and B to the gate, then the gate to the LED.")
-                      : getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Detail`)}
+                    {getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Detail`)}
                   </p>
                   {highlightGuide === "canvas:wire" && (
                     <svg
@@ -1531,17 +1542,6 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                   )}
                 </div>
               </div>
-              {isMobile && highlightGuide.startsWith("component:") && (
-                <Button
-                  className="guide-add-component w-full"
-                  disabled={completedSteps.has(guideIndex)}
-                  onClick={() => addNode(highlightGuide.slice(10) as Parameters<typeof addNode>[0])}
-                >
-                  <Plus className="h-4 w-4" aria-hidden="true" />
-                  {highlightGuide.slice(10) === "INPUT" ? "Input switch" : highlightGuide.slice(10) === "OUTPUT" ? "Output LED" : highlightGuide.slice(10)}
-                  {lang === "bn" ? " যোগ করো" : " — Add to canvas"}
-                </Button>
-              )}
               <div className="guide-navigation flex shrink-0 items-center gap-1.5">
                 <Button
                   variant="outline"
