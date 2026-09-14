@@ -776,6 +776,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
   const [guideSkipped, setGuideSkipped] = useState(false);
   const [showTruthTable, setShowTruthTable] = useState(false);
   const [showChallengeSuccess, setShowChallengeSuccess] = useState(false);
+  const [hasSelectedExpression, setHasSelectedExpression] = useState(false);
   const [challengeErrors, setChallengeErrors] = useState<string[]>([]);
   const [challengeNodeErrors, setChallengeNodeErrors] = useState<Record<string, string>>({});
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
@@ -1040,7 +1041,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
   );
   const challengeLearningOutcomes = getChallengeLearningOutcomes(activeChallenge.id, lang === "bn");
   const activeGuide =
-    !hasSelectedDifficulty || guideSkipped
+    !hasSelectedDifficulty || !hasSelectedExpression || guideSkipped
       ? undefined
       : (activeChallenge?.guide[guideIndex] ?? activeChallenge?.guide[0]);
 
@@ -1102,6 +1103,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
   }, [checkStepCompletion]);
 
   const loadChallenge = useCallback((challengeId: string) => {
+    setHasSelectedExpression(true);
     setShowTruthTable(false);
     const challenge =
       PRACTICE_CHALLENGES.find((item) => item.id === challengeId) ?? PRACTICE_CHALLENGES[0];
@@ -1127,6 +1129,8 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         (challenge) => challenge.difficulty === nextDifficulty,
       );
       if (firstChallenge) loadChallenge(firstChallenge.id);
+      setHasSelectedExpression(false);
+      setGuideSkipped(true);
     },
     [loadChallenge],
   );
@@ -1189,7 +1193,8 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
   const closeChallengeSuccess = () => {
     setShowChallengeSuccess(false);
     setGuideSkipped(true);
-    setIsPracticeMode(false);
+    setHasSelectedDifficulty(false);
+    setHasSelectedExpression(false);
     setShowTruthTable(false);
   };
 
@@ -1262,7 +1267,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
 
   return (
     <div
-      className={`flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-hidden touch-none lg:touch-auto ${isPracticeMode ? "practice-builder" : ""} ${isMobile && activeGuide && isPracticeMode ? "mobile-guided-builder" : ""}`}
+      className={`flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-hidden touch-none lg:touch-auto ${isPracticeMode ? "practice-builder" : ""} ${activeGuide && isPracticeMode ? "mobile-guided-builder" : ""} ${!isMobile ? "desktop-builder" : ""}`}
     >
       <AlertDialog open={showChallengeSuccess} onOpenChange={(open) => open ? setShowChallengeSuccess(true) : closeChallengeSuccess()}>
         <AlertDialogContent className="challenge-success max-w-lg overflow-y-auto border-2 border-primary/35 bg-card p-0 text-center shadow-2xl sm:text-center">
@@ -1420,9 +1425,21 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                     <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">
                       Expression
                     </label>
-                    <select
+                    {!hasSelectedExpression ? (
+                      <div className="flex flex-col gap-1.5">
+                        {difficultyChallenges.map((challenge) => (
+                          <button
+                            key={challenge.id}
+                            onClick={() => loadChallenge(challenge.id)}
+                            className="min-h-10 rounded-lg border border-border bg-card px-2.5 py-2 text-left font-mono text-xs font-medium text-foreground transition hover:border-primary hover:bg-primary/5"
+                          >
+                            {challenge.title}
+                          </button>
+                        ))}
+                      </div>
+                    ) : <select
                       aria-label="Select practice expression"
-                      value={activeChallenge.id}
+                      value={hasSelectedExpression ? activeChallenge.id : ""}
                       onChange={(event) => loadChallenge(event.target.value)}
                       className="w-full rounded-lg border border-border bg-card px-2.5 py-1.5 font-mono text-xs font-medium text-foreground transition hover:bg-muted"
                     >
@@ -1431,10 +1448,10 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                           {challenge.title}
                         </option>
                       ))}
-                    </select>
+                    </select>}
                   </div>
                 )}
-                {hasSelectedDifficulty && difficulty !== "beginner" && (
+                {hasSelectedExpression && difficulty !== "beginner" && (
                   <Button
                     size="sm"
                     className="h-8 w-full text-xs"
@@ -1497,7 +1514,10 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
               <div className="flex min-w-0 flex-1 items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                 <div className="min-w-0">
-                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-primary">
+                  <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-primary">
+                    <span className="rounded-md border border-primary/20 bg-primary/5 px-2 py-1 font-mono text-xs normal-case tracking-normal text-foreground">
+                      {activeChallenge.title}
+                    </span>
                     Step {guideIndex + 1} of {activeChallenge.guide.length}
                     {completedSteps.has(guideIndex) && (
                       <span className="inline-flex items-center gap-1 text-emerald-600">

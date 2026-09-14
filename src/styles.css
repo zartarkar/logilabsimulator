@@ -618,7 +618,7 @@ svg.react-flow__connectionline {
 /* Reserve space for guidance above the canvas, alongside the full palette. */
 .mobile-guided-builder {
   display: grid !important;
-  grid-template-columns: 140px minmax(0, 1fr);
+  grid-template-columns: 120px minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   gap: 0;
 }
@@ -628,6 +628,11 @@ svg.react-flow__connectionline {
   grid-column: 2; grid-row: 1; margin: 6px; padding: 8px;
   min-width: 0; border-color: var(--primary); background: var(--card);
 }
+.desktop-builder.mobile-guided-builder { grid-template-columns: 210px minmax(0, 1fr); }
+.desktop-builder.mobile-guided-builder .practice-guide > div { flex-direction: row; align-items: center; flex-wrap: wrap; }
+.desktop-builder.mobile-guided-builder .practice-guide > div > div:first-of-type { flex: 1; }
+.desktop-builder.mobile-guided-builder .practice-guide p { font-size: 13px; }
+.desktop-builder.mobile-guided-builder .practice-guide svg[role="img"] { display: none; }
 .mobile-guided-builder .practice-guide p { font-size: 12px; line-height: 1.45; }
 .mobile-guided-builder .practice-guide p + p { font-size: 11px; }
 .mobile-guided-builder .guide-navigation { flex-wrap: wrap; gap: 4px; }
