@@ -10,14 +10,14 @@ import {
 import { BOOLEAN_LAWS, gateValue, inputRows, universalNetwork } from "../logic/lessonCurriculum";
 
 describe("guided curriculum", () => {
-  it("keeps the five-question algebra lesson separate from the following lessons", () => {
-    expect(QUESTION_COUNTS).toEqual([3, 3, 3, 3]);
-    expect([0, 1, 2, 3, 4].map(questionOffset)).toEqual([0, 3, 6, 9, 12]);
+  it("has four questions across three lessons", () => {
+    expect(QUESTION_COUNTS).toEqual([2, 1, 1]);
+    expect([0, 1, 2, 3].map(questionOffset)).toEqual([0, 2, 3, 4]);
     expect(makeIntroQuestion(0, false, () => 0, 4).answer).toBe("A");
   });
-  it("scores the four-topic assessment at the boundaries", () => {
-    expect(INTRO_LESSONS).toHaveLength(4);
-    expect([0, 9, 10, 17, 18, 20].map((score) => suggestFamiliarity(score, 20))).toEqual([
+  it("scores the three-topic assessment at the boundaries", () => {
+    expect(INTRO_LESSONS).toHaveLength(3);
+    expect([0, 1, 2, 3, 4, 4].map((score) => suggestFamiliarity(score, 4))).toEqual([
       "new",
       "new",
       "some",
@@ -26,17 +26,17 @@ describe("guided curriculum", () => {
       "confident",
     ]);
   });
-  it("replaces the proof-count question with both De Morgan output calculations", () => {
-    for (const step of [3, 4]) for (const [a, b] of inputRows(2)) {
-      let call = 0;
-      const q = makeIntroQuestion(1, false, () => (++call === 1 ? a! : b!) / 2, step);
-      expect(Number(q.answer)).toBe(step === 3 ? Number(!(a! | b!)) : Number(!(a! & b!)));
-      expect(q.kind).toBe("number");
-      expect(q.prompt.en).not.toContain("must both sides agree");
-    }
+  it("routes simplification and gates after removing truth tables", () => {
+    expect(INTRO_LESSONS.map((lesson) => lesson.title.en)).toEqual([
+      "Boolean algebra",
+      "Simplifying logic functions",
+      "Logic gates",
+    ]);
+    expect(makeIntroQuestion(1, false).prompt.en).toContain("Simplify");
+    expect(makeIntroQuestion(2, false).kind).toBe("table");
   });
   it("generates valid bilingual questions for every taught step", () => {
-    for (let lesson = 0; lesson < 4; lesson++)
+    for (let lesson = 0; lesson < INTRO_LESSONS.length; lesson++)
       for (let step = 0; step < QUESTION_COUNTS[lesson]!; step++)
         for (const challenge of [false, true])
           for (let seed = 0; seed < 30; seed++) {
@@ -56,18 +56,18 @@ describe("guided curriculum", () => {
     for (const [a, b] of inputRows(2)) {
       for (const step of [2, 3]) {
         let calls = 0;
-        const question = makeIntroQuestion(3, false, () => (calls++ === 0 ? a! : b!) / 2, step);
+        const question = makeIntroQuestion(2, false, () => (calls++ === 0 ? a! : b!) / 2, step);
         expect(question.kind).toBe("choice");
         expect(question.answer).toBe(String(step === 2 ? a! | b! : 1 - a!));
       }
     }
-    expect(makeIntroQuestion(3, false, () => 0, 4).answer).toBe("NAND, NOR");
+    expect(makeIntroQuestion(2, false, () => 0, 4).answer).toBe("NAND, NOR");
   });
   it("accepts Bengali digits", () => {
     expect(
       checkIntroAnswer(
-        makeIntroQuestion(1, false, () => 0, 0),
-        " ৪ ",
+        makeIntroQuestion(2, false, () => 0, 0),
+        " ০ ",
       ),
     ).toBe(true);
   });

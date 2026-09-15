@@ -6,7 +6,6 @@ import {
   Check,
   CircuitBoard,
   Languages,
-  ListChecks,
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -115,11 +114,16 @@ export function IntroLearning({
 
   return (
     <div className="lesson-controls relative min-h-dvh overflow-x-hidden bg-[#f7f8fa] text-foreground">
-      <WelcomeLearning open={welcome} bn={bn} onClose={() => setWelcome(false)} onExplore={(index) => {
-        setWelcome(false);
-        if (index === lesson && activePhase !== "result") setOverview(false);
-        else setPreview(index);
-      }} />
+      <WelcomeLearning
+        open={welcome}
+        bn={bn}
+        onClose={() => setWelcome(false)}
+        onExplore={(index) => {
+          setWelcome(false);
+          if (index === lesson && activePhase !== "result") setOverview(false);
+          else setPreview(index);
+        }}
+      />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-24 top-24 h-72 w-72 rounded-full bg-destructive/10 blur-3xl"
@@ -183,8 +187,8 @@ export function IntroLearning({
             </h1>
             <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
               {bn
-                ? "বুলিয়ান লজিকের চারটি বিষয় এক নজরে। পাঠে ক্লিক করে পপআপে ডায়াগ্রাম ও ইনপুট বদলে ধারণাটি বোঝো, তারপর অনুশীলন করো।"
-                : "Four topics that bring Boolean logic to life. Open a lesson, play with its diagrams, then put your understanding into practice."}
+                ? "বুলিয়ান লজিকের তিনটি ছোট পাঠ। উদাহরণ ও চিত্রে বুঝে নাও, তারপর মোট চারটি প্রশ্নের অনুশীলন করো।"
+                : "Three short lessons on Boolean logic. Explore the examples and diagrams, then try four questions in total."}
             </p>
           </div>
 
@@ -196,14 +200,18 @@ export function IntroLearning({
                   bn ? "পাঠ ও বিষয়বস্তু দেখে নাও" : "Browse the content and lessons",
                 ],
                 [
-                  bn ? "০২ · বুলিয়ান এক্সপ্রেশন থেকে লজিক গেট তৈরি" : "02 · Expression to logic gates",
+                  bn
+                    ? "০২ · বুলিয়ান এক্সপ্রেশন থেকে লজিক গেট তৈরি"
+                    : "02 · Expression to logic gates",
                   bn
                     ? "রাশি লিখে সার্কিট ও তার ফল দেখো"
                     : "Enter an expression and explore its circuit",
                 ],
                 [
                   bn ? "০৩ · নিজের হাতে সার্কিট বিল্ড" : "03 · Build your own circuit",
-                  bn ? "গেট বসাও, তার জোড়ো, ইনপুট বদলে দেখো" : "Place gates, connect wires and toggle inputs",
+                  bn
+                    ? "গেট বসাও, তার জোড়ো, ইনপুট বদলে দেখো"
+                    : "Place gates, connect wires and toggle inputs",
                 ],
               ].map(([label, text]) => (
                 <div key={label} className="rounded-xl border border-border/70 bg-white/70 p-4">
@@ -212,7 +220,7 @@ export function IntroLearning({
                 </div>
               ))}
             </div>
-            <div className="relative grid items-stretch gap-5 md:grid-cols-2 xl:grid-cols-2">
+            <div className="relative grid auto-cols-[minmax(230px,1fr)] grid-flow-col items-stretch gap-3 overflow-x-auto pb-2">
               {INTRO_LESSONS.map((item, i) => (
                 <button
                   type="button"
@@ -224,9 +232,9 @@ export function IntroLearning({
                     }
                   }}
                   key={i}
-                  className="group rounded-2xl border border-white bg-white/85 p-5 text-left shadow-[0_10px_35px_rgba(15,23,42,0.05)] transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary motion-reduce:transform-none sm:p-6"
+                  className="group rounded-xl border border-border bg-white p-4 text-left transition-colors hover:border-primary/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 >
-                  <div className="mb-4 flex items-center gap-3">
+                  <div className="mb-3 flex items-center gap-2">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-sm font-bold text-destructive">
                       {i < completed ? (
                         <Check className="h-4 w-4" aria-label={bn ? "সম্পন্ন" : "Completed"} />
@@ -234,26 +242,10 @@ export function IntroLearning({
                         String(i + 1).padStart(2, "0")
                       )}
                     </span>
-                    <h2 className="font-display text-lg font-semibold">{item.title[lang]}</h2>
+                    <h2 className="font-display text-sm font-semibold">{item.title[lang]}</h2>
                   </div>
                   <p className="text-sm leading-6 text-muted-foreground">{item.contents[lang]}</p>
-                  <div className="mt-4 flex items-start gap-2 rounded-lg bg-primary/5 px-3 py-2 text-xs leading-5 text-primary">
-                    <ListChecks className="mt-0.5 h-4 w-4 shrink-0" />
-                    <span>{item.practice[lang]}</span>
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    className="my-5 flex h-20 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary/5 to-destructive/5 font-mono text-sm"
-                  >
-                    <span className="rounded-lg border border-primary/20 bg-card px-3 py-2 text-primary">
-                      {["(A+B)′", "A B C", "AB+AB′", "NAND"][i]}
-                    </span>
-                    <ArrowRight className="h-4 w-4 text-primary/50 transition-transform group-hover:translate-x-1" />
-                    <span className="rounded-lg bg-primary/10 px-3 py-2 text-primary">
-                      {["A′B′", "F", "A", "XOR / XNOR"][i]}
-                    </span>
-                  </div>
-                  <span className="flex items-center justify-between border-t pt-4 text-sm font-semibold text-destructive">
+                  <span className="flex items-center justify-between border-t mt-3 pt-3 text-xs font-semibold text-destructive">
                     {bn ? "দেখে শিখি" : "Explore this lesson"}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </span>
@@ -449,26 +441,28 @@ export function IntroLearning({
                         )}
                       </div>
                     )}
-                    <Button variant="outline" onClick={() => setPreview(lesson)}>
-                      <BookOpenCheck className="mr-2 h-4 w-4" />
-                      {bn ? "ডায়াগ্রামে আবার দেখি" : "Revisit the visual lesson"}
-                    </Button>
-                    {submitted && (
-                      <Button variant="destructive" onClick={next}>
-                        {answers.length === TOTAL
-                          ? bn
-                            ? "আমার শেখার পথ দেখি"
-                            : "Find my starting point"
-                          : answeredInLesson === lessonCount
-                            ? bn
-                              ? "পরের পাঠে যাই"
-                              : "Next lesson"
-                            : bn
-                              ? "পরবর্তী প্রশ্ন"
-                              : "Next question"}
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <Button className="h-10" variant="outline" onClick={() => setPreview(lesson)}>
+                        <BookOpenCheck className="mr-2 h-4 w-4" />
+                        {bn ? "ডায়াগ্রামে আবার দেখি" : "Revisit the visual lesson"}
                       </Button>
-                    )}
+                      {submitted && (
+                        <Button className="h-10" variant="destructive" onClick={next}>
+                          {answers.length === TOTAL
+                            ? bn
+                              ? "আমার শেখার পথ দেখি"
+                              : "Find my starting point"
+                            : answeredInLesson === lessonCount
+                              ? bn
+                                ? "পরের পাঠে যাই"
+                                : "Next lesson"
+                              : bn
+                                ? "পরবর্তী প্রশ্ন"
+                                : "Next question"}
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 )}
                 {phase === "result" && (

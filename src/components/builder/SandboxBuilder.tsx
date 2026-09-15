@@ -1,3 +1,4 @@
+import { PracticeTourPreview, type PracticeTourStage } from "./PracticeTourPreview";
 import {
   useCallback,
   useEffect,
@@ -774,6 +775,15 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
   const [hasSelectedDifficulty, setHasSelectedDifficulty] = useState(false);
   const [guideIndex, setGuideIndex] = useState<number>(0);
   const [guideSkipped, setGuideSkipped] = useState(false);
+  const [tutorialPreview, setTutorialPreview] = useState<PracticeTourStage | null>(null);
+  useEffect(() => {
+    const preview = (event: Event) => {
+      const stage = (event as CustomEvent<PracticeTourStage | null>).detail;
+      setTutorialPreview(stage);
+    };
+    window.addEventListener("logiclab:tutorial-practice", preview);
+    return () => window.removeEventListener("logiclab:tutorial-practice", preview);
+  }, []);
   const [showTruthTable, setShowTruthTable] = useState(false);
   const [showChallengeSuccess, setShowChallengeSuccess] = useState(false);
   const [hasSelectedExpression, setHasSelectedExpression] = useState(false);
@@ -848,6 +858,21 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     const challenge = PRACTICE_CHALLENGES.find((item) => item.id === challengeId);
     const guideEntry = property.match(/^Guide(\d+)(Msg|Detail)$/);
     const guideStep = guideEntry ? challenge?.guide[Number(guideEntry[1])] : undefined;
+    if (isMobile && guideStep && guideEntry) {
+      if (guideEntry[2] === "Detail") return "";
+      const bn = lang === "bn";
+      if (guideStep.target === "canvas:wire")
+        return bn ? "OUT → IN চাপো: A ও B → গেট → LED।" : "Tap OUT → IN: A and B → gate → LED.";
+      if (guideStep.target === "canvas:toggle")
+        return bn ? "ইনপুটের 0/1 চাপো, LED জ্বালাও।" : "Tap input 0/1 switches to light the LED.";
+      const component = guideStep.target.split(":")[1];
+      if (component === "INPUT") {
+        const input = challenge!.guide.slice(0, Number(guideEntry[1]) + 1).filter(step => step.target === "component:INPUT").length === 1 ? "A" : "B";
+        return bn ? `${input}-এর জন্য Input switch চাপো।` : `Tap Input switch for ${input}.`;
+      }
+      if (component === "OUTPUT") return bn ? "Output LED চাপো।" : "Tap Output LED.";
+      return bn ? `${component} গেট চাপো।` : `Tap the ${component} gate.`;
+    }
     if (guideStep?.target === "canvas:toggle") {
       if (guideEntry?.[2] === "Msg")
         return lang === "bn" ? "ইনপুটের ০/1 বোতাম চাপো" : "Tap an input’s 0/1 switch";
@@ -1356,6 +1381,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
       <aside className="flex shrink-0 flex-col gap-2 border-b border-border bg-card/60 backdrop-blur-sm p-2.5 lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r z-10 touch-auto no-scrollbar">
         <div
           data-tour="practice-panel"
+          style={tutorialPreview ? { display: "flex" } : undefined}
           className="practice-panel order-1 relative w-full shrink-0 overflow-hidden rounded-xl border-2 border-primary/45 bg-card p-3 shadow-md ring-1 ring-primary/10 flex flex-col gap-2.5"
         >
           {/* Header */}
@@ -1364,7 +1390,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
               <Sparkles className="h-3.5 w-3.5" />
               {lang === "bn" ? "প্র্যাকটিস চ্যালেঞ্জ" : "Practice challenges"}
             </div>
-            {isPracticeMode && (
+            {isPracticeMode && !tutorialPreview && (
               <button
                 className="text-[10px] font-medium text-muted-foreground underline-offset-2 hover:underline"
                 onClick={() => {
@@ -1377,12 +1403,14 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             )}
           </div>
 
-          {!isPracticeMode ? (
+          {tutorialPreview ? <PracticeTourPreview stage={tutorialPreview} bn={lang === "bn"} /> : !isPracticeMode ? (
             <div>
               <p className="mb-2 text-[11px] leading-relaxed text-muted-foreground">
-                {lang === "bn"
-                  ? "তৈরি expression দেখে circuit বানাও। Beginner level-এ ধাপে ধাপে guide পাওয়া যাবে।"
-                  : "Build circuits from ready-made expressions. Beginner level includes an interactive step-by-step guide."}
+                {isMobile
+                  ? lang === "bn" ? "রাশি দেখে বানাও। সহজ স্তরে গাইড আছে।" : "Build from an expression. Easy includes a guide."
+                  : lang === "bn"
+                    ? "তৈরি expression দেখে circuit বানাও। Beginner level-এ ধাপে ধাপে guide পাওয়া যাবে।"
+                    : "Build circuits from ready-made expressions. Beginner level includes an interactive step-by-step guide."}
               </p>
               <Button
                 size="sm"
@@ -1415,7 +1443,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                     <option value="" disabled>
                       {lang === "bn" ? "লেভেল বেছে নাও" : "Choose a level"}
                     </option>
-                    <option value="beginner">{lang === "bn" ? "সহজ" : "Beginner"}</option>
+                    <option value="beginner">{lang === "bn" ? "সহজ" : "Easy"}</option>
                     <option value="intermediate">{lang === "bn" ? "মধ্যম" : "Intermediate"}</option>
                     <option value="hard">{lang === "bn" ? "কঠিন" : "Hard"}</option>
                   </select>
@@ -1505,7 +1533,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
           )}
         </div>
 
-        {isPracticeMode && activeGuide && (
+        {isPracticeMode && activeGuide && !tutorialPreview && (
           <section
             className="practice-guide order-2 shrink-0 border rounded-lg border-border bg-card/95 px-4 py-2.5 backdrop-blur-sm"
             aria-label="Guided practice step"
@@ -1528,9 +1556,9 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                   <p className="text-xs font-semibold text-foreground">
                     {getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Msg`)}
                   </p>
-                  <p className="text-[10px] text-muted-foreground">
+                  {!isMobile && <p className="text-[10px] text-muted-foreground">
                     {getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Detail`)}
-                  </p>
+                  </p>}
                   {highlightGuide === "canvas:wire" && (
                     <svg
                       role="img"
@@ -1570,7 +1598,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                   disabled={guideIndex === 0}
                   onClick={() => setGuideIndex((idx) => Math.max(0, idx - 1))}
                 >
-                  <ChevronLeft className="mr-1 h-3 w-3" aria-hidden="true" /> Previous
+                  <ChevronLeft className="mr-1 h-3 w-3" aria-hidden="true" /> {lang === "bn" ? "আগের" : "Back"}
                 </Button>
                 <Button
                   variant="default"
@@ -1584,7 +1612,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                     setGuideIndex((idx) => Math.min(activeChallenge.guide.length - 1, idx + 1))
                   }
                 >
-                  Next <ChevronRight className="ml-1 h-3 w-3" aria-hidden="true" />
+                  {lang === "bn" ? "পরের" : "Next"} <ChevronRight className="ml-1 h-3 w-3" aria-hidden="true" />
                 </Button>
                 <Button
                   variant="outline"
@@ -1592,7 +1620,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                   className="h-8 text-xs"
                   onClick={() => loadChallenge(activeChallenge.id)}
                 >
-                  <RotateCcw className="mr-1 h-3.5 w-3.5" aria-hidden="true" /> Reset
+                  <RotateCcw className="mr-1 h-3.5 w-3.5" aria-hidden="true" /> {lang === "bn" ? "রিসেট" : "Reset"}
                 </Button>
                 <Button
                   variant="ghost"
@@ -1607,7 +1635,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                     );
                   }}
                 >
-                  {lang === "bn" ? "গাইড বাদ দাও" : "Skip guide"}
+                  {lang === "bn" ? "বাদ দাও" : "Skip"}
                 </Button>
               </div>
             </div>

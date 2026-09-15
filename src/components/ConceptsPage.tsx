@@ -235,7 +235,7 @@ export function ConceptsPage() {
               LOGICLAB / {say("REFERENCE", "এক নজরে")}
             </p>
             <h1 className="my-4 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-              {say("Concept refresher", "কনসেপ্ট ঝালাই করি")}
+              {say("Concept refresher", "কনসেপ্ট ঝালাই")}
             </h1>
             <p className="max-w-3xl text-sm leading-8 text-muted-foreground sm:text-base sm:leading-9">
               {say(
@@ -423,7 +423,7 @@ export function ConceptsPage() {
             {BOOLEAN_LAWS.slice(0, 8).map((law, i) => (
               <article
                 key={law.name}
-                className={`law-card space-y-5 rounded-xl border p-6 ${i % 2 === 0 ? "border-rose-100 bg-rose-50/40" : "border-emerald-100 bg-emerald-50/40"}`}
+                className="law-card space-y-5 rounded-xl border border-emerald-100 bg-emerald-50/40 p-6"
               >
                 <h3 className="flex items-center gap-3 font-semibold">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-sm text-destructive shadow-sm">
@@ -455,7 +455,7 @@ export function ConceptsPage() {
           </p>
           <div className="grid gap-5 lg:grid-cols-2">
             {([0, 1] as const).map((law) => (
-              <article key={law} className={`law-card space-y-4 rounded-xl border p-5 ${law === 0 ? "border-rose-100 bg-rose-50/40" : "border-emerald-100 bg-emerald-50/40"}`}>
+              <article key={law} className="law-card space-y-4 rounded-xl border border-emerald-100 bg-emerald-50/40 p-5">
                 <h3 className="flex items-center gap-3 font-semibold"><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-sm text-destructive shadow-sm">{law + 9}</span>{bn ? `ডি মর্গ্যানের ${law === 0 ? "প্রথম" : "দ্বিতীয়"} সূত্র` : `De Morgan’s ${law === 0 ? "First" : "Second"} Law`}</h3>
                 <h3 className="font-mono text-lg font-bold">
                   {law === 0 ? "(A+B)′ = A′B′" : "(AB)′ = A′+B′"}

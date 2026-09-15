@@ -396,7 +396,7 @@ function App() {
           <nav data-tour="navigation" className="app-header-nav flex min-w-0 max-w-full justify-center gap-1.5 overflow-x-auto no-scrollbar sm:col-start-2 sm:row-start-1 sm:justify-center sm:gap-1 sm:overflow-visible" aria-label="Primary navigation">
               {(
                 [
-                  { id: "concepts", label: lang === "bn" ? "কনসেপ্ট ঝালাই করি" : "Concept refresher" },
+                  { id: "concepts", label: lang === "bn" ? "কনসেপ্ট ঝালাই" : "Concept refresher" },
                   { id: "simulator", label: t("tabCircuit") },
                   { id: "builder", label: t("tabBuild") },
                 ] as const

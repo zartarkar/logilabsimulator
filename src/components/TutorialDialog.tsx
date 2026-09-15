@@ -38,62 +38,33 @@ export const TutorialDialog = forwardRef<
             popover: {
               title: bn ? "LogicLab-এর সম্পূর্ণ গাইড" : "The complete LogicLab guide",
               description: bn
-                ? "এই গাইডে শুরু থেকে শেষ পর্যন্ত প্রতিটি অংশের কাজ দেখানো হবে। গাইড নিজে থেকেই প্রয়োজনীয় পর্দায় নিয়ে যাবে।"
-                : "This tour walks through every part of LogicLab from beginning to end and opens each workspace at the right time.",
+                ? "এই গাইডে কনসেপ্ট ঝালাই, রাশি পরীক্ষা, সার্কিট তৈরি ও চ্যালেঞ্জের ব্যবহার দেখানো হবে। গাইড নিজেই প্রয়োজনীয় পাতায় নিয়ে যাবে।"
+                : "This guide covers concept review, testing expressions, building circuits and using challenges. It opens each workspace as you go.",
             },
           },
           {
-            element: '[data-tour="concept-demo"]',
+            element: ".nav-tab-concepts",
             popover: {
-              title: bn ? "সুইচ বদলে নিয়ম বুঝি" : "Discover a rule with switches",
+              title: bn ? "কনসেপ্ট ঝালাই" : "Concept refresher",
               description: bn
-                ? "এই সুইচগুলো চাপলে বাতির অবস্থা বদলাবে। দুটিই চালু থাকা আর যেকোনো একটি চালু থাকার নিয়ম তুলনা করো। এখান থেকেই অধ্যায়ের ধারণা শুরু।"
-                : "Tap the switches and compare requiring both switches with requiring either one. This everyday decision introduces the chapter.",
+                ? "এই বাটন থেকে ধারণা ও সূত্র ঝালিয়ে নিতে পারো। পরের ধাপে পুরো পাতাটি দেখব।"
+                : "Use this button to review concepts and laws. Next, we’ll explore the full page.",
               side: "bottom",
+              align: "center",
+              onNextClick: goTo("concepts"),
+            },
+          },
+          {
+            element: '[data-tour="concepts"]',
+            popover: {
+              title: bn ? "কনসেপ্ট ঝালাই" : "Concept refresher",
+              description: bn
+                ? "এই পুরো পাতায় গেট, সত্যক সারণি, সূত্র ও সরলীকরণ আছে। স্ক্রল করে দেখো; সুইচ বদলে ফল মেলাও।"
+                : "This page covers gates, truth tables, laws and simplification. Scroll to explore and toggle inputs to compare results.",
+              side: "over",
               align: "center",
             },
           },
-          {
-            element: '[data-tour="concept-map"]',
-            popover: {
-              title: bn ? "একই পাতায় ধারণাগুলোর সম্পর্ক" : "Explore the connected ideas",
-              description: bn
-                ? "এই লিংকগুলো দিয়ে সংকেত, সারণি, সূত্র, সরলীকরণ ও সার্বজনীন গেটের ব্যাখ্যায় যাওয়া যায়।"
-                : "These links lead to signals, possible input states, laws, simplification and universal gates.",
-              side: "bottom",
-            },
-          },
-          {
-            element: '[data-tour="concept-signals"] h2',
-            popover: {
-              title: bn ? "ইনপুট বদলে গেটের ফল দেখো" : "See how gates respond",
-              description: bn
-                ? "প্রতিটি গেটের নিচে তার নিজস্ব ইনপুট বোতাম আছে। A বা B চাপলে শুধু সেই গেটের মান ও আউটপুট বদলাবে। NOT গেটে একটি ইনপুট আছে।"
-                : "Each gate has its own input buttons below it. Tap A or B to change only that gate's inputs and output. NOT has one input.",
-              side: "bottom",
-            },
-          },
-          {
-            element: '[data-tour="concept-tables"] h2',
-            popover: {
-              title: bn ? "চারটি বা আটটি অবস্থা কেন?" : "Why four or eight states?",
-              description: bn
-                ? "ইনপুটের কার্ডে চাপ দিয়ে সম্ভাবনাগুলো দেখো। দুই ইনপুটে চার, তিন ইনপুটে আটটি অবস্থা হয়। দরকার হলে নিচের সারণি খুলে সব ফল মেলাও।"
-                : "Tap the input cards to explore four states for two inputs and eight for three. Expand the tables when you want to check every result.",
-              side: "bottom",
-            },
-          },
-          {
-            element: '[data-tour="concept-laws"] h2',
-            popover: {
-              title: bn ? "সূত্র থেকে ছোট সার্কিট" : "From laws to simpler circuits",
-              description: bn
-                ? "এখানে সূত্রের কার্ড, তারপর ডি মর্গ্যানের ব্যাখ্যা ও সরলীকরণের ধাপ আছে। সবশেষে NAND বা NOR দিয়ে একই কাজ করার পদ্ধতি দেখো।"
-                : "Read the law cards, then follow De Morgan and the simplification steps. The final section shows how NAND or NOR alone can do the same work.",
-              side: "bottom",
-            },
-          },
-
           {
             element: '[data-tour="navigation"]',
             popover: {
@@ -177,17 +148,53 @@ export const TutorialDialog = forwardRef<
 
           {
             element: '[data-tour="practice-panel"]',
+            onHighlightStarted: () =>
+              window.dispatchEvent(
+                new CustomEvent("logiclab:tutorial-practice", { detail: "levels" }),
+              ),
             popover: {
-              title: bn ? "২. লক্ষ্যভিত্তিক অনুশীলন" : "2. Goal-based practice",
+              title: bn ? "চ্যালেঞ্জ শুরু ও স্তর বাছাই" : "Start a challenge and choose a level",
               description: bn
-                ? "চ্যালেঞ্জ চালু করে সহজ, মধ্যম বা কঠিন স্তর বেছে নাও। সহজ স্তরে ধাপে ধাপে সহায়তা থাকবে এবং অন্য স্তরে নিজের সার্কিট যাচাই করা যাবে।"
-                : "Start a challenge and choose beginner, intermediate, or hard. Beginner includes guided steps; the other levels let you check your own solution.",
+                ? "চ্যালেঞ্জ শুরু করো → সহজ, মধ্যম বা কঠিন বেছে নাও। সহজে আলাদা ধাপে ধাপে গাইড আছে।"
+                : "Start a challenge, then choose Easy, Intermediate or Hard. Easy includes a separate step-by-step guide.",
+              side: "right",
+              align: "start",
+            },
+          },
+          {
+            element: '[data-tour="practice-panel"]',
+            onHighlightStarted: () =>
+              window.dispatchEvent(
+                new CustomEvent("logiclab:tutorial-practice", { detail: "expressions" }),
+              ),
+            popover: {
+              title: bn ? "একটি রাশি বেছে নাও" : "Choose an expression",
+              description: bn
+                ? "রাশি বাছার পর সেটির সার্কিট বানাও। মধ্যম ও কঠিন স্তরে শেষে ‘সার্কিট যাচাই করো’ চাপো।"
+                : "Choose an expression and build its circuit. For Intermediate or Hard, finish with Check circuit.",
+              side: "right",
+              align: "start",
+            },
+          },
+          {
+            element: '[data-tour="practice-panel"]',
+            onHighlightStarted: () =>
+              window.dispatchEvent(
+                new CustomEvent("logiclab:tutorial-practice", { detail: "guide" }),
+              ),
+            popover: {
+              title: bn ? "সহজ স্তরের আলাদা গাইড" : "The separate Easy guide",
+              description: bn
+                ? "গেট → দুটি ইনপুট → LED → তার → ইনপুট পরীক্ষা। কাজ শেষ হলে ধাপ এগোয়। আগের ধাপ, রিসেট বা বাদ দেওয়ার বোতামও আছে।"
+                : "Follow gate → two inputs → LED → wires → test inputs. Completed actions advance the guide. You can go back, reset or skip.",
               side: "right",
               align: "start",
             },
           },
           {
             element: '[data-tour="builder-palette"]',
+            onHighlightStarted: () =>
+              window.dispatchEvent(new CustomEvent("logiclab:tutorial-practice", { detail: null })),
             popover: {
               title: bn ? "উপাদান যোগ ও মুছে ফেলো" : "Add and remove components",
               description: bn
@@ -202,8 +209,8 @@ export const TutorialDialog = forwardRef<
             popover: {
               title: bn ? "তার দিয়ে সার্কিট সম্পূর্ণ করো" : "Wire the circuit",
               description: bn
-                ? "প্রথমে ডান পাশের OUT বিন্দুতে, তারপর পরের গেটের বাম পাশের IN বিন্দুতে চাপো। টেনেও তার জোড়া যায়। ভুল তার একবার চাপলেই মুছে যাবে। ফাঁকা জায়গা টেনে পুরো সার্কিট সরাতে পারবে।"
-                : "Tap an OUT dot, then an IN dot to connect them, or drag between the dots. Tap an incorrect wire to remove it, and drag empty space to pan.",
+                ? "OUT → IN চাপলে তার জোড়ে। ভুল তার চাপলে মুছে যায়। ফাঁকা জায়গা টেনে সরাও।"
+                : "Tap OUT → IN to wire. Tap a wire to remove it. Drag empty space to pan.",
               side: "left",
               align: "center",
             },
@@ -250,6 +257,24 @@ export const TutorialDialog = forwardRef<
 
         const tutorial = driver({
           steps,
+          onPrevClick: (_element, _step, { driver: activeTour }) => {
+            const previous = (activeTour.getActiveIndex() ?? 0) - 1;
+            if (previous < 0) return;
+            const target = String(steps[previous]?.element ?? "");
+            const tab: TourTab =
+              previous < 4
+                ? "concepts"
+                : target.includes("practice-panel") ||
+                    (target.includes("builder-") && target !== ".nav-tab-builder") ||
+                    previous === steps.length - 1
+                  ? "builder"
+                  : "simulator";
+            window.dispatchEvent(new CustomEvent("logiclab:tutorial-practice", { detail: null }));
+            onSelectTab(tab);
+            window.setTimeout(() => activeTour.movePrevious(), 350);
+          },
+          onDestroyed: () =>
+            window.dispatchEvent(new CustomEvent("logiclab:tutorial-practice", { detail: null })),
           showProgress: true,
           animate: false,
           smoothScroll: false,
