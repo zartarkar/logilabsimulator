@@ -1662,14 +1662,11 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             } ${!isPracticeMode || !activeGuide ? "hover:bg-muted bg-card text-foreground" : "text-foreground"}`}
           >
             <span className="relative flex items-center gap-2">
-              {isGuideTarget("component:INPUT") && (
-                <span className="absolute -left-1 text-lg ">➜</span>
-              )}
-              {isGuideTarget("component:INPUT") && (
-                <span className="text-[10px] font-bold uppercase text-primary">Choose</span>
+              {!isMobile && isGuideTarget("component:INPUT") && (
+                <span className="w-full text-center text-[10px] font-bold uppercase text-primary">Choose</span>
               )}
               <ToggleLeft className="h-4 w-4 text-primary" aria-hidden="true" />
-              Input switch
+              <span className="min-w-0 whitespace-normal text-center leading-tight">Input switch</span>
             </span>
           </button>
           <button
@@ -1685,14 +1682,11 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             } ${!isPracticeMode || !activeGuide ? "hover:bg-muted bg-card text-foreground" : "text-foreground"}`}
           >
             <span className="relative flex items-center gap-2">
-              {isGuideTarget("component:OUTPUT") && (
-                <span className="absolute -left-1 text-lg ">➜</span>
-              )}
-              {isGuideTarget("component:OUTPUT") && (
-                <span className="text-[10px] font-bold uppercase text-primary">Choose</span>
+              {!isMobile && isGuideTarget("component:OUTPUT") && (
+                <span className="w-full text-center text-[10px] font-bold uppercase text-primary">Choose</span>
               )}
               <Lightbulb className="h-4 w-4 text-[var(--signal-on)]" aria-hidden="true" />
-              Output LED
+              <span className="min-w-0 whitespace-normal text-center leading-tight">Output LED</span>
             </span>
           </button>
           {PALETTE.map((g) => (
@@ -1711,13 +1705,10 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
               aria-label={`Add ${g} gate`}
             >
               <span className="relative flex items-center gap-2">
-                {isGuideTarget(`component:${g}`) && (
-                  <span className="absolute -left-1 text-lg ">➜</span>
-                )}
-                {isGuideTarget(`component:${g}`) && (
-                  <span className="text-[10px] font-bold uppercase text-primary">Choose</span>
-                )}
-                <span className="scale-[0.5] origin-left -mr-6">
+              {!isMobile && isGuideTarget(`component:${g}`) && (
+                <span className="w-full text-center text-[10px] font-bold uppercase text-primary">Choose</span>
+              )}
+                <span className="palette-icon">
                   <GateShape type={g} active={false} />
                 </span>
                 <span className="font-mono text-xs">{g}</span>

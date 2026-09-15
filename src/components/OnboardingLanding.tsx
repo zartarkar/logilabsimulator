@@ -1,10 +1,75 @@
 import { useState } from "react";
-import { BookOpenCheck, CircuitBoard, Gauge, GraduationCap, Languages, Rocket } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpenCheck,
+  CircuitBoard,
+  Gauge,
+  GraduationCap,
+  Languages,
+  Rocket,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLang } from "@/i18n";
 import { IntroLearning } from "@/components/IntroLearning";
 
 export type Familiarity = "new" | "some" | "confident";
+
+function CircuitPreview({ bn }: { bn: boolean }) {
+  const [inputs, setInputs] = useState([1, 0]);
+  const output = inputs[0]! & inputs[1]!;
+  return (
+    <div className="rounded-xl border border-emerald-200 bg-white/90 p-4">
+      <div className="flex items-center justify-between gap-2 text-xs">
+        <span className="font-semibold text-emerald-800">
+          {bn ? "একবার চালিয়ে দেখো" : "Give it a try"}
+        </span>
+        <span className="font-mono text-muted-foreground">F = A · B</span>
+      </div>
+      <div className="my-4 flex items-center justify-center gap-3">
+        <div className="space-y-2">
+          {inputs.map((value, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-pressed={value === 1}
+              aria-label={`${i === 0 ? "A" : "B"} = ${value}`}
+              onClick={() => setInputs((previous) => previous.map((v, j) => (i === j ? 1 - v : v)))}
+              className={`block min-h-10 w-16 rounded-lg border font-mono text-sm font-bold transition-colors ${value ? "border-emerald-500 bg-emerald-50 text-emerald-800" : "border-slate-200 bg-slate-50 text-slate-600"}`}
+            >
+              {i === 0 ? "A" : "B"} = {value}
+            </button>
+          ))}
+        </div>
+        <svg aria-hidden="true" viewBox="0 0 135 90" className="h-24 min-w-0 max-w-32 flex-1">
+          <path
+            d="M0 22H32V32H46 M0 68H32V58H46 M96 45H124"
+            fill="none"
+            stroke="#059669"
+            strokeWidth="2"
+          />
+          <path
+            d="M46 20H70A25 25 0 0 1 70 70H46Z"
+            fill="#ecfdf5"
+            stroke="#059669"
+            strokeWidth="2"
+          />
+          <text x="67" y="49" textAnchor="middle" fontSize="12" fill="#065f46">
+            AND
+          </text>
+          <circle cx="125" cy="45" r="8" fill={output ? "#10b981" : "#cbd5e1"} />
+        </svg>
+        <output aria-live="polite" className="font-mono text-sm font-bold text-emerald-800">
+          F={output}
+        </output>
+      </div>
+      <p className="text-center text-xs leading-5 text-muted-foreground">
+        {bn
+          ? "A ও B চাপো। দুটিই 1 হলে বাতি জ্বলবে।"
+          : "Tap A and B. Both must be 1 to light the LED."}
+      </p>
+    </div>
+  );
+}
 
 export function OnboardingLanding({
   onEnter,
@@ -81,33 +146,52 @@ export function OnboardingLanding({
           </div>
         </header>
 
-        <div className="mx-auto grid w-full max-w-4xl flex-1 gap-7 py-6 sm:py-10">
+        <div className="mx-auto grid w-full max-w-4xl flex-1 content-start gap-7 py-6 sm:py-10">
           <section
             className="rounded-2xl border border-white/90 bg-white/85 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.11)] backdrop-blur-xl sm:p-7"
             aria-labelledby="path-title"
           >
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-destructive">
-              {bn ? "শুরু করার আগে" : "Before you begin"}
+              {choice && choice !== "new"
+                ? bn
+                  ? "তোমার পরবর্তী ধাপ"
+                  : "Your next step"
+                : bn
+                  ? "শুরু করার আগে"
+                  : "Before you begin"}
             </p>
             <h1
               id="path-title"
               className="mt-3 max-w-3xl text-2xl font-bold leading-snug sm:text-4xl"
             >
-              {bn
-                ? "Boolean expression ও logic gate সম্পর্কে তোমার ধারণা কেমন?"
-                : "How familiar are you with Boolean expressions and logic gates?"}
+              {choice === "some"
+                ? bn
+                  ? "চেনা ধারণা, এবার হাতে-কলমে"
+                  : "Put familiar ideas into practice"
+                : choice === "confident"
+                  ? bn
+                    ? "এবার তোমার যুক্তিতে সার্কিট বানাও"
+                    : "Turn your logic into a circuit"
+                  : bn
+                    ? "Boolean expression ও logic gate সম্পর্কে তোমার ধারণা কেমন?"
+                    : "How familiar are you with Boolean expressions and logic gates?"}
             </h1>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              {bn
-                ? "তোমার উত্তরের ভিত্তিতে উপযুক্ত জায়গা থেকে শুরু করব।"
-                : "We’ll take you to the most suitable starting point."}
+              {choice && choice !== "new"
+                ? bn
+                  ? "রাশি লিখো, সার্কিট দেখো, ইনপুট বদলে ফল মেলাও।"
+                  : "Write an expression, see its circuit and test the inputs."
+                : bn
+                  ? "তোমার উত্তরের ভিত্তিতে উপযুক্ত জায়গা থেকে শুরু করব।"
+                  : "We’ll take you to the most suitable starting point."}
             </p>
 
             {suggestion && (
-              <p className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+              <p className="my-4 flex items-center gap-2 text-xs text-emerald-800">
+                <Gauge className="h-4 w-4 shrink-0" />
                 {bn
-                  ? "তোমার অনুশীলনের ভিত্তিতে একটি পথ বেছে দিয়েছি। চাইলে নিচে পরিবর্তন করতে পারো।"
-                  : "Your suggested path is selected below, based on your practice. Feel free to choose another."}
+                  ? `অনুশীলনের পরামর্শ: ${paths.find((path) => path.id === suggestion)?.title}। চাইলে পথ বদলাতে পারো।`
+                  : `Suggested from your practice: ${paths.find((path) => path.id === suggestion)?.title}. You can change your path.`}
               </p>
             )}
             <button
@@ -215,22 +299,47 @@ export function OnboardingLanding({
                 </div>
               </div>
             ) : (
-              <div className="mt-6 rounded-xl border border-destructive/15 bg-destructive/[0.04] p-5 shadow-sm">
-                <h3 className="text-base font-semibold">
-                  {bn ? "নিজে পরীক্ষা করে দেখি" : "Try it for yourself"}
-                </h3>
-                <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                  {bn
-                    ? "এক্সপ্রেশন সিমুলেটরে রাশি থেকে সার্কিট তৈরি করে শুরু করো।"
-                    : "Start by creating a circuit in the Expression Simulator."}
-                </p>
-                <Button
-                  variant="destructive"
-                  className="mt-4"
-                  onClick={() => onEnter("simulator", choice)}
-                >
-                  {bn ? "শুরু করি" : "Get started"}
-                </Button>
+              <div className="mt-3 overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-emerald-50/50">
+                <div className="grid items-center gap-5 p-4 sm:grid-cols-2 sm:p-6">
+                  <div>
+                    <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">
+                      <CircuitBoard className="h-3.5 w-3.5" />
+                      {bn ? "এক্সপ্রেশন সিমুলেটর" : "Expression Simulator"}
+                    </span>
+                    <h2 className="mt-4 text-xl font-bold leading-snug">
+                      {bn ? "একটি রাশি থেকে শুরু করো" : "Start with an expression"}
+                    </h2>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {choice === "some"
+                        ? bn
+                          ? "AND দিয়ে শুরু করো। তারপর নিজের রাশিতে গেটের কাজ মিলিয়ে নাও।"
+                          : "Start with AND, then explore how gates work in your own expression."
+                        : bn
+                          ? "নিজের রাশি পরীক্ষা করো। এরপর বিল্ডারে গিয়ে চ্যালেঞ্জ সমাধান করো।"
+                          : "Test your own expression, then try a challenge in the builder."}
+                    </p>
+                    <Button
+                      variant="destructive"
+                      className="mt-5 gap-2"
+                      onClick={() => onEnter("simulator", choice)}
+                    >
+                      {bn ? "সিমুলেটরে শুরু করি" : "Open simulator"}
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <CircuitPreview bn={bn} />
+                </div>
+                <ol className="grid grid-cols-3 divide-x divide-emerald-200 border-t border-emerald-200 bg-white/70 text-center">
+                  {(bn
+                    ? ["রাশি লিখো", "সার্কিট দেখো", "ফল যাচাই করো"]
+                    : ["Write", "Build", "Test"]
+                  ).map((label, i) => (
+                    <li key={label} className="px-2 py-3 text-xs font-semibold">
+                      <span className="mr-1.5 font-mono text-emerald-600">0{i + 1}</span>
+                      {label}
+                    </li>
+                  ))}
+                </ol>
               </div>
             )}
 
