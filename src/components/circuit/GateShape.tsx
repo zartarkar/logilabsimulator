@@ -8,10 +8,14 @@ export function GateShape({
   type,
   active,
   className,
+  width = GATE_BODY_W,
+  height = GATE_BODY_H,
 }: {
   type: CircuitNodeType;
   active: boolean;
   className?: string;
+  width?: number;
+  height?: number;
 }) {
   const stroke = "currentColor";
   const gateColor = `var(--gate-${type.toLowerCase()})`;
@@ -89,8 +93,8 @@ export function GateShape({
   return (
     <svg
       viewBox="0 0 68 48"
-      width={GATE_BODY_W}
-      height={GATE_BODY_H}
+      width={width}
+      height={height}
       className={className}
       role="img"
       aria-label={`${type} gate`}

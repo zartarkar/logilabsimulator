@@ -28,7 +28,9 @@ import { AstPanel } from "@/components/panels/AstPanel";
 import { SandboxBuilder } from "@/components/builder/SandboxBuilder";
 import { ConceptsPage } from "@/components/ConceptsPage";
 import { MobileLandscapeGate } from "@/components/MobileLandscapeGate";
-import { OnboardingLanding, type Familiarity } from "@/components/OnboardingLanding";
+import { DiscoveryLanding } from "@/components/discovery/DiscoveryLanding";
+import type { Destination } from "@/components/discovery/model";
+import type { Familiarity } from "@/logic/introLearning";
 import { TutorialDialog, type TutorialHandle } from "@/components/TutorialDialog";
 import { LanguageProvider, useLang } from "@/i18n";
 import { recognizeCircuitFromImage } from "@/services/circuit-recognition.functions";
@@ -110,14 +112,14 @@ function App() {
     setShowOnboarding(qTab === undefined);
   }, [qTab]);
 
-  const enterApp = (destination: "simulator", familiarity: Familiarity, startGuide = true) => {
+  const enterApp = (destination: Destination, familiarity: Familiarity, startGuide = false) => {
     browserStorage.setItem("logiclab-onboarding-complete", "true");
     browserStorage.setItem("logiclab-familiarity", familiarity);
     setAutoTourEndTab("concepts");
     // Starting a journey explicitly requests guidance, even after an earlier tour.
     setAutoTourRequested(startGuide);
-    s.setTab("concepts");
-    navigate({ search: { tab: "concepts" }, replace: true });
+    s.setTab(destination);
+    navigate({ search: { tab: destination }, replace: true });
     setShowOnboarding(false);
   };
 
@@ -346,7 +348,7 @@ function App() {
     return (
       <>
         <Toaster />
-        <OnboardingLanding onEnter={enterApp} />
+        <DiscoveryLanding onEnter={enterApp} />
       </>
     );
   }

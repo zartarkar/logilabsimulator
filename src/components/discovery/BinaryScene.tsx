@@ -1,0 +1,85 @@
+import { useState } from "react";
+import { Lightbulb, Power } from "lucide-react";
+export function BinaryScene({ revealed, bn }: { revealed: boolean; bn: boolean }) {
+  const [on, setOn] = useState(true);
+  return (
+    <div className="ll-binary-scene">
+      <div className="ll-scene-caption">
+        {bn ? "একটি সিগন্যাল। দুটি অবস্থা।" : "One signal. Two states."}
+      </div>
+      <div className={`ll-power-circuit ${on ? "is-on" : ""}`}>
+        <div className="ll-power-source">
+          <span>{bn ? "ইনপুট" : "INPUT"}</span>
+          <button
+            type="button"
+            aria-pressed={on}
+            aria-label={bn ? "সুইচ চালু বা বন্ধ করো" : "Toggle the input switch"}
+            onClick={() => setOn(!on)}
+          >
+            <Power size={28} />
+          </button>
+          <strong>{on ? "ON" : "OFF"}</strong>
+        </div>
+        <div className="ll-power-wire">
+          <span />
+          <i />
+          <i />
+          <i />
+        </div>
+        <div className="ll-bulb">
+          <Lightbulb strokeWidth={1.5} />
+          <strong>{revealed ? Number(on) : "?"}</strong>
+          <span>{bn ? "সিগন্যাল" : "SIGNAL"}</span>
+        </div>
+      </div>
+      <p className="ll-canvas-hint">
+        {bn ? "সুইচে চাপ দিয়ে আলো জ্বালাও বা নেভাও" : "Tap the switch to turn the light on or off"}
+      </p>
+      {revealed && (
+        <div className="ll-binary-key">
+          <span>
+            <i className="on" />1 = ON
+          </span>
+          <span>
+            <i />0 = OFF
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+export function BinaryChoices({
+  disabled,
+  bn,
+  onAnswer,
+}: {
+  disabled: boolean;
+  bn: boolean;
+  onAnswer: (correct: boolean) => void;
+}) {
+  return (
+    <div
+      className="ll-binary-choices"
+      aria-label={bn ? "সঠিক মানের জোড়া বেছে নাও" : "Choose the value pair"}
+    >
+      {[true, false].map((correct) => (
+        <button
+          type="button"
+          key={String(correct)}
+          disabled={disabled}
+          onClick={() => onAnswer(correct)}
+          aria-label={`ON = ${correct ? 1 : 0}, OFF = ${correct ? 0 : 1}`}
+        >
+          <span className="ll-choice-state">
+            <span className="ll-mini-switch on" />
+            ON <b>{correct ? 1 : 0}</b>
+          </span>
+          <span className="ll-choice-state">
+            <span className="ll-mini-switch" />
+            OFF <b>{correct ? 0 : 1}</b>
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}
