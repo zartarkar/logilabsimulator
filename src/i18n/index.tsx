@@ -6,7 +6,7 @@ export type Lang = "en" | "bn";
 type Dict = Record<string, { en: string; bn: string }>;
 
 export const DICT: Dict = {
-  classLine: { en: "Class 11–12", bn: "একাদশ–দ্বাদশ শ্রেণি" },
+  classLine: { en: "Class 11 to 12", bn: "একাদশ ও দ্বাদশ শ্রেণি" },
   chapterLine: {
     en: "Chapter 3: Number Systems & Digital Devices",
     bn: "অধ্যায় ৩: সংখ্যা পদ্ধতি ও ডিজিটাল ডিভাইস",
@@ -44,8 +44,8 @@ export const DICT: Dict = {
   },
   step5t: { en: "5. Check truth table & simplification", bn: "৫. ট্রুথ টেবিল ও সরলীকরণ দেখো" },
   step5d: {
-    en: "The bottom panel shows the full truth table and the Quine–McCluskey simplification steps.",
-    bn: "নিচের প্যানেলে পূর্ণ ট্রুথ টেবিল এবং কুইন–ম্যাক্লাস্কি সরলীকরণের ধাপ দেখা যায়।",
+    en: "The bottom panel shows the full truth table and the Quine McCluskey simplification steps.",
+    bn: "নিচের প্যানেলে পূর্ণ ট্রুথ টেবিল এবং কুইন ম্যাক্লাস্কি সরলীকরণের ধাপ দেখা যায়।",
   },
   step6t: { en: "6. Build your own circuit", bn: "৬. নিজের সার্কিট বানাও" },
   step6d: {
@@ -80,7 +80,7 @@ export const DICT: Dict = {
   components: { en: "Components", bn: "কম্পোনেন্ট" },
   mobileMoveInstruction: {
     en: "Tap an element, then tap an empty canvas spot to move it",
-    bn: "একটি element-এ tap করে canvas-এর খালি জায়গায় tap করলে সেটি সরবে",
+    bn: "একটি element এ tap করে canvas এর খালি জায়গায় tap করলে সেটি সরবে",
   },
   builderTruth: { en: "Truth table of your circuit", bn: "তোমার সার্কিটের ট্রুথ টেবিল" },
   builderTruthEmpty: {
@@ -140,7 +140,7 @@ export const DICT: Dict = {
   practiceAnd1Guide4Msg: { en: "Complete all three wire connections.", bn: "তিনটি তারের সংযোগ সম্পূর্ণ করো।" },
   practiceAnd1Guide4Detail: {
     en: "Connect A and B to the AND gate, then connect the AND gate to the output LED.",
-    bn: "A ও B থেকে AND গেটে তার দাও, তারপর AND গেট থেকে আউটপুট LED-তে তার দাও।",
+    bn: "A ও B থেকে AND গেটে তার দাও, তারপর AND গেট থেকে আউটপুট LED তে তার দাও।",
   },
   practiceAnd1Guide5Msg: { en: "Toggle the input values and check the result.", bn: "ইনপুট মান টগল করো এবং ফলাফল দেখো।" },
   practiceAnd1Guide5Detail: {
@@ -192,7 +192,7 @@ export const DICT: Dict = {
   practiceOr2Guide4Msg: { en: "Complete all three wire connections.", bn: "তিনটি তারের সংযোগ সম্পূর্ণ করো।" },
   practiceOr2Guide4Detail: {
     en: "Connect A and B to the OR gate, then connect the OR gate to the output LED.",
-    bn: "A ও B থেকে OR গেটে তার দাও, তারপর OR গেট থেকে আউটপুট LED-তে তার দাও।",
+    bn: "A ও B থেকে OR গেটে তার দাও, তারপর OR গেট থেকে আউটপুট LED তে তার দাও।",
   },
   // Practice Challenge 3: XOR Gate
   practiceXor3Title: { en: "Practice 3: Build an XOR gate", bn: "প্রাকটিস ৩: XOR গেট তৈরি করো" },
@@ -239,7 +239,7 @@ export const DICT: Dict = {
   practiceXor3Guide4Msg: { en: "Complete all three wire connections.", bn: "তিনটি তারের সংযোগ সম্পূর্ণ করো।" },
   practiceXor3Guide4Detail: {
     en: "Connect A and B to the XOR gate, then connect the XOR gate to the output LED.",
-    bn: "A ও B থেকে XOR গেটে তার দাও, তারপর XOR গেট থেকে আউটপুট LED-তে তার দাও।",
+    bn: "A ও B থেকে XOR গেটে তার দাও, তারপর XOR গেট থেকে আউটপুট LED তে তার দাও।",
   },
 };
 

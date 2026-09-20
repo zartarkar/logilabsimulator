@@ -19,41 +19,59 @@ export function DiscoveryResult({
   onEnter: (destination: Destination) => void;
 }) {
   const result = assess(knowledge);
+  const incorrect = Object.values(knowledge).filter((value) => value === false).length;
+  const number = (value: number) => value.toLocaleString(bn ? "bn-BD" : "en-US");
   const weak = GATES.filter((g) => knowledge[`behavior${g}`] !== true);
   const unknownShapes = GATES.filter((g) => knowledge[`recognize${g}`] !== true);
   const sentence = !knowledge.binaryUnderstanding
     ? bn
-      ? "ON = 1, OFF = 0 — এই ভিত্তিটা আরেকটু ঝালাই করে শুরু করি।"
+      ? "প্রথমে ON = 1 ও OFF = 0 এর ধারণা পুনরালোচনা করো।"
       : "Begin by strengthening the foundation: ON = 1, OFF = 0."
     : weak.length
       ? bn
-        ? `${weak.join(" ও ")}-এর behavior একটু অনুশীলন করলে আরও পরিষ্কার হবে।`
-        : `A little practice with ${weak.join(" and ")} behavior will make things clearer.`
+        ? `${weak.join(" ও ")} এর output নির্ধারণ অনুশীলন করো।`
+        : `Practise determining the output of ${weak.join(" and ")} gates.`
       : unknownShapes.length
         ? bn
-          ? `সিগন্যালের ধারণা পরিষ্কার! ${unknownShapes.join(" ও ")}-এর আকৃতি একটু ঝালাই করে নাও।`
-          : `Your signal understanding is clear! Revisit the ${unknownShapes.join(" and ")} shapes.`
+          ? `গেটের output সম্পর্কে ধারণা পরিষ্কার। ${unknownShapes.join(" ও ")} এর আকৃতি পুনরালোচনা করো।`
+          : `Gate outputs are clear. Review the ${unknownShapes.join(" and ")} shapes.`
         : bn
-          ? "গেট চিনতে ও সিগন্যাল বুঝতে পারছো। এবার নিজের expression দিয়ে পরীক্ষা করো!"
-          : "You recognize the gates and understand their signals. Try your own expression!";
+          ? "গেটের আকৃতি ও output সঠিকভাবে নির্ধারণ করা হয়েছে। এবার Expression Simulator ব্যবহার করো।"
+          : "Gate shapes and outputs were identified correctly. Continue with the Expression Simulator.";
   return (
     <div className="ll-result">
       <span className="ll-eyebrow">
         <Sparkles size={16} />
-        {bn ? "তোমার পরের ধাপ" : "YOUR NEXT STEP"}
+        {bn ? "পরবর্তী ধাপ" : "NEXT STEP"}
       </span>
       <h1 tabIndex={-1} data-discovery-focus>
         {skipped
           ? bn
-            ? "নিজের পথ বেছে নাও"
+            ? "বিভাগ নির্বাচন করো"
             : "Choose your starting point"
           : bn
-            ? "তোমার Logic Insight"
+            ? "Logic Insight"
             : "Your Logic Insight"}
       </h1>
       {!skipped && (
         <>
           <p>{sentence}</p>
+          <dl className="ll-result-marks" aria-label={bn ? "অনুশীলনের ফলাফল" : "Practice results"}>
+            <div>
+              <dt>{bn ? "মোট নম্বর" : "Marks"}</dt>
+              <dd>
+                {number(result.score)} / {number(Object.keys(knowledge).length)}
+              </dd>
+            </div>
+            <div className="ll-marks-correct">
+              <dt>{bn ? "সঠিক উত্তর" : "Correct"}</dt>
+              <dd>{number(result.score)}</dd>
+            </div>
+            <div className="ll-marks-incorrect">
+              <dt>{bn ? "ভুল উত্তর" : "Incorrect"}</dt>
+              <dd>{number(incorrect)}</dd>
+            </div>
+          </dl>
           <div className="ll-profile">
             {(
               [
@@ -80,7 +98,7 @@ export function DiscoveryResult({
                             ? "প্রায় হয়ে গেছে"
                             : "Almost there"
                           : bn
-                            ? "একটু ঝালাই করি"
+                            ? "পুনরালোচনা প্রয়োজন"
                             : "A little recap"}
                     </strong>
                   </span>
@@ -107,7 +125,7 @@ export function DiscoveryResult({
             <Icon size={20} />
             <span>
               {!skipped && result.destination === destination && (
-                <small>{bn ? "তোমার জন্য ভালো starting point" : "Recommended for you"}</small>
+                <small>{bn ? "প্রস্তাবিত বিভাগ" : "Recommended section"}</small>
               )}
               <strong>{label}</strong>
             </span>
@@ -117,7 +135,7 @@ export function DiscoveryResult({
       </div>
       <p className="ll-fineprint">
         {bn
-          ? "সব বিভাগই খোলা। চাইলে অন্য পথেও শুরু করতে পারো।"
+          ? "সব বিভাগ ব্যবহার করা যাবে। পছন্দের বিভাগ নির্বাচন করো।"
           : "Every section is open. You can start with any of them."}
       </p>
     </div>

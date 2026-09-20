@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, RotateCcw } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { GateShape } from "@/components/circuit/GateShape";
 import { GATES, shapes, type Gate } from "./model";
 export function RecognitionScene({
@@ -22,10 +22,10 @@ export function RecognitionScene({
     setSelected(null);
     setAnnouncement(
       label === target
-        ? `${label}: ${bn ? "ঠিক মিলেছে!" : "Matched!"}`
+        ? `${label}: ${bn ? "সঠিক মিল" : "Correct match"}`
         : bn
-          ? "এই আকৃতিটা আবার দেখে নিই।"
-          : "Let’s take another look at this shape.",
+          ? "এই মিলটি সঠিক নয়। বাকি নামগুলো মেলাও; শেষে সঠিক আকৃতি দেখানো হবে।"
+          : "This match is incorrect. Place the remaining names to see the correct shapes.",
     );
     if (Object.keys(next).length === 3)
       onComplete(Object.fromEntries(GATES.map((g) => [g, next[g] === g])) as Record<Gate, boolean>);
@@ -33,21 +33,55 @@ export function RecognitionScene({
   return (
     <div className="ll-recognition">
       <div className="ll-scene-caption">
-        {revealed ? bn ? "সঠিক নাম ও আকৃতিগুলো মিলিয়ে দেখো" : "Compare the correct names and shapes" : bn ? "১. একটি নাম বেছে নাও → ২. নিচের সঠিক ছবিতে চাপো" : "1. Choose a name → 2. Tap its matching shape below"}
+        {revealed
+          ? bn
+            ? "সঠিক নাম ও আকৃতি দেখো"
+            : "Correct names and shapes"
+          : bn
+            ? "নাম বেছে নিয়ে সঠিক ছবিতে চাপো"
+            : "Choose a name, then tap its matching shape"}
       </div>
-      <div className="ll-gate-labels" aria-label={bn ? "প্রথমে একটি গেটের নাম বেছে নাও" : "First choose a gate name"}>
+      <div
+        className="ll-gate-labels"
+        aria-label={bn ? "গেটের নাম নির্বাচন করো" : "Select a gate name"}
+      >
         {GATES.map((gate) => (
-          <button type="button" key={gate} draggable={!Object.values(attempts).includes(gate)} disabled={Object.values(attempts).includes(gate)} aria-pressed={selected === gate}
-            onClick={() => { setSelected(gate); setAnnouncement(""); }}
-            onDragStart={(e) => { setSelected(gate); e.dataTransfer.setData("text/plain", gate); }}>
-            {gate}<span aria-hidden="true">⠿</span>
+          <button
+            type="button"
+            key={gate}
+            draggable={!Object.values(attempts).includes(gate)}
+            disabled={Object.values(attempts).includes(gate)}
+            aria-pressed={selected === gate}
+            onClick={() => {
+              setSelected(gate);
+              setAnnouncement("");
+            }}
+            onDragStart={(e) => {
+              setSelected(gate);
+              e.dataTransfer.setData("text/plain", gate);
+            }}
+          >
+            {gate}
+            <span aria-hidden="true">⠿</span>
           </button>
         ))}
       </div>
       <p className="ll-match-direction" id="ll-match-direction" role="status">
-        {revealed ? bn ? "তিনটি উত্তর দেওয়া হয়েছে। ব্যাখ্যা পড়ে ‘পরের প্রশ্নে যাই’ চাপো।" : "All three answers are recorded. Read the explanation, then press ‘Next question’."
-          : selected ? bn ? `${selected} বেছে নিয়েছো। এখন নিচের যে ছবিটি ${selected} গেটের, সেটিতে চাপো।` : `${selected} selected. Now tap the shape below that represents ${selected}.`
-          : bn ? `${placed ? "এবার বাকি" : "প্রথমে উপরের"} AND / OR / NOT নামের একটি বাটনে চাপো।` : `${placed ? "Choose a remaining" : "First choose an"} AND / OR / NOT name above.`}
+        {revealed
+          ? bn
+            ? "মেলানো সম্পন্ন। ব্যাখ্যা পড়ে ‘পরবর্তী’ চাপো।"
+            : "Matching complete. Read the explanation, then select ‘Next’."
+          : selected
+            ? bn
+              ? `${selected} নির্বাচিত। নিচে ${selected} গেটের ছবিতে চাপো।`
+              : `${selected} selected. Tap its shape below.`
+            : bn
+              ? placed
+                ? "বাকি নামগুলোর একটি নির্বাচন করো।"
+                : "উপরের AND, OR বা NOT বাটনে চাপো।"
+              : placed
+                ? "Select a remaining name."
+                : "Select AND, OR or NOT above."}
       </p>
       <div className="ll-symbols">
         {(["OR", "NOT", "AND"] as Gate[]).map((gate, i) => (
@@ -65,7 +99,7 @@ export function RecognitionScene({
                     ? "is-target"
                     : ""
               }
-              aria-label={`${bn ? "আকৃতি" : "Shape"} ${i + 1}: ${shapes[gate][bn ? 0 : 1]}`}
+              aria-label={`${bn ? "আকৃতি" : "Shape"} ${i + 1}: ${shapes[gate][bn ? 0 : 1]}${attempts[gate] ? (attempts[gate] === gate ? (bn ? ", সঠিক মিল" : ", correct match") : bn ? ", সঠিক নয়" : ", incorrect match") : ""}`}
               onClick={() => place(gate, selected)}
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => {
@@ -80,13 +114,19 @@ export function RecognitionScene({
               <span className="ll-drop-label">
                 {attempts[gate] ? (
                   <>
-                    {attempts[gate] === gate ? <Check size={16} /> : <RotateCcw size={16} />}{" "}
+                    {attempts[gate] === gate ? <Check size={16} /> : <X size={16} />}{" "}
                     {revealed ? gate : attempts[gate]}
                   </>
                 ) : bn ? (
-                  selected ? `${selected} বসাও` : "আগে নাম বেছে নাও"
+                  selected ? (
+                    `${selected} বসাও`
+                  ) : (
+                    "আগে নাম নির্বাচন করো"
+                  )
+                ) : selected ? (
+                  `Place ${selected}`
                 ) : (
-                  selected ? `Place ${selected}` : "Choose a name first"
+                  "Choose a name first"
                 )}
               </span>
             </button>
@@ -96,7 +136,7 @@ export function RecognitionScene({
       </div>
       <p className="ll-canvas-hint">
         {bn
-          ? `নাম বসানো হয়েছে: ${placed}/৩ · চাইলে নাম টেনেও ছবিতে ছেড়ে দিতে পারো।`
+          ? `সম্পন্ন: ${placed}/৩ · নাম টেনে ছবিতে ছেড়েও মেলাতে পারবে।`
           : `Names placed: ${placed}/3 · You can also drag a name onto its shape.`}
       </p>
       <span role="status" className="ll-match-announcement">

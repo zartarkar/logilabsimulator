@@ -126,7 +126,7 @@ export function MobileLandscapeGate() {
           <RotateCw className="absolute -right-1 top-0 h-7 w-7 animate-pulse" />
         </div>
         <h2 id="landscape-title" className="text-xl font-bold leading-snug">
-          আপনার মোবাইলের Auto Rotation চালু করে Landscape Mode-এ নিন
+          তোমার মোবাইলের Auto Rotation চালু করে Landscape Mode এ নিন
         </h2>
         <p className="mt-2 text-sm font-medium leading-relaxed text-foreground/75">
           Turn on Auto Rotation and rotate your phone to Landscape Mode
@@ -138,7 +138,7 @@ export function MobileLandscapeGate() {
         </div>
         {canAutoLock ? (
           <Button disabled={switching} className="mt-5 h-auto min-h-11 w-full whitespace-normal py-3" onClick={enterLandscape}>
-            <RotateCw className="mr-2 h-4 w-4" /> Landscape Mode-এ নিন · Enter Landscape Mode
+            <RotateCw className="mr-2 h-4 w-4" /> Landscape Mode এ নিন · Enter Landscape Mode
           </Button>
         ) : (
           <div className="mt-5 rounded-xl border border-amber-300 bg-amber-50 p-3 text-left text-xs leading-relaxed text-amber-900">

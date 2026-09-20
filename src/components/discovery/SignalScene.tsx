@@ -15,7 +15,7 @@ export function SignalScene({
   return (
     <div className={`ll-signal-scene ${revealed ? "ll-signal-reveal" : ""}`} key={gate}>
       <div className="ll-scene-caption">
-        {bn ? "ইনপুট থেকে আউটপুট — সিগন্যালের যাত্রা" : "From input to output. Follow the signal."}
+        {bn ? "ইনপুট থেকে আউটপুট, সিগন্যালের যাত্রা" : "From input to output. Follow the signal."}
       </div>
       <svg
         className="ll-circuit-diagram"

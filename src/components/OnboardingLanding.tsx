@@ -111,7 +111,7 @@ export function OnboardingLanding({
       id: "confident" as const,
       icon: Rocket,
       title: bn ? "ভালোভাবে পরিচিত" : "Confident",
-      text: bn ? "সরাসরি simulation-এ যাই" : "Go directly to simulation",
+      text: bn ? "সরাসরি simulation এ যাই" : "Go directly to simulation",
     },
   ];
 
@@ -128,7 +128,7 @@ export function OnboardingLanding({
             </span>
             LogicLab
             <span className="hidden border-l border-border pl-3 text-xs font-medium text-muted-foreground sm:inline">
-              {bn ? "একাদশ–দ্বাদশ শ্রেণি · অধ্যায় ৩" : "Class 11–12 · Chapter 3"}
+              {bn ? "একাদশ ও দ্বাদশ শ্রেণি · অধ্যায় ৩" : "Class 11 to 12 · Chapter 3"}
             </span>
           </div>
           <div className="flex items-center overflow-hidden rounded-lg border border-border/80 bg-white/80 shadow-sm">
@@ -166,7 +166,7 @@ export function OnboardingLanding({
             >
               {choice === "some"
                 ? bn
-                  ? "চেনা ধারণা, এবার হাতে-কলমে"
+                  ? "চেনা ধারণা, এবার হাতে কলমে"
                   : "Put familiar ideas into practice"
                 : choice === "confident"
                   ? bn
@@ -371,8 +371,8 @@ export function OnboardingLanding({
 
         <footer className="border-t border-border py-4 text-xs text-muted-foreground">
           {bn
-            ? "একাদশ–দ্বাদশ শ্রেণি · সংখ্যা পদ্ধতি ও ডিজিটাল ডিভাইস"
-            : "Class 11–12 · Number Systems and Digital Devices"}
+            ? "একাদশ ও দ্বাদশ শ্রেণি · সংখ্যা পদ্ধতি ও ডিজিটাল ডিভাইস"
+            : "Class 11 to 12 · Number Systems and Digital Devices"}
         </footer>
       </div>
     </main>

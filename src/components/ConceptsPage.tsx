@@ -29,16 +29,16 @@ const meanings = [
     "Output is 1 when at least one input is 1.",
     "অন্তত একটি ইনপুট 1 হলে আউটপুট 1; উভয় ইনপুট ০ হলে ০।",
   ],
-  ["Output is the complement of input A.", "আউটপুট ইনপুট A-এর পূরক: ০ হলে 1, 1 হলে ০।"],
-  ["Output is the complement of AND.", "AND-এর পূরক: উভয় ইনপুট 1 হলে আউটপুট ০; অন্যথায় 1।"],
-  ["Output is the complement of OR.", "OR-এর পূরক: উভয় ইনপুট ০ হলে আউটপুট 1; অন্যথায় ০।"],
+  ["Output is the complement of input A.", "আউটপুট ইনপুট A এর পূরক: ০ হলে 1, 1 হলে ০।"],
+  ["Output is the complement of AND.", "AND এর পূরক: উভয় ইনপুট 1 হলে আউটপুট ০; অন্যথায় 1।"],
+  ["Output is the complement of OR.", "OR এর পূরক: উভয় ইনপুট ০ হলে আউটপুট 1; অন্যথায় ০।"],
   ["Output is 1 when the two inputs differ.", "দুটি ইনপুটের মান ভিন্ন হলে আউটপুট 1; একই হলে ০।"],
   ["Output is 1 when the two inputs agree.", "দুটি ইনপুটের মান একই হলে আউটপুট 1; ভিন্ন হলে ০।"],
 ];
 const notes = [
   [
     "OR with 0 or AND with 1 leaves the variable unchanged.",
-    "কোনো চলকের সঙ্গে ০-এর OR অথবা 1-এর AND করলে চলকটির মান অপরিবর্তিত থাকে।",
+    "কোনো চলকের সঙ্গে ০ এর OR অথবা 1 এর AND করলে চলকটির মান অপরিবর্তিত থাকে।",
   ],
   [
     "A variable and its complement have opposite values. Their OR is always 1 and their AND is always 0.",
@@ -50,7 +50,7 @@ const notes = [
   ],
   [
     "OR with 1 always produces 1; AND with 0 always produces 0.",
-    "কোনো চলকের সঙ্গে 1-এর OR করলে ফল সর্বদা 1; ০-এর AND করলে ফল সর্বদা ০।",
+    "কোনো চলকের সঙ্গে 1 এর OR করলে ফল সর্বদা 1; ০ এর AND করলে ফল সর্বদা ০।",
   ],
   [
     "Changing the order of operands does not change an AND or OR result.",
@@ -62,11 +62,11 @@ const notes = [
   ],
   [
     "AND distributes over OR, and OR distributes over AND. The identities also allow factorisation.",
-    "AND অপারেশনকে OR-এর উপর এবং OR-কে AND-এর উপর বণ্টন করা যায়। একই সূত্র ব্যবহার করে সাধারণ গুণনীয়কও বের করা যায়।",
+    "AND অপারেশনকে OR এর উপর এবং OR কে AND এর উপর বণ্টন করা যায়। একই সূত্র ব্যবহার করে সাধারণ গুণনীয়কও বের করা যায়।",
   ],
   [
     "In A+AB, A=1 makes the result 1 and A=0 makes both terms 0; therefore the result is A.",
-    "A+AB রাশিতে A=1 হলে ফল 1; A=০ হলে উভয় পদ ০। তাই রাশিটির ফল A-এর সমান।",
+    "A+AB রাশিতে A=1 হলে ফল 1; A=০ হলে উভয় পদ ০। তাই রাশিটির ফল A এর সমান।",
   ],
 ];
 const reductions = [
@@ -240,7 +240,7 @@ export function ConceptsPage() {
             <p className="max-w-3xl text-sm leading-8 text-muted-foreground sm:text-base sm:leading-9">
               {say(
                 "Boolean algebra represents logical relationships using two values: 0 and 1. This overview connects Boolean operations, truth tables, simplification and logic gates through definitions and worked examples.",
-                "বুলিয়ান বীজগণিতে ০ ও 1—এই দুটি মান দিয়ে যৌক্তিক সম্পর্ক প্রকাশ করা হয়। এখানে সংজ্ঞা ও উদাহরণের মাধ্যমে বুলিয়ান অপারেশন, সত্যক সারণি, সরলীকরণ এবং লজিক গেটের পারস্পরিক সম্পর্ক আলোচনা করা হয়েছে।",
+                "বুলিয়ান বীজগণিতে ০ ও 1, এই দুটি মান দিয়ে যৌক্তিক সম্পর্ক প্রকাশ করা হয়। এখানে সংজ্ঞা ও উদাহরণের মাধ্যমে বুলিয়ান অপারেশন, সত্যক সারণি, সরলীকরণ এবং লজিক গেটের পারস্পরিক সম্পর্ক আলোচনা করা হয়েছে।",
               )}
             </p>
           </div>
@@ -307,7 +307,7 @@ export function ConceptsPage() {
           <p>
             {say(
               "Basic: AND, OR, NOT. Universal: NAND, NOR. Exclusive: XOR, XNOR. Compound circuits join stages: AO = AND → OR; OA = OR → AND; AOI and OAI invert those outputs. NAND = AND → NOT, NOR = OR → NOT, XNOR = XOR → NOT.",
-              "মৌলিক: AND, OR, NOT। সার্বজনীন: NAND, NOR। বিশেষ: XOR, XNOR। যৌগিক সার্কিটে ধাপগুলো জোড়া লাগে: AO = AND → OR; OA = OR → AND; AOI ও OAI-এ শেষে ফল উল্টে যায়। NAND = AND → NOT, NOR = OR → NOT, XNOR = XOR → NOT।",
+              "মৌলিক: AND, OR, NOT। সার্বজনীন: NAND, NOR। বিশেষ: XOR, XNOR। যৌগিক সার্কিটে ধাপগুলো জোড়া লাগে: AO = AND → OR; OA = OR → AND; AOI ও OAI এ শেষে ফল উল্টে যায়। NAND = AND → NOT, NOR = OR → NOT, XNOR = XOR → NOT।",
             )}
           </p>
         </Section>
@@ -331,7 +331,7 @@ export function ConceptsPage() {
               <p>
                 {say(
                   "A has 2 choices and B has 2: 2 × 2 = 4 rows. We write this as 2².",
-                  "A-এর ২টি অবস্থা, B-এরও ২টি: ২ × ২ = ৪টি সারি। সংক্ষেপে একেই ২² লেখা হয়।",
+                  "A এর ২টি অবস্থা, B এরও ২টি: ২ × ২ = ৪টি সারি। সংক্ষেপে একেই ২² লেখা হয়।",
                 )}
               </p>
               <div className="grid grid-cols-4 gap-2">
@@ -368,7 +368,7 @@ export function ConceptsPage() {
               <p>
                 {say(
                   "For each A/B pair, C can be 0 or 1. The four cases double: 2 × 2 × 2 = 8 rows, written 2³.",
-                  "A/B-এর প্রতিটি জোড়ায় C হতে পারে ০ বা 1। তাই চারটি অবস্থা দ্বিগুণ হয়: ২ × ২ × ২ = ৮টি সারি, সংক্ষেপে ২³।",
+                  "A/B এর প্রতিটি জোড়ায় C হতে পারে ০ বা 1। তাই চারটি অবস্থা দ্বিগুণ হয়: ২ × ২ × ২ = ৮টি সারি, সংক্ষেপে ২³।",
                 )}
               </p>
               <div className="grid grid-cols-4 gap-2">
@@ -442,7 +442,7 @@ export function ConceptsPage() {
             ))}
           </div>
           <p className="rounded-xl bg-amber-50 p-4">
-            {say("Double complement undoes the reversal:", "দ্বি-পূরকে আগের অবস্থায় ফিরি:")}{" "}
+            {say("Double complement undoes the reversal:", "দ্বি পূরকে আগের অবস্থায় ফিরি:")}{" "}
             <span className="font-mono">A=1 → A′=0 → (A′)′=1=A</span>
           </p>
         </Section>

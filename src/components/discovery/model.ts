@@ -31,7 +31,7 @@ export const gateCopy = {
     inputs: [1, 1],
     output: 1,
     formula: "1 · 1 = 1",
-    rule: ["সব input 1 হলে AND-এর output 1।", "AND outputs 1 only when every input is 1."],
+    rule: ["সব input 1 হলে AND এর output 1।", "AND outputs 1 only when every input is 1."],
     detail: [
       "দুটি শর্তই একসঙ্গে পূরণ হতে হবে: একটি input OFF হলেই output 0।",
       "Both conditions must hold. If either input is OFF, the output becomes 0.",
@@ -47,7 +47,7 @@ export const gateCopy = {
     inputs: [0, 1],
     output: 1,
     formula: "0 + 1 = 1",
-    rule: ["অন্তত একটি input 1 হলেই OR-এর output 1।", "OR outputs 1 when at least one input is 1."],
+    rule: ["অন্তত একটি input 1 হলেই OR এর output 1।", "OR outputs 1 when at least one input is 1."],
     detail: [
       "এখানে A বন্ধ হলেও B চালু। তাই output চালু থাকে; শুধু দুটিই OFF হলে output 0।",
       "A is OFF, but B is ON, so the output is ON. Only two OFF inputs give 0.",
@@ -63,7 +63,7 @@ export const gateCopy = {
     inputs: [1],
     output: 0,
     formula: "NOT 1 = 0",
-    rule: ["NOT input-কে উল্টে দেয়: 1 → 0।", "NOT flips its input: 1 → 0."],
+    rule: ["NOT input কে উল্টে দেয়: 1 → 0।", "NOT flips its input: 1 → 0."],
     detail: [
       "এটির একটি input। input 0 দিলে output 1; input 1 দিলে output 0।",
       "It has one input. Input 0 gives output 1; input 1 gives output 0.",

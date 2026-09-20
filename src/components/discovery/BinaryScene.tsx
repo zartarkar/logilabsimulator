@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Lightbulb, Power } from "lucide-react";
+import { CheckCircle2, Lightbulb, Power, XCircle } from "lucide-react";
 export function BinaryScene({ revealed, bn }: { revealed: boolean; bn: boolean }) {
   const [on, setOn] = useState(true);
   return (
@@ -33,7 +33,7 @@ export function BinaryScene({ revealed, bn }: { revealed: boolean; bn: boolean }
         </div>
       </div>
       <p className="ll-canvas-hint">
-        {bn ? "সুইচে চাপ দিয়ে আলো জ্বালাও বা নেভাও" : "Tap the switch to turn the light on or off"}
+        {bn ? "সুইচে চাপ দিয়ে ON/OFF অবস্থা দেখো" : "Tap the switch to observe ON/OFF"}
       </p>
       {revealed && (
         <div className="ll-binary-key">
@@ -49,27 +49,37 @@ export function BinaryScene({ revealed, bn }: { revealed: boolean; bn: boolean }
   );
 }
 export function BinaryChoices({
-  disabled,
+  answer,
   bn,
   onAnswer,
 }: {
-  disabled: boolean;
+  answer: boolean | null;
   bn: boolean;
   onAnswer: (correct: boolean) => void;
 }) {
   return (
     <div
       className="ll-binary-choices"
-      aria-label={bn ? "সঠিক মানের জোড়া বেছে নাও" : "Choose the value pair"}
+      aria-label={bn ? "সঠিক মানের জোড়া নির্বাচন করো" : "Choose the value pair"}
     >
       {[true, false].map((correct) => (
         <button
           type="button"
           key={String(correct)}
-          disabled={disabled}
+          disabled={answer !== null}
+          data-result={answer === correct ? (correct ? "correct" : "incorrect") : undefined}
           onClick={() => onAnswer(correct)}
           aria-label={`ON = ${correct ? 1 : 0}, OFF = ${correct ? 0 : 1}`}
         >
+          <span className="ll-choice-label">
+            {correct ? "A" : "B"}
+            {answer === correct && (
+              <span>
+                {correct ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+                {correct ? (bn ? "সঠিক" : "Correct") : bn ? "সঠিক নয়" : "Incorrect"}
+              </span>
+            )}
+          </span>
           <span className="ll-choice-state">
             <span className="ll-mini-switch on" />
             ON <b>{correct ? 1 : 0}</b>

@@ -198,7 +198,7 @@ export function diagnosePracticeCircuit(
             ? "মাঝের"
             : "middle";
     return bn
-      ? `canvas-এর ${yPosition} ${xPosition} ${node.kind} gate`
+      ? `canvas এর ${yPosition} ${xPosition} ${node.kind} gate`
       : `the ${yPosition} ${xPosition} ${node.kind} gate on the canvas`;
   };
   const expectedVariables = Array.from(
@@ -248,7 +248,7 @@ export function diagnosePracticeCircuit(
         const name = node.kind === "OUTPUT" ? "Output LED" : describeGate(node);
         errors.push(
           bn
-            ? `${name}-এ ${required - incoming.length}টি সংযোগ কম আছে।`
+            ? `${name} এ ${required - incoming.length}টি সংযোগ কম আছে।`
             : `${name} is missing ${required - incoming.length} input connection(s).`,
         );
       }
@@ -262,7 +262,7 @@ export function diagnosePracticeCircuit(
   if (invalidEdges.length)
     errors.push(
       bn
-        ? "এক বা একাধিক তার ভাঙা component-এর সঙ্গে যুক্ত। সেগুলো মুছে আবার সংযোগ দাও।"
+        ? "এক বা একাধিক তার ভাঙা component এর সঙ্গে যুক্ত। সেগুলো মুছে আবার সংযোগ দাও।"
         : "One or more wires point to a missing component. Remove and reconnect them.",
     );
 
@@ -280,7 +280,7 @@ export function diagnosePracticeCircuit(
   if (nodes.some((node) => hasCycle(node.id)))
     errors.push(
       bn
-        ? "Circuit-এ একটি loop তৈরি হয়েছে। যে তারটি আগের gate-এ ফিরে গেছে সেটি সরাও।"
+        ? "Circuit এ একটি loop তৈরি হয়েছে। যে তারটি আগের gate এ ফিরে গেছে সেটি সরাও।"
         : "The circuit contains a loop. Remove the wire that feeds back into an earlier gate.",
     );
 
@@ -298,7 +298,7 @@ export function diagnosePracticeCircuit(
     if (disconnected.length)
       errors.push(
         bn
-          ? `${disconnected.length}টি component final output-এর সঙ্গে যুক্ত নয়।`
+          ? `${disconnected.length}টি component final output এর সঙ্গে যুক্ত নয়।`
           : `${disconnected.length} component(s) are not connected to the final output.`,
       );
   }
@@ -314,7 +314,7 @@ export function diagnosePracticeCircuit(
     if (expectedFinalGate && actualFinalGate && actualFinalGate.kind !== expectedFinalGate) {
       errors.push(
         bn
-          ? `Final gate-এ ${expectedFinalGate} ব্যবহার করতে হবে, কিন্তু তুমি ${actualFinalGate.kind} ব্যবহার করেছ। ${actualFinalGate.kind} gate-টি ${expectedFinalGate} gate দিয়ে বদলে আবার সংযোগ দাও।`
+          ? `Final gate এ ${expectedFinalGate} ব্যবহার করতে হবে, কিন্তু তুমি ${actualFinalGate.kind} ব্যবহার করেছ। ${actualFinalGate.kind} gate টি ${expectedFinalGate} gate দিয়ে বদলে আবার সংযোগ দাও।`
           : `The final gate should be ${expectedFinalGate}, but you used ${actualFinalGate.kind}. Replace the ${actualFinalGate.kind} gate with the required ${expectedFinalGate} gate and reconnect it.`,
       );
     } else if (actualFinalGate) {
@@ -326,7 +326,7 @@ export function diagnosePracticeCircuit(
       else
         errors.push(
           bn
-            ? "সংযুক্ত circuit-টির output target expression-এর সঙ্গে মিলছে না। লাল চিহ্নিত connection-টি ঠিক করো।"
+            ? "সংযুক্ত circuit টির output target expression এর সঙ্গে মিলছে না। লাল চিহ্নিত connection টি ঠিক করো।"
             : "The connected circuit output does not match the target expression. Fix the highlighted connection.",
         );
     }
@@ -535,12 +535,12 @@ function formatPracticeMismatch(
   const branch = `“${mismatch.branch}”`;
   if (mismatch.actual === "missing connection") {
     return bn
-      ? `${branch} branch-টি অসম্পূর্ণ। এই gate-এ ওই branch-এর output wire সংযোগ করো।`
+      ? `${branch} branch টি অসম্পূর্ণ। এই gate এ ওই branch এর output wire সংযোগ করো।`
       : `The ${branch} branch is incomplete. Connect that branch's output wire to this gate.`;
   }
   if (mismatch.expected === "no extra branch") {
     return bn
-      ? `${branch} অংশে একটি অতিরিক্ত ${mismatch.actual} branch যুক্ত আছে। অতিরিক্ত wire-টি সরাও।`
+      ? `${branch} অংশে একটি অতিরিক্ত ${mismatch.actual} branch যুক্ত আছে। অতিরিক্ত wire টি সরাও।`
       : `An extra ${mismatch.actual} branch is connected in ${branch}. Remove the extra wire.`;
   }
   if (mismatch.expected === "NOT") {
@@ -550,11 +550,11 @@ function formatPracticeMismatch(
   }
   if (mismatch.expected.startsWith("input ")) {
     return bn
-      ? `${branch} অংশে ${mismatch.expected} সংযোগ করার কথা, কিন্তু ${mismatch.actual} সংযুক্ত আছে। ভুল wire-টি সরিয়ে সঠিক input দাও।`
+      ? `${branch} অংশে ${mismatch.expected} সংযোগ করার কথা, কিন্তু ${mismatch.actual} সংযুক্ত আছে। ভুল wire টি সরিয়ে সঠিক input দাও।`
       : `${branch} requires ${mismatch.expected}, but ${mismatch.actual} is connected. Replace the incorrect wire with the required input.`;
   }
   return bn
-    ? `${branch} অংশে ${mismatch.expected} gate দরকার, কিন্তু ${mismatch.actual} ব্যবহার করা হয়েছে। এই gate-টি ${mismatch.expected} দিয়ে বদলে একই branch-এর wireগুলো আবার সংযোগ করো।`
+    ? `${branch} অংশে ${mismatch.expected} gate দরকার, কিন্তু ${mismatch.actual} ব্যবহার করা হয়েছে। এই gate টি ${mismatch.expected} দিয়ে বদলে একই branch এর wireগুলো আবার সংযোগ করো।`
     : `${branch} requires an ${mismatch.expected} gate, but ${mismatch.actual} is used. Replace it with ${mismatch.expected} and reconnect the same branch wires.`;
 }
 
@@ -740,7 +740,7 @@ export function locatePracticeNodeErrors(
       .filter((node) => node.kind !== "OUTPUT" && !connected.has(node.id))
       .forEach((node) => {
         nodeErrors[node.id] ??= bn
-          ? "এটি final output-এর সঙ্গে যুক্ত করো"
+          ? "এটি final output এর সঙ্গে যুক্ত করো"
           : "Connect this to the final output";
       });
     if (!checkCircuitMatchesChallengeTarget(nodes, edges, expectedExpression)) {
@@ -755,7 +755,7 @@ export function locatePracticeNodeErrors(
         nodeErrors[mismatch.id] = formatPracticeMismatch(mismatch, bn);
       } else if (finalGate && !Object.keys(nodeErrors).length) {
         nodeErrors[finalGate.id] = bn
-          ? "এই branch-এর আগের gate ও wire পরীক্ষা করো"
+          ? "এই branch এর আগের gate ও wire পরীক্ষা করো"
           : "Check the earlier gates and wires in this branch";
       }
     }
@@ -868,7 +868,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
       const component = guideStep.target.split(":")[1];
       if (component === "INPUT") {
         const input = challenge!.guide.slice(0, Number(guideEntry[1]) + 1).filter(step => step.target === "component:INPUT").length === 1 ? "A" : "B";
-        return bn ? `${input}-এর জন্য Input switch চাপো।` : `Tap Input switch for ${input}.`;
+        return bn ? `${input} এর জন্য Input switch চাপো।` : `Tap Input switch for ${input}.`;
       }
       if (component === "OUTPUT") return bn ? "Output LED চাপো।" : "Tap Output LED.";
       return bn ? `${component} গেট চাপো।` : `Tap the ${component} gate.`;
@@ -1409,7 +1409,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                 {isMobile
                   ? lang === "bn" ? "রাশি দেখে বানাও। সহজ স্তরে গাইড আছে।" : "Build from an expression. Easy includes a guide."
                   : lang === "bn"
-                    ? "তৈরি expression দেখে circuit বানাও। Beginner level-এ ধাপে ধাপে guide পাওয়া যাবে।"
+                    ? "তৈরি expression দেখে circuit বানাও। Beginner level এ ধাপে ধাপে guide পাওয়া যাবে।"
                     : "Build circuits from ready-made expressions. Beginner level includes an interactive step-by-step guide."}
               </p>
               <Button

@@ -66,7 +66,7 @@ export function UniversalGateExplorer({ bn }: { bn: boolean }) {
           </article>;
         })}
       </div>
-      <p className="text-sm leading-6 text-muted-foreground">{target === "NOT" ? (bn ? "একই A দুই ইনপুটে দিলে NAND ও NOR—দুটিই A-এর উল্টো মান দেয়।" : "Feed A into both inputs: either NAND or NOR flips A.") : (bn ? "P ও Q হলো আগের ধাপের ফল। এগুলোই পরের গেটের ইনপুট—নতুন সুইচ নয়।" : "P and Q are results from earlier steps. They feed the next gate; they are not new switches.")}</p>
+      <p className="text-sm leading-6 text-muted-foreground">{target === "NOT" ? (bn ? "একই A দুই ইনপুটে দিলে NAND ও NOR, দুটিই A এর উল্টো মান দেয়।" : "Feed A into both inputs: either NAND or NOR flips A.") : (bn ? "P ও Q হলো আগের ধাপের ফল। এগুলোই পরের গেটের ইনপুট, নতুন সুইচ নয়।" : "P and Q are results from earlier steps. They feed the next gate; they are not new switches.")}</p>
     </section>
   );
 }

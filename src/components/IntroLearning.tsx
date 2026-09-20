@@ -140,7 +140,7 @@ export function IntroLearning({
             </span>
             LogicLab
             <span className="hidden border-l pl-3 text-xs font-medium text-muted-foreground sm:inline">
-              {bn ? "একাদশ–দ্বাদশ শ্রেণি · অধ্যায় ৩" : "Class 11–12 · Chapter 3"}
+              {bn ? "একাদশ ও দ্বাদশ শ্রেণি · অধ্যায় ৩" : "Class 11 to 12 · Chapter 3"}
             </span>
           </div>
           <div className="flex items-center gap-2">

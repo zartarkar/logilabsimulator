@@ -60,13 +60,13 @@ export function LogicFoundations({ bn }: { bn: boolean }) {
             <span className="text-xs font-semibold">{Number(on)} · {bn ? (on ? "জ্বলছে" : "বন্ধ") : (on ? "On" : "Off")}</span>
           </output>
         </div>
-        <p className="text-center text-sm text-muted-foreground">{bn ? "গেট বদলে দেখো—একই সুইচে ফল কীভাবে বদলায়!" : "Try another gate—see how the same switches give a different result!"}</p>
+        <p className="text-center text-sm text-muted-foreground">{bn ? "গেট বদলে দেখো, একই সুইচে ফল কীভাবে বদলায়!" : "Try another gate, see how the same switches give a different result!"}</p>
         <details className="rounded-xl border border-border p-4">
           <summary className="cursor-pointer text-sm font-semibold">{bn ? "বইয়ের ভাষায় এটা কীভাবে লিখব?" : "How do we write this as an expression?"}</summary>
           <div className="mt-3 space-y-3 text-sm leading-7 text-muted-foreground">
             <p>{bn ? "সুইচ দুটির নাম A ও B। বাতির ফলকে বলি F। এখন যে গেটটি দেখছ, তার রাশি:" : "Call the switches A and B, and the bulb’s result F. For your selected gate:"}</p>
             <p className="rounded-lg bg-muted px-3 py-2 font-mono text-foreground">{mode === "AND" ? "F = A·B" : mode === "OR" ? "F = A+B" : "F = A'"} = {Number(on)}</p>
-            <p>{bn ? "· মানে AND, + মানে OR, আর ' মানে NOT। এখানে + সাধারণ যোগ নয়: 1 OR 1-এর ফল 1।" : "· means AND, + means OR, and ' means NOT. Here + is not ordinary addition: 1 OR 1 gives 1."}</p>
+            <p>{bn ? "· মানে AND, + মানে OR, আর ' মানে NOT। এখানে + সাধারণ যোগ নয়: 1 OR 1 এর ফল 1।" : "· means AND, + means OR, and ' means NOT. Here + is not ordinary addition: 1 OR 1 gives 1."}</p>
             <p>{bn ? "সব সম্ভাব্য সুইচের অবস্থা ও ফল একসঙ্গে লিখলে সেটাই ট্রুথ টেবিল। দুটি সুইচে চারটি অবস্থা: 00, 01, 10, 11।" : "List every switch combination and its result to make a truth table. Two switches have four combinations: 00, 01, 10, 11."}</p>
             <p>{bn ? "এখানে 0/1 দিয়ে বন্ধ/চালু বোঝাচ্ছি। বাস্তব সার্কিটে LOW/HIGH ভোল্টেজ দিয়ে লজিক মান প্রকাশ করা হয়; 0 মানে পুরো ডিভাইস বন্ধ নয়।" : "Here 0/1 represent off/on. Real circuits use LOW/HIGH voltage levels for logic values; 0 does not mean the whole device is unpowered."}</p>
           </div>

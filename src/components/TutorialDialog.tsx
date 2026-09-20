@@ -36,7 +36,7 @@ export const TutorialDialog = forwardRef<
         const steps: DriveStep[] = [
           {
             popover: {
-              title: bn ? "LogicLab-এর সম্পূর্ণ গাইড" : "The complete LogicLab guide",
+              title: bn ? "LogicLab এর সম্পূর্ণ গাইড" : "The complete LogicLab guide",
               description: bn
                 ? "এই গাইডে কনসেপ্ট ঝালাই, রাশি পরীক্ষা, সার্কিট তৈরি ও চ্যালেঞ্জের ব্যবহার দেখানো হবে। গাইড নিজেই প্রয়োজনীয় পাতায় নিয়ে যাবে।"
                 : "This guide covers concept review, testing expressions, building circuits and using challenges. It opens each workspace as you go.",

@@ -55,7 +55,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Turn any Boolean expression into an interactive logic-gate circuit. Live simulation, truth tables, Quine–McCluskey simplification and a free-build gate sandbox.",
+          "Turn any Boolean expression into an interactive logic-gate circuit. Live simulation, truth tables, Quine McCluskey simplification and a free-build gate sandbox.",
       },
       { property: "og:title", content: "LogicLab: Boolean Logic Circuit Simulator" },
       {

@@ -1,14 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  ArrowRight,
-  CircuitBoard,
-  GraduationCap,
-  Languages,
-  Pause,
-  Play,
-  RotateCcw,
-  Zap,
-} from "lucide-react";
+import { ArrowRight, CircuitBoard, GraduationCap, Languages, Pause, Play, Zap } from "lucide-react";
 import { useLang } from "@/i18n";
 import { browserStorage } from "@/lib/browserStorage";
 import { BinaryScene, BinaryChoices } from "./BinaryScene";
@@ -95,7 +86,7 @@ export function DiscoveryLanding({
           <span>
             <CircuitBoard size={21} />
           </span>
-          LogicLab<small>{bn ? "দেখে শেখো, করে বোঝো" : "Learn by making it happen"}</small>
+          LogicLab<small>{bn ? "পর্যবেক্ষণ ও অনুশীলন" : "Observe and practise"}</small>
         </a>
         <div>
           <button
@@ -112,7 +103,7 @@ export function DiscoveryLanding({
           </button>
           {step < 5 && (
             <button type="button" onClick={skip}>
-              {bn ? "এড়িয়ে যাই" : "Skip"}
+              {bn ? "এড়িয়ে যাও" : "Skip"}
               <ArrowRight size={15} />
             </button>
           )}
@@ -121,9 +112,11 @@ export function DiscoveryLanding({
       <div className="ll-topline">
         <span>
           <span className="ll-live-dot" />
-          {bn ? "তোমার লজিক ল্যাব" : "YOUR LOGIC LAB"}
+          {bn ? "লজিক গেট অনুশীলন" : "LOGIC GATE PRACTICE"}
         </span>
-        <span>{bn ? "ছোট্ট পরীক্ষা, নতুন আবিষ্কার" : "Small experiments. New discoveries."}</span>
+        <span>
+          {bn ? "ON/OFF · গেটের আকৃতি · গেটের output" : "ON/OFF · Gate shapes · Gate outputs"}
+        </span>
       </div>
       <div className={`ll-workbench ${step === 5 ? "ll-workbench-result" : ""}`}>
         <section
@@ -137,12 +130,14 @@ export function DiscoveryLanding({
             </span>
             <span>{step >= 2 && step < 5 ? `${gate} GATE` : "01 · LOGIC LAB"}</span>
           </div>
-          <TenTen
-            scene={step < 0 ? 0 : step === 5 ? 6 : step + 1}
-            reaction={feedback === null ? "idle" : feedback ? "yes" : "learn"}
-            paused={paused}
-            bn={bn}
-          />
+          {step !== 5 && (
+            <TenTen
+              scene={step < 0 ? 0 : step === 5 ? 6 : step + 1}
+              reaction={feedback === null ? "idle" : feedback ? "yes" : "learn"}
+              paused={paused}
+              bn={bn}
+            />
+          )}
           {step < 1 ? (
             <BinaryScene revealed={feedback !== null} bn={bn} />
           ) : step === 1 ? (
@@ -160,12 +155,18 @@ export function DiscoveryLanding({
             <SignalScene gate={gate} revealed={feedback !== null} bn={bn} />
           ) : (
             <div className="ll-finish-scene">
-              <div className="ll-finish-orbit" />
+              <div className="ll-finish-orbit">
+                <TenTen scene={6} reaction="idle" paused={true} bn={bn} />
+              </div>
               <span className="ll-finish-label">
-                {bn ? "প্রতিটি আবিষ্কারে, আরও এক ধাপ।" : "Every discovery is a step forward."}
+                {bn ? "প্রাথমিক অনুশীলন সম্পন্ন" : "Practice complete"}
               </span>
-              <h2>{bn ? "এবার তোমার পালা।" : "Make it your own."}</h2>
-              <p>{bn ? "শেখো। সিমুলেট করো। তৈরি করো।" : "Learn. Simulate. Build."}</p>
+              <h2>{bn ? "পরবর্তী বিভাগ নির্বাচন করো" : "Select your next section"}</h2>
+              <p>
+                {bn
+                  ? "কনসেপ্ট · সিমুলেশন · সার্কিট তৈরি"
+                  : "Concepts · Simulation · Circuit building"}
+              </p>
             </div>
           )}
           <div className="ll-canvas-bottom">
@@ -177,7 +178,7 @@ export function DiscoveryLanding({
               <i />
               {bn ? "সিগন্যাল বন্ধ" : "SIGNAL OFF"}
             </span>
-            <span>{bn ? "করে দেখে শেখো" : "EXPLORE TO UNDERSTAND"}</span>
+            <span>{bn ? "ইন্টারেক্টিভ সিমুলেশন" : "INTERACTIVE SIMULATION"}</span>
           </div>
         </section>
         <div className="ll-panel" ref={panel}>
@@ -190,23 +191,51 @@ export function DiscoveryLanding({
             />
           ) : (
             <>
-              <div className="ll-step-label">
-                <GraduationCap size={17} />
-                {bn ? `ধাপ ${stage + 1}/৩` : `EXPERIMENT ${stage + 1} OF 3`}
-              </div>
-              <ol className="ll-progress" aria-label={bn ? "অগ্রগতি" : "Progress"}>
-                {labels.map((label, i) => (
-                  <li
-                    key={label}
-                    aria-current={stage === i ? "step" : undefined}
-                    className={stage > i ? "done" : ""}
-                  >
-                    <span />
-                    {label}
-                  </li>
-                ))}
-              </ol>
-              {feedback !== null ? (
+              {step >= 0 && (
+                <div className="ll-step-label">
+                  <GraduationCap size={17} />
+                  {bn ? `ধাপ ${stage + 1}/৩` : `EXPERIMENT ${stage + 1} OF 3`}
+                </div>
+              )}
+              {step >= 0 && (
+                <ol className="ll-progress" aria-label={bn ? "অগ্রগতি" : "Progress"}>
+                  {labels.map((label, i) => (
+                    <li
+                      key={label}
+                      aria-current={stage === i ? "step" : undefined}
+                      className={stage > i ? "done" : ""}
+                    >
+                      <span />
+                      {label}
+                    </li>
+                  ))}
+                </ol>
+              )}
+              {step === 0 ? (
+                <div className="ll-prompt ll-binary-question">
+                  <h1 tabIndex={-1} data-discovery-focus>
+                    {bn
+                      ? "সার্কিটের ON আর OFF বোঝায় কোন মান দিয়ে?"
+                      : "Which values represent ON and OFF in a circuit?"}
+                  </h1>
+                  <BinaryChoices
+                    answer={feedback}
+                    bn={bn}
+                    onAnswer={(correct) => answer({ binaryUnderstanding: correct }, correct)}
+                  />
+                  {feedback !== null && (
+                    <ConceptFeedback
+                      step={step}
+                      gate={gate}
+                      correct={feedback}
+                      bn={bn}
+                      expanded={expanded}
+                      onExpand={inspect}
+                      onNext={next}
+                    />
+                  )}
+                </div>
+              ) : feedback !== null ? (
                 <ConceptFeedback
                   step={step}
                   gate={gate}
@@ -217,76 +246,63 @@ export function DiscoveryLanding({
                   onNext={next}
                 />
               ) : (
-                <div className="ll-prompt" key={step}>
+                <div className={`ll-prompt ${step < 0 ? "ll-welcome" : ""}`} key={step}>
                   <h1 tabIndex={-1} data-discovery-focus>
                     {step < 0
                       ? bn
-                        ? "একটু খেলি, লজিক বুঝি।"
-                        : "A little play. A little logic."
-                      : step === 0
+                        ? "LogicLab এ স্বাগতম!"
+                        : "Welcome to LogicLab!"
+                      : step === 1
                         ? bn
-                          ? "ON আর OFF — কোন মান?"
-                          : "ON and OFF. Which values?"
-                        : step === 1
-                          ? bn
-                            ? "গেটের নাম ও আকৃতি মেলাও"
-                            : "Match each gate name to its shape"
-                          : bn
-                            ? `${gate} গেটের output বেছে নাও`
-                            : `Choose the ${gate} gate’s output`}
+                          ? "গেটের নাম ও আকৃতি মেলাও"
+                          : "Match each gate name to its shape"
+                        : bn
+                          ? `${gate} গেটের output নির্ধারণ করো`
+                          : `Choose the ${gate} gate’s output`}
+                    {step < 0 && <span aria-hidden="true"> 🎉</span>}
                   </h1>
-                  <p>
-                    {step < 0
-                      ? bn
-                        ? "প্রথমে ON/OFF-এর মান বেছে নেবে, তারপর তিনটি গেটের নাম মেলাবে, শেষে গেটের output বলবে। প্রতিটি উত্তরের পর চিত্রসহ ব্যাখ্যা দেখাবে।"
-                        : "First choose the values for ON/OFF, then match three gate names, and finally predict their outputs. Each answer reveals an explanation with a diagram."
-                      : step === 0
+                  {step < 0 && (
+                    <div className="ll-step-label ll-welcome-label">
+                      <GraduationCap size={17} />
+                      {bn ? "শুরু করার আগে" : "BEFORE YOU BEGIN"}
+                    </div>
+                  )}
+                  {step !== 1 && (
+                    <p>
+                      {step < 0
                         ? bn
-                          ? "Digital logic-এ ON এবং OFF কোন values দিয়ে প্রকাশ করা হয়?"
-                          : "Which values represent ON and OFF in digital logic?"
+                          ? "শুরু করার আগে, লজিক সার্কিট নিয়ে তোমার ধারণা যাচাই করো।"
+                          : "Before you begin, check your understanding of logic circuits."
                         : step === 1
                           ? bn
-                            ? "সিমুলেশনের তিনটি ছবির মধ্যে কোনটি AND, কোনটি OR আর কোনটি NOT, তা বেছে নিতে হবে।"
-                            : "Identify which of the three symbols in the simulation is AND, OR and NOT."
+                            ? "প্রতিটি ছবির সঠিক নাম নির্বাচন করো।"
+                            : "Assign the correct name to each symbol."
                           : bn
                             ? `${gate} গেটে ${gateCopy[gate].inputs.join(" ও ")} input দেওয়া আছে। প্রশ্নচিহ্নের জায়গায় output কত হবে?`
                             : `The ${gate} gate has input${gate === "NOT" ? "" : "s"} ${gateCopy[gate].inputs.join(" and ")}. What value replaces the question mark at the output?`}
-                  </p>
+                    </p>
+                  )}
                   {step >= 0 && <StepInstructions step={step} bn={bn} />}
                   {step < 0 ? (
                     <>
-                      <div className="ll-start-note">
-                        <span>01</span>
-                        <p>
-                          {bn
-                            ? "ব্যাখ্যা পড়া হলে ‘পরের প্রশ্নে যাই’ চাপবে। নিজে না চাপা পর্যন্ত পরের প্রশ্ন আসবে না।"
-                            : "Read the explanation, then press ‘Next question’. Nothing advances until you choose to continue."}
-                        </p>
-                      </div>
+                      <p className="ll-welcome-detail">
+                        {bn
+                          ? "সার্কিট ON/OFF, লজিক গেটের symbol এবং গেটের কাজ, এই তিন ধাপে নিজের জন্য উপযুক্ত শুরুর পথ নির্বাচন করো।"
+                          : "Circuit ON/OFF, logic gate symbols and gate behavior, use these three steps to choose the right starting point for you."}
+                      </p>
                       <button
                         type="button"
                         className="ll-primary ll-start"
                         onClick={() => setStep(0)}
                       >
-                        {bn ? "শুরু করি" : "Let’s begin"}
+                        {bn ? "শুরু করি" : "Let’s start"}
                         <ArrowRight size={18} />
                       </button>
-                      <p className="ll-fineprint">
-                        {bn
-                          ? "কোনো চাপ নেই — নিজের গতিতে শেখো।"
-                          : "No pressure. Make progress at your own pace."}
-                      </p>
                     </>
-                  ) : step === 0 ? (
-                    <BinaryChoices
-                      disabled={false}
-                      bn={bn}
-                      onAnswer={(correct) => answer({ binaryUnderstanding: correct }, correct)}
-                    />
                   ) : step === 1 ? null : (
                     <div
                       className="ll-output-choices"
-                      aria-label={bn ? "আউটপুট বেছে নাও" : "Choose the output"}
+                      aria-label={bn ? "আউটপুট নির্বাচন করো" : "Choose the output"}
                     >
                       {[0, 1].map((value) => (
                         <button
@@ -309,18 +325,14 @@ export function DiscoveryLanding({
                   )}
                 </div>
               )}
-              <div className="ll-panel-footer">
-                <RotateCcw size={14} />
-                {bn
-                  ? "ভুল হলেও সমস্যা নেই, কারণটা দেখে শিখবো।"
-                  : "Every attempt is a chance to understand."}
-              </div>
             </>
           )}
         </div>
       </div>
       <footer className="ll-page-footer">
-        <span>{bn ? "একাদশ–দ্বাদশ শ্রেণি · ডিজিটাল ডিভাইস" : "Class 11–12 · Digital devices"}</span>
+        <span>
+          {bn ? "একাদশ ও দ্বাদশ শ্রেণি · ডিজিটাল ডিভাইস" : "Class 11 to 12 · Digital devices"}
+        </span>
         <span>LogicLab · {bn ? "যুক্তি দিয়ে শুরু" : "Start with curiosity"}</span>
       </footer>
     </main>

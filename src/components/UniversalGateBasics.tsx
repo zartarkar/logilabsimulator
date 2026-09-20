@@ -4,19 +4,19 @@ const recipes = {
       gate: "NOT",
       steps: ["P = NAND(A, A) = A′"],
       en: "Connect A to both inputs. The output is NOT A.",
-      bn: "একটি NAND গেটের দুই ইনপুটেই A দাও। আউটপুট হবে A-এর পূরক।",
+      bn: "একটি NAND গেটের দুই ইনপুটেই A দাও। আউটপুট হবে A এর পূরক।",
     },
     {
       gate: "AND",
       steps: ["P = NAND(A, B) = (AB)′", "F = NAND(P, P) = AB"],
       en: "First obtain NOT(AB), then invert it using a second NAND.",
-      bn: "প্রথম NAND-এ (AB)′ পাওয়া যায়। এই ফল দ্বিতীয় NAND-এর দুই ইনপুটে দিলে AB পাওয়া যায়।",
+      bn: "প্রথম NAND এ (AB)′ পাওয়া যায়। এই ফল দ্বিতীয় NAND এর দুই ইনপুটে দিলে AB পাওয়া যায়।",
     },
     {
       gate: "OR",
       steps: ["P = NAND(A, A) = A′", "Q = NAND(B, B) = B′", "F = NAND(P, Q) = (A′B′)′ = A+B"],
       en: "Invert A and B separately, then feed the outputs into a third NAND.",
-      bn: "দুটি NAND দিয়ে A ও B-এর পূরক নাও। পূরক দুটি তৃতীয় NAND-এ দিলে (A′B′)′ = A+B পাওয়া যায়।",
+      bn: "দুটি NAND দিয়ে A ও B এর পূরক নাও। পূরক দুটি তৃতীয় NAND এ দিলে (A′B′)′ = A+B পাওয়া যায়।",
     },
   ],
   NOR: [
@@ -24,19 +24,19 @@ const recipes = {
       gate: "NOT",
       steps: ["P = NOR(A, A) = A′"],
       en: "Connect A to both inputs. The output is NOT A.",
-      bn: "একটি NOR গেটের দুই ইনপুটেই A দাও। আউটপুট হবে A-এর পূরক।",
+      bn: "একটি NOR গেটের দুই ইনপুটেই A দাও। আউটপুট হবে A এর পূরক।",
     },
     {
       gate: "AND",
       steps: ["P = NOR(A, A) = A′", "Q = NOR(B, B) = B′", "F = NOR(P, Q) = (A′+B′)′ = AB"],
       en: "Invert A and B separately, then feed the outputs into a third NOR.",
-      bn: "দুটি NOR দিয়ে A ও B-এর পূরক নাও। পূরক দুটি তৃতীয় NOR-এ দিলে (A′+B′)′ = AB পাওয়া যায়।",
+      bn: "দুটি NOR দিয়ে A ও B এর পূরক নাও। পূরক দুটি তৃতীয় NOR এ দিলে (A′+B′)′ = AB পাওয়া যায়।",
     },
     {
       gate: "OR",
       steps: ["P = NOR(A, B) = (A+B)′", "F = NOR(P, P) = A+B"],
       en: "First obtain NOT(A+B), then invert it using a second NOR.",
-      bn: "প্রথম NOR-এ (A+B)′ পাওয়া যায়। এই ফল দ্বিতীয় NOR-এর দুই ইনপুটে দিলে A+B পাওয়া যায়।",
+      bn: "প্রথম NOR এ (A+B)′ পাওয়া যায়। এই ফল দ্বিতীয় NOR এর দুই ইনপুটে দিলে A+B পাওয়া যায়।",
     },
   ],
 };
@@ -49,7 +49,7 @@ export function UniversalGateBasics({ bn }: { bn: boolean }) {
       </h3>
       <p>
         {bn
-          ? "NAND(A, B) মানে একটি NAND গেটের দুই ইনপুটে A ও B দেওয়া। NOR(A, B)-ও একইভাবে পড়তে হবে। P ও Q মধ্যবর্তী গেটের আউটপুট, যা পরের গেটের ইনপুট হবে। প্রতিটি লাইনে একটি গেটের সংযোগ দেখানো হয়েছে।"
+          ? "NAND(A, B) মানে একটি NAND গেটের দুই ইনপুটে A ও B দেওয়া। NOR(A, B) ও একইভাবে পড়তে হবে। P ও Q মধ্যবর্তী গেটের আউটপুট, যা পরের গেটের ইনপুট হবে। প্রতিটি লাইনে একটি গেটের সংযোগ দেখানো হয়েছে।"
           : "NAND(A, B) means connecting A and B to a NAND gate's two inputs. Read NOR(A, B) the same way. P and Q are intermediate outputs that feed later gates. Each line describes one gate connection."}
       </p>
       <div className="grid gap-5 lg:grid-cols-2">
