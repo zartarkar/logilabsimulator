@@ -73,12 +73,12 @@ export function RecognitionScene({
             : "Matching complete. Read the explanation, then select ‘Next’."
           : selected
             ? bn
-              ? `${selected} নির্বাচিত। নিচে ${selected} গেটের ছবিতে চাপো।`
-              : `${selected} selected. Tap its shape below.`
+              ? `${selected} নির্বাচিত। ${selected} গেটের প্রতীকে চাপো।`
+              : `${selected} selected. Tap its symbol.`
             : bn
               ? placed
                 ? "বাকি নামগুলোর একটি নির্বাচন করো।"
-                : "উপরের AND, OR বা NOT বাটনে চাপো।"
+                : "উপরে AND, OR বা NOT নাম নির্বাচন করো।"
               : placed
                 ? "Select a remaining name."
                 : "Select AND, OR or NOT above."}
@@ -119,12 +119,12 @@ export function RecognitionScene({
                   </>
                 ) : bn ? (
                   selected ? (
-                    `${selected} বসাও`
+                    "এই প্রতীক বেছে নাও"
                   ) : (
                     "আগে নাম নির্বাচন করো"
                   )
                 ) : selected ? (
-                  `Place ${selected}`
+                  "Select this symbol"
                 ) : (
                   "Choose a name first"
                 )}

@@ -7,19 +7,20 @@ import { GraduationCap } from "lucide-react";
 type TourTab = "concepts" | "simulator" | "builder";
 
 export interface TutorialHandle {
-  startAutomatically: (finishTab: "concepts") => void;
+  start: () => void;
+  startAutomatically: (finishTab: TourTab) => void;
 }
 
 export const TutorialDialog = forwardRef<
   TutorialHandle,
-  { className?: string; onSelectTab: (tab: TourTab) => void }
->(function TutorialDialog({ className = "", onSelectTab }, ref) {
+  { className?: string; hideTrigger?: boolean; onSelectTab: (tab: TourTab) => void }
+>(function TutorialDialog({ className = "", hideTrigger = false, onSelectTab }, ref) {
   const { t, lang } = useLang();
   const bn = lang === "bn";
 
   const startTour = useCallback(
-    (finishTab?: "concepts") => {
-      onSelectTab("concepts");
+    (finishTab?: TourTab) => {
+      onSelectTab(finishTab === "simulator" ? "simulator" : "concepts");
 
       window.setTimeout(() => {
         const goTo =
@@ -61,7 +62,7 @@ export const TutorialDialog = forwardRef<
               description: bn
                 ? "এই পুরো পাতায় গেট, সত্যক সারণি, সূত্র ও সরলীকরণ আছে। স্ক্রল করে দেখো; সুইচ বদলে ফল মেলাও।"
                 : "This page covers gates, truth tables, laws and simplification. Scroll to explore and toggle inputs to compare results.",
-              side: "over",
+              side: "bottom",
               align: "center",
             },
           },
@@ -81,7 +82,7 @@ export const TutorialDialog = forwardRef<
           {
             element: '[data-tour="expression-editor"]',
             popover: {
-              title: bn ? "1. বুলিয়ান রাশি লিখো" : "1. Enter a Boolean expression",
+              title: bn ? "১. বুলিয়ান রাশি লিখো" : "1. Enter a Boolean expression",
               description: bn
                 ? "নিজের রাশি লিখতে পারো অথবা নিচের প্রস্তুত উদাহরণ থেকে বেছে নিতে পারো। বন্ধনী ও পরিপূরক চিহ্নও ব্যবহার করা যাবে।"
                 : "Enter your own expression or choose a prepared example. Parentheses and complement notation are supported.",
@@ -155,38 +156,8 @@ export const TutorialDialog = forwardRef<
             popover: {
               title: bn ? "চ্যালেঞ্জ শুরু ও স্তর বাছাই" : "Start a challenge and choose a level",
               description: bn
-                ? "চ্যালেঞ্জ শুরু করো → সহজ, মধ্যম বা কঠিন বেছে নাও। সহজে আলাদা ধাপে ধাপে গাইড আছে।"
-                : "Start a challenge, then choose Easy, Intermediate or Hard. Easy includes a separate step-by-step guide.",
-              side: "right",
-              align: "start",
-            },
-          },
-          {
-            element: '[data-tour="practice-panel"]',
-            onHighlightStarted: () =>
-              window.dispatchEvent(
-                new CustomEvent("logiclab:tutorial-practice", { detail: "expressions" }),
-              ),
-            popover: {
-              title: bn ? "একটি রাশি বেছে নাও" : "Choose an expression",
-              description: bn
-                ? "রাশি বাছার পর সেটির সার্কিট বানাও। মধ্যম ও কঠিন স্তরে শেষে ‘সার্কিট যাচাই করো’ চাপো।"
-                : "Choose an expression and build its circuit. For Intermediate or Hard, finish with Check circuit.",
-              side: "right",
-              align: "start",
-            },
-          },
-          {
-            element: '[data-tour="practice-panel"]',
-            onHighlightStarted: () =>
-              window.dispatchEvent(
-                new CustomEvent("logiclab:tutorial-practice", { detail: "guide" }),
-              ),
-            popover: {
-              title: bn ? "সহজ স্তরের আলাদা গাইড" : "The separate Easy guide",
-              description: bn
-                ? "গেট → দুটি ইনপুট → LED → তার → ইনপুট পরীক্ষা। কাজ শেষ হলে ধাপ এগোয়। আগের ধাপ, রিসেট বা বাদ দেওয়ার বোতামও আছে।"
-                : "Follow gate → two inputs → LED → wires → test inputs. Completed actions advance the guide. You can go back, reset or skip.",
+                ? "চ্যালেঞ্জ মোড খুলে সহজ, মধ্যম বা কঠিন—এই তিনটি স্তরের একটি নির্বাচন করো।"
+                : "Open challenge mode and choose one of three levels: Easy, Intermediate or Hard.",
               side: "right",
               align: "start",
             },
@@ -288,14 +259,14 @@ export const TutorialDialog = forwardRef<
           doneBtnText: bn ? "শুরু করি" : "Start exploring",
           progressText: bn ? "{{current}} / {{total}}" : "{{current}} of {{total}}",
         });
-        tutorial.drive();
+        tutorial.drive(finishTab === "simulator" ? 4 : 0);
       }, 300);
     },
     [bn, onSelectTab],
   );
 
   const startAutomatically = useCallback(
-    (finishTab: "concepts") => {
+    (finishTab: TourTab) => {
       let timer: number;
       const startWhenVisible = () => {
         const landscapePrompt = document.querySelector('[aria-labelledby="landscape-title"]');
@@ -310,7 +281,12 @@ export const TutorialDialog = forwardRef<
     [startTour],
   );
 
-  useImperativeHandle(ref, () => ({ startAutomatically }), [startAutomatically]);
+  useImperativeHandle(ref, () => ({ startAutomatically, start: () => startTour() }), [
+    startAutomatically,
+    startTour,
+  ]);
+
+  if (hideTrigger) return null;
 
   return (
     <Button

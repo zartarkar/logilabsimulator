@@ -109,6 +109,167 @@
   background: white;
   box-shadow: 0 18px 55px #14223a08;
 }
+.ll-workbench.ll-workbench-welcome {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 820px;
+}
+.ll-workbench-welcome .ll-panel {
+  min-height: 480px;
+  justify-content: center;
+}
+.ll-builder-journey {
+  max-width: 1440px;
+  margin: auto;
+}
+.ll-builder-intro {
+  padding: 12px 16px 20px;
+}
+.ll-builder-intro h1 {
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.ll-builder-intro p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #627486;
+}
+.ll-builder-workspace {
+  position: relative;
+  height: max(650px, calc(100dvh - 220px));
+  border: 1px solid #dce5e1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: white;
+}
+@media (max-width: 767px) {
+  .ll-builder-workspace {
+    height: max(620px, calc(100dvh - 160px));
+  }
+}
+.ll-builder-workspace .component-palette {
+  background: #f5faf7;
+  padding: 16px;
+}
+.ll-builder-workspace [data-practice-target^="component:"] {
+  min-height: 60px;
+  border-radius: 12px;
+  border-color: #cdded4;
+  background: white;
+}
+.ll-builder-workspace .practice-guide {
+  border-radius: 14px;
+  box-shadow: 0 4px 16px #174f3010;
+}
+.ll-builder-workspace .input-drag-grip {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 10px);
+  transform: translateX(-50%);
+  width: 44px;
+  height: 28px;
+}
+.ll-builder-workspace .react-flow__handle {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px;
+  min-height: 18px;
+  border: 3px solid #fff !important;
+  background: #087f8c !important;
+  box-shadow: 0 0 0 2px #087f8c;
+  z-index: 70;
+  cursor: crosshair;
+  pointer-events: all;
+}
+.ll-builder-workspace .react-flow__handle.source {
+  background: #1967d2 !important;
+  box-shadow: 0 0 0 2px #1967d2;
+}
+.ll-builder-workspace .react-flow__handle.connecting {
+  background: #e7a000 !important;
+  box-shadow: 0 0 0 5px #e7a00055;
+}
+.ll-builder-workspace .react-flow__handle.source::after {
+  content: "OUT";
+}
+.ll-builder-workspace .react-flow__handle.target::after {
+  content: "IN";
+}
+.ll-builder-workspace .react-flow__handle::after {
+  position: absolute;
+  top: -25px;
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: #173c52;
+  color: white;
+  font: bold 9px/1.3 sans-serif;
+  pointer-events: none;
+}
+.ll-builder-workspace .react-flow__node-gate .react-flow__handle.target::after {
+  top: -3px;
+  left: -20px;
+}
+.ll-builder-workspace .react-flow__node button[aria-label^="Delete"] {
+  top: -32px;
+  right: 0;
+}
+.ll-builder-workspace .react-flow__node-gate .react-flow__handle[data-handleid="in-0"] {
+  top: 15% !important;
+}
+.ll-builder-workspace .react-flow__node-gate .react-flow__handle[data-handleid="in-1"] {
+  top: 85% !important;
+}
+.ll-workbench-welcome .ll-panel {
+  background:
+    radial-gradient(ellipse at top right, #d6f5e3, transparent 65%),
+    linear-gradient(140deg, #fff, #f1faf5);
+  border-color: #cce8d7;
+  padding: clamp(28px, 6vw, 64px);
+}
+.ll-workbench.ll-workbench-welcome {
+  border-color: #cce8d7;
+  box-shadow: 0 20px 60px #1b6b3b12;
+}
+.ll-welcome::before {
+  content: none;
+  display: block;
+  font: 13px monospace;
+  letter-spacing: 3px;
+  color: #228151;
+  padding-bottom: 24px;
+}
+.ll-build-invitation {
+  max-width: 780px;
+  margin: 24px auto;
+  padding: clamp(26px, 5vw, 56px);
+  border: 1px solid #cce8d7;
+  border-radius: 24px;
+  background: radial-gradient(ellipse at top right, #d6f5e3, transparent 65%), #fff;
+  box-shadow: 0 20px 60px #1b6b3b12;
+}
+.ll-build-invitation > svg {
+  color: #159650;
+  margin-bottom: 22px;
+}
+.ll-build-invitation h1 {
+  font-size: clamp(24px, 4vw, 36px);
+  line-height: 1.5;
+  font-weight: 700;
+  margin: 16px 0;
+}
+.ll-build-invitation p {
+  color: #587265;
+  line-height: 1.9;
+  margin-bottom: 26px;
+}
+.ll-build-invitation .ll-primary {
+  width: auto;
+  min-height: 44px;
+  padding: 12px 24px;
+}
 .ll-canvas {
   position: relative;
   min-height: 610px;
@@ -1078,7 +1239,11 @@
   padding: 6px;
 }
 .ll-feedback-actions .ll-primary {
-  flex: 1;
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 44px;
+  padding: 10px 24px;
+  font-size: 15px;
 }
 .ll-auto-progress {
   margin-top: 20px;
@@ -1603,3 +1768,1001 @@
     opacity: 1;
   }
 }
+/* Keep the learning workspace within the available viewport. */
+.ll-discovery {
+  height: 100dvh;
+  min-height: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px clamp(10px, 2vw, 32px);
+}
+.ll-header {
+  width: 100%;
+  flex: 0 0 auto;
+}
+.ll-topline {
+  width: 100%;
+  margin: 0 auto;
+  flex: 0 0 auto;
+}
+.ll-page-footer {
+  display: none;
+}
+.ll-workbench {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  margin: 0 auto;
+}
+.ll-canvas {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.ll-panel {
+  min-height: 0;
+  padding: clamp(16px, 2vw, 28px);
+  overflow: auto;
+}
+.ll-workbench-welcome .ll-panel {
+  min-height: 0;
+}
+.ll-panel h1 {
+  font-size: clamp(22px, 2.5vw, 32px);
+  margin-bottom: 14px;
+}
+.ll-panel p {
+  line-height: 1.65;
+}
+.ll-progress {
+  margin: 10px 0 18px;
+}
+.ll-binary-scene,
+.ll-recognition,
+.ll-signal-scene {
+  padding: 68px 18px 34px;
+}
+.ll-guide {
+  top: 34px;
+  width: 48px;
+  height: 48px;
+}
+.ll-power-circuit {
+  margin: 40px auto 26px;
+}
+.ll-circuit-diagram {
+  max-height: 34dvh;
+}
+.ll-symbol-slot button {
+  min-height: 100px;
+}
+.ll-canvas-hint,
+.ll-recognition .ll-canvas-hint {
+  margin-top: 14px;
+}
+.ll-match-direction {
+  margin-top: 8px;
+  min-height: 30px;
+}
+.ll-feedback h2 {
+  margin-bottom: 8px;
+}
+.ll-verdict,
+.ll-selected-output {
+  padding: 10px;
+  margin-bottom: 12px;
+}
+.ll-feedback-bits,
+.ll-formula {
+  margin: 12px 0;
+  padding: 10px;
+}
+.ll-feedback-actions {
+  margin-top: 12px;
+}
+.ll-profile {
+  padding: 12px 0;
+}
+.ll-result-marks {
+  margin-top: 12px;
+  padding: 12px 0;
+}
+.ll-destinations {
+  gap: 8px;
+}
+.ll-destinations button {
+  padding: 10px 14px;
+}
+.ll-finish-scene {
+  padding: 230px 20px 30px;
+}
+.ll-finish-orbit {
+  top: 30px;
+  width: 170px;
+  height: 170px;
+  left: calc(50% - 85px);
+}
+.ll-build-invitation {
+  margin: auto;
+  max-height: 100%;
+}
+.ll-builder-journey {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.ll-builder-intro {
+  padding: 0 8px 10px;
+}
+.ll-builder-intro h1 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+.ll-builder-intro p {
+  font-size: 12px;
+}
+.ll-builder-workspace {
+  height: auto;
+  flex: 1;
+  min-height: 0;
+}
+.ll-builder-workspace .component-palette {
+  padding: 8px;
+}
+.ll-builder-workspace .guide-navigation button {
+  min-height: 44px;
+}
+.ll-builder-workspace .practice-guide {
+  margin: 4px;
+}
+@media (max-width: 767px) and (orientation: portrait) {
+  .ll-discovery {
+    gap: 6px;
+    padding: 8px;
+  }
+  .ll-header a {
+    font-size: 19px;
+  }
+  .ll-topline {
+    display: none;
+  }
+  .ll-workbench {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(190px, 34%) minmax(0, 1fr);
+    padding: 4px;
+    gap: 4px;
+  }
+  .ll-workbench-welcome {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .ll-workbench .ll-panel {
+    padding: 12px 16px;
+  }
+  .ll-canvas-top,
+  .ll-canvas-bottom,
+  .ll-canvas .ll-scene-caption,
+  .ll-canvas-hint,
+  .ll-binary-key {
+    display: none;
+  }
+  .ll-guide {
+    width: 32px;
+    height: 32px;
+    top: 8px;
+  }
+  .ll-binary-scene,
+  .ll-recognition,
+  .ll-signal-scene {
+    padding: 32px 10px 6px;
+  }
+  .ll-power-circuit {
+    margin: 20px auto 10px;
+    max-width: 250px;
+  }
+  .ll-power-source button {
+    width: 48px;
+    height: 48px;
+  }
+  .ll-bulb {
+    width: 58px;
+    height: 58px;
+  }
+  .ll-circuit-diagram {
+    max-height: 170px;
+    margin: -25px auto -22px;
+  }
+  .ll-equation {
+    font-size: 17px;
+    margin: 4px;
+  }
+  .ll-canvas-rule {
+    margin: 2px;
+  }
+  .ll-gate-labels {
+    margin-top: 0;
+    gap: 8px;
+  }
+  .ll-gate-labels button {
+    padding: 5px 12px;
+  }
+  .ll-match-direction {
+    margin: 4px 0;
+    font-size: 10px;
+    min-height: 20px;
+  }
+  .ll-recognition .ll-symbols {
+    margin-top: 4px;
+  }
+  .ll-symbol-slot button {
+    min-height: 72px;
+    padding: 5px;
+    gap: 4px;
+  }
+  .ll-symbol-slot svg {
+    width: 48px;
+    height: 32px;
+  }
+  .ll-symbol-slot p,
+  .ll-match-announcement {
+    display: none;
+  }
+  .ll-progress {
+    margin: 6px 0 10px;
+  }
+  .ll-panel h1 {
+    font-size: 21px;
+    margin-bottom: 8px;
+  }
+  .ll-panel p {
+    font-size: 12px;
+  }
+  .ll-panel .ll-task-instructions {
+    margin: 10px 0;
+  }
+  .ll-binary-choices button {
+    padding: 8px;
+  }
+  .ll-binary-question > .ll-feedback {
+    margin-top: 10px;
+  }
+  .ll-verdict {
+    padding: 7px;
+    margin-bottom: 8px;
+  }
+  .ll-feedback h2 {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  .ll-feedback-bits {
+    display: none;
+  }
+  .ll-selected-output {
+    padding: 6px 12px;
+    margin-bottom: 8px;
+  }
+  .ll-formula {
+    padding: 8px;
+    margin: 8px 0;
+    font-size: 20px;
+  }
+  .ll-formula small {
+    margin-bottom: 4px;
+  }
+  .ll-workbench-result {
+    grid-template-rows: 100px minmax(0, 1fr);
+  }
+  .ll-finish-scene {
+    padding: 0 12px 0 104px;
+  }
+  .ll-finish-orbit {
+    width: 70px;
+    height: 70px;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .ll-finish-orbit .ll-guide {
+    width: 54px;
+    height: 54px;
+  }
+  .ll-finish-scene h2 {
+    font-size: 19px;
+    margin: 4px 0;
+  }
+  .ll-finish-scene p,
+  .ll-finish-label {
+    display: none;
+  }
+  .ll-result-marks dd {
+    font-size: 20px;
+  }
+  .ll-profile {
+    gap: 6px;
+  }
+  .ll-build-invitation {
+    padding: 24px;
+  }
+  .ll-builder-intro h1 {
+    font-size: 19px;
+  }
+  .ll-builder-intro p {
+    font-size: 11px;
+  }
+  .ll-builder-workspace .mobile-guided-builder {
+    grid-template-columns: 94px minmax(0, 1fr);
+  }
+  .ll-builder-workspace [data-practice-target^="component:"] {
+    min-height: 50px;
+  }
+}
+@media (max-height: 650px) and (min-width: 768px),
+  (max-height: 500px) and (orientation: landscape) {
+  .ll-workbench {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .ll-workbench-welcome {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ll-topline {
+    display: none;
+  }
+  .ll-panel {
+    padding: 12px 18px;
+  }
+  .ll-panel h1 {
+    font-size: 22px;
+  }
+  .ll-profile {
+    padding: 6px 0;
+  }
+  .ll-result-marks {
+    padding: 6px 0;
+    margin-top: 6px;
+  }
+  .ll-destinations button {
+    padding: 6px 12px;
+  }
+  .ll-canvas-top,
+  .ll-canvas-bottom {
+    display: none;
+  }
+  .ll-finish-scene {
+    padding-top: 160px;
+  }
+  .ll-finish-orbit {
+    width: 120px;
+    height: 120px;
+    top: 15px;
+    left: calc(50% - 60px);
+  }
+}
+.ll-binary-question > .ll-feedback {
+  margin-top: 10px;
+}
+.ll-binary-question .ll-feedback-bits {
+  display: none;
+}
+.ll-binary-choices button {
+  padding: 10px 12px;
+}
+.ll-binary-question .ll-feedback-actions {
+  margin-top: 8px;
+}
+/* Viewport layout: the header never participates in vertical centering. */
+.ll-discovery,
+.ll-discovery:has(.ll-workbench-welcome),
+.ll-discovery:has(.ll-build-invitation) {
+  height: 100dvh;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 44px minmax(0, 1fr);
+  gap: 8px;
+  padding: 12px clamp(12px, 2vw, 32px);
+  box-sizing: border-box;
+}
+.ll-discovery .ll-header {
+  margin: 0 auto;
+  align-self: start;
+  width: 100%;
+  height: 44px;
+}
+.ll-discovery:has(.ll-workbench-welcome),
+.ll-discovery:has(.ll-build-invitation) {
+  grid-template-rows: 44px minmax(0, 1fr) 44px;
+}
+.ll-discovery .ll-workbench-welcome,
+.ll-discovery .ll-build-invitation {
+  align-self: center;
+  justify-self: center;
+  margin: 0;
+  width: min(100%, 720px);
+  max-height: 100%;
+  min-height: 0;
+  flex: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  background: radial-gradient(ellipse at top right, #fff1f2, transparent 65%), #fff;
+  box-shadow: 0 18px 55px #14223a08;
+  text-align: center;
+}
+.ll-discovery .ll-workbench-welcome {
+  display: block;
+  padding: 0;
+  overflow: auto;
+}
+.ll-discovery .ll-workbench-welcome .ll-panel {
+  padding: clamp(20px, 4dvh, 40px) clamp(20px, 4vw, 48px);
+  background: transparent;
+  border: 0;
+  overflow: visible;
+}
+.ll-discovery .ll-build-invitation {
+  padding: clamp(20px, 4dvh, 40px) clamp(20px, 4vw, 48px);
+  overflow: auto;
+}
+.ll-welcome {
+  margin: 0;
+  text-align: center;
+}
+.ll-welcome-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 16px;
+  background: #fff1f2;
+  color: #e11d48;
+}
+.ll-welcome-label,
+.ll-build-invitation .ll-eyebrow {
+  justify-content: center;
+  color: #be123c;
+  margin: 0 0 12px;
+}
+.ll-discovery .ll-build-invitation h1,
+.ll-workbench-welcome h1 {
+  font-size: clamp(23px, 3vw, 32px);
+  line-height: 1.4;
+  margin: 0 0 12px;
+}
+.ll-welcome .ll-start,
+.ll-build-invitation .ll-primary {
+  margin: 22px auto 0;
+  width: auto;
+  background: #e11d48;
+  box-shadow: 0 4px 0 #9f1239;
+}
+.ll-workbench-welcome .ll-panel p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+.ll-builder-journey {
+  height: 100%;
+  min-height: 0;
+}
+.ll-builder-intro {
+  padding: 0 4px 8px;
+}
+.ll-builder-intro h1 {
+  margin: 0;
+}
+
+.ll-discovery-exercise {
+  background: #080d16;
+  color: #eef4fa;
+}
+.ll-discovery-exercise .ll-header small {
+  color: #a5b4c6;
+  border-color: #334155;
+}
+.ll-discovery-exercise .ll-header button:hover {
+  background: #1e293b;
+}
+.ll-experiment {
+  width: min(100%, 960px);
+  height: 100%;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(6px, 1.5dvh, 14px);
+}
+.ll-experiment-heading h1 {
+  font-size: clamp(21px, 2.6vw, 30px);
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 8px 0;
+}
+.ll-experiment .ll-step-label {
+  color: #6ee7b7;
+  font-size: 13px;
+}
+.ll-experiment .ll-progress {
+  margin: 6px 0 10px;
+}
+.ll-experiment .ll-progress li {
+  font-size: 12px;
+  color: #a5b4c6;
+}
+.ll-experiment .ll-progress li > span {
+  background: #293648;
+  margin-bottom: 5px;
+}
+.ll-experiment .ll-progress li[aria-current] {
+  color: #6ee7b7;
+}
+.ll-experiment .ll-progress li[aria-current] > span,
+.ll-experiment .ll-progress .done > span {
+  background: #34d399;
+}
+.ll-experiment .ll-task-instructions {
+  color: #bcc9d9;
+  font-size: clamp(15px, 1.3vw, 18px);
+  line-height: 1.5;
+  margin: 0;
+}
+.ll-experiment .ll-canvas {
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+.ll-experiment .ll-binary-scene,
+.ll-experiment .ll-signal-scene {
+  padding: 26px 36px;
+  min-height: 0;
+  width: 100%;
+}
+.ll-experiment .ll-signal-scene {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.ll-experiment .ll-circuit-diagram {
+  width: 100%;
+  height: 100%;
+  max-width: 760px;
+  max-height: 280px;
+  min-height: 0;
+  flex: 1;
+  margin: 0;
+}
+.ll-experiment .ll-equation {
+  flex: none;
+  font-size: 21px;
+  margin: 0;
+}
+.ll-experiment .ll-canvas-rule {
+  display: none;
+}
+.ll-experiment .ll-power-circuit {
+  margin: 22px auto 30px;
+  max-width: 450px;
+}
+.ll-experiment .ll-scene-caption,
+.ll-experiment .ll-canvas-hint,
+.ll-experiment .ll-binary-key {
+  display: none;
+}
+.ll-experiment .ll-guide {
+  width: 28px;
+  height: 28px;
+  left: clamp(16px, var(--guide-x), calc(100% - 16px));
+  top: clamp(0px, calc(var(--guide-y) * 1%), calc(100% - 28px));
+  transition:
+    left 6s linear,
+    top 6s linear;
+}
+.ll-experiment .ll-recognition {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  padding: 20px 32px;
+  gap: 8px;
+}
+.ll-experiment .ll-gate-labels {
+  order: 0;
+  margin: 0;
+  gap: 10px;
+}
+.ll-experiment .ll-match-direction {
+  order: 1;
+  margin: 0;
+  min-height: 0;
+  font-size: 13px;
+}
+.ll-experiment .ll-symbols {
+  order: 2;
+  margin: 0;
+  gap: 12px;
+}
+.ll-experiment .ll-match-announcement {
+  order: 3;
+  margin: 0;
+}
+.ll-experiment .ll-symbol-slot button {
+  min-height: 100px;
+  height: clamp(90px, 19dvh, 170px);
+  padding: 10px;
+  gap: 8px;
+}
+.ll-experiment .ll-symbol-slot svg {
+  width: clamp(48px, 7vw, 92px);
+  height: clamp(36px, 8dvh, 68px);
+}
+.ll-experiment .ll-symbol-slot p {
+  display: none;
+}
+.ll-experiment-answered .ll-gate-labels,
+.ll-experiment-answered .ll-match-direction,
+.ll-experiment-answered .ll-match-announcement {
+  display: none;
+}
+.ll-experiment .ll-experiment-answer {
+  min-height: 0;
+  max-height: 44dvh;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+}
+.ll-experiment .ll-experiment-answer:empty {
+  display: none;
+}
+.ll-experiment .ll-binary-choices {
+  margin: 0;
+  gap: 12px;
+}
+.ll-experiment .ll-binary-choices button,
+.ll-experiment .ll-output-choices button {
+  background: #111d2d;
+  border-color: #405169;
+  color: #dce7f5;
+  padding: 10px 16px;
+}
+.ll-experiment .ll-choice-state,
+.ll-experiment .ll-choice-label,
+.ll-experiment .ll-choice-state b {
+  color: #dce7f5;
+}
+.ll-experiment .ll-choice-state {
+  margin-top: 6px;
+}
+.ll-experiment .ll-choice-state + .ll-choice-state {
+  margin-top: 8px;
+}
+.ll-experiment .ll-output-choices {
+  margin: 0;
+}
+.ll-experiment .ll-output-choices button {
+  min-height: 54px;
+}
+.ll-experiment .ll-output-choices button:hover,
+.ll-experiment .ll-binary-choices button:hover {
+  background: #19332e;
+  border-color: #34d399;
+}
+
+/* Feedback is a short explanation with compact inline values, not stacked banners. */
+.ll-experiment .ll-feedback {
+  max-height: 44dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #111d2d;
+  border: 1px solid #304057;
+  border-radius: 14px;
+}
+.ll-feedback-content {
+  min-height: 0;
+  overflow-y: auto;
+}
+.ll-experiment .ll-verdict {
+  display: inline-flex;
+  padding: 0;
+  margin: 0 14px 6px 0;
+  background: none;
+  color: #6ee7b7;
+  font-size: 13px;
+  gap: 6px;
+}
+.ll-experiment .ll-verdict.recap {
+  color: #fda4af;
+}
+.ll-experiment .ll-selected-output {
+  display: inline-flex;
+  vertical-align: middle;
+  gap: 8px;
+  padding: 0;
+  margin: 0 0 6px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: #bcc9d9;
+  font-size: 13px;
+}
+.ll-experiment .ll-selected-output strong {
+  font-size: 17px;
+  margin: 0;
+}
+.ll-experiment .ll-selected-output > svg {
+  display: none;
+}
+.ll-experiment .ll-feedback h2 {
+  font-size: 17px;
+  line-height: 1.45;
+  margin: 0 0 4px;
+}
+.ll-experiment .ll-feedback p,
+.ll-experiment .ll-shape-recap > div {
+  color: #bcc9d9;
+  font-size: 15px;
+  line-height: 1.45;
+  margin: 0;
+}
+.ll-experiment .ll-formula {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  margin: 6px 0 0;
+  background: none;
+  color: #6ee7b7;
+  font-size: 20px;
+  text-align: left;
+}
+.ll-experiment .ll-formula small {
+  margin: 0;
+  font-size: 13px;
+  color: #bcc9d9;
+}
+.ll-experiment .ll-feedback-actions {
+  position: static;
+  flex-shrink: 0;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.ll-experiment .ll-feedback-actions > button:first-child:not(.ll-primary) {
+  color: #b7c8db;
+  font-size: 13px;
+}
+.ll-experiment .ll-feedback-actions .ll-primary {
+  min-height: 42px;
+  padding: 8px 20px;
+}
+.ll-experiment .ll-feedback-bits {
+  display: none;
+}
+.ll-experiment .ll-shape-recap {
+  gap: 6px;
+  margin: 6px 0 0;
+}
+.ll-experiment .ll-shape-recap > div {
+  gap: 10px;
+  font-size: 14px;
+}
+.ll-experiment .ll-shape-recap b {
+  display: inline;
+  margin-right: 8px;
+  color: #eef4fa;
+  font-size: 14px;
+}
+.ll-experiment .ll-shape-recap svg {
+  width: 32px;
+  height: 25px;
+}
+
+@media (max-width: 600px) {
+  .ll-discovery {
+    padding: 8px 12px;
+    gap: 6px;
+  }
+  .ll-header .ll-skip {
+    font-size: 12px;
+  }
+  .ll-experiment {
+    gap: 6px;
+  }
+  .ll-experiment .ll-progress {
+    margin-bottom: 6px;
+  }
+  .ll-experiment-heading h1 {
+    font-size: 21px;
+    margin: 6px 0;
+  }
+  .ll-experiment .ll-task-instructions {
+    font-size: 15px;
+  }
+  .ll-experiment .ll-binary-scene,
+  .ll-experiment .ll-signal-scene {
+    padding: 22px 18px;
+  }
+  .ll-experiment .ll-recognition {
+    padding: 16px 14px;
+    gap: 6px;
+  }
+  .ll-experiment .ll-symbol-slot button {
+    min-height: 72px;
+    height: clamp(72px, 14dvh, 115px);
+    padding: 6px;
+  }
+  .ll-experiment .ll-symbols {
+    gap: 6px;
+  }
+  .ll-experiment .ll-drop-label {
+    font-size: 10px;
+  }
+  .ll-experiment .ll-guide {
+    width: 20px;
+    height: 20px;
+    left: clamp(11px, var(--guide-x), calc(100% - 11px));
+    top: clamp(0px, calc(var(--guide-y) * 1%), calc(100% - 20px));
+  }
+  .ll-experiment .ll-feedback {
+    padding: 10px 12px;
+    gap: 6px;
+  }
+  .ll-experiment .ll-feedback h2 {
+    font-size: 16px;
+  }
+  .ll-experiment .ll-feedback p {
+    font-size: 14px;
+  }
+  .ll-experiment .ll-shape-recap > div {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .ll-experiment .ll-binary-choices button {
+    padding: 8px 12px;
+  }
+  .ll-experiment .ll-power-circuit {
+    margin: 18px auto 28px;
+  }
+}
+@media (max-height: 650px) {
+  .ll-experiment-heading h1 {
+    font-size: 21px;
+    margin: 4px 0;
+  }
+  .ll-experiment .ll-task-instructions {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .ll-experiment .ll-progress {
+    margin: 4px 0 6px;
+  }
+  .ll-experiment .ll-equation {
+    display: none;
+  }
+  .ll-experiment .ll-signal-scene {
+    padding-block: 8px;
+  }
+  .ll-experiment .ll-feedback {
+    gap: 4px;
+  }
+}
+@media (max-height: 450px) and (min-width: 600px) {
+  .ll-discovery,
+  .ll-discovery:has(.ll-workbench-welcome),
+  .ll-discovery:has(.ll-build-invitation) {
+    padding-block: 6px;
+    grid-template-rows: 36px minmax(0, 1fr);
+    gap: 4px;
+  }
+  .ll-discovery .ll-header {
+    height: 36px;
+  }
+  .ll-discovery:has(.ll-workbench-welcome),
+  .ll-discovery:has(.ll-build-invitation) {
+    grid-template-rows: 36px minmax(0, 1fr) 36px;
+  }
+  .ll-discovery .ll-workbench-welcome .ll-panel,
+  .ll-discovery .ll-build-invitation {
+    padding: 14px 24px;
+  }
+  .ll-welcome-icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 6px;
+  }
+  .ll-welcome-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  .ll-welcome-label,
+  .ll-build-invitation .ll-eyebrow {
+    margin-bottom: 4px;
+  }
+  .ll-welcome .ll-start,
+  .ll-build-invitation .ll-primary {
+    margin-top: 10px;
+  }
+  .ll-experiment {
+    gap: 4px;
+  }
+  .ll-experiment .ll-progress {
+    display: none;
+  }
+  .ll-experiment-heading h1 {
+    display: inline;
+    margin-left: 12px;
+    font-size: 19px;
+  }
+  .ll-experiment .ll-step-label {
+    display: inline-flex;
+  }
+  .ll-experiment .ll-task-instructions {
+    font-size: 13px;
+  }
+  .ll-experiment .ll-feedback {
+    padding: 6px 12px;
+    max-height: 40dvh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+  .ll-experiment .ll-feedback-actions {
+    flex-direction: column;
+    gap: 0;
+  }
+  .ll-experiment .ll-feedback p {
+    font-size: 13px;
+  }
+  .ll-experiment .ll-verdict {
+    margin-bottom: 2px;
+  }
+  .ll-experiment .ll-binary-choices button {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .ll-experiment .ll-choice-state {
+    margin: 0;
+    gap: 8px;
+  }
+  .ll-experiment .ll-choice-state + .ll-choice-state {
+    margin: 0;
+  }
+  .ll-experiment .ll-recognition {
+    padding: 4px 28px;
+    gap: 4px;
+  }
+  .ll-experiment .ll-match-direction {
+    display: none;
+  }
+  .ll-experiment .ll-symbol-slot button {
+    min-height: 62px;
+    height: 62px;
+    flex-direction: row;
+    gap: 8px;
+  }
+  .ll-experiment .ll-symbol-slot svg {
+    width: 55px;
+    height: 38px;
+  }
+}
+.ll-experiment .ll-symbol-slot .ll-drop-label svg { width: 16px; height: 16px; flex-shrink: 0; }
+.ll-experiment .ll-symbol-slot button > span { flex-shrink: 0; }

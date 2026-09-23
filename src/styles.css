@@ -701,3 +701,10 @@ svg.react-flow__connectionline {
   .challenge-success > div:last-child { padding: 8px 16px; }
 }
 
+/* Challenge mode follows the app's red accent. */
+.practice-panel { --primary: var(--destructive); --primary-foreground: var(--destructive-foreground); border-color: color-mix(in srgb, var(--destructive) 45%, transparent); }
+.concept-chapter[hidden] { display: none; }
+.wiring-gesture { position: absolute; inset: 0; z-index: 25; pointer-events: none; overflow: hidden; }
+.wiring-gesture-hand { position: absolute; margin-left: -12px; margin-top: -4px; filter: drop-shadow(0 2px 3px #0003); animation: demonstrate-wire 2.8s ease-in-out infinite; }
+@keyframes demonstrate-wire { 0%, 12% { transform: translate(0, 0); opacity: 0; } 20% { transform: translate(0, 0); opacity: 1; } 75%, 88% { transform: translate(var(--wire-dx), var(--wire-dy)); opacity: 1; } 100% { transform: translate(var(--wire-dx), var(--wire-dy)); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .wiring-gesture-hand { animation: none; } }

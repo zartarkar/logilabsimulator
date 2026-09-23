@@ -152,7 +152,7 @@ export function InputNode({ data, selected }: NodeProps & { data: GateNodeData }
         </span>
         <span className="tabular-nums">{data.value} · {on ? "ON" : "OFF"}</span>
       </button>
-      {data.onNodePointerDown && <span title="Drag to move input" className="flex h-11 w-7 cursor-grab items-center justify-center rounded bg-muted text-muted-foreground"><GripVertical className="h-5 w-5" /></span>}
+      {data.onNodePointerDown && <span title="Drag to move input" className="input-drag-grip flex h-11 w-7 cursor-grab items-center justify-center rounded bg-muted text-muted-foreground"><GripVertical className="h-5 w-5" /></span>}
       <Handle id="out" type="source" position={Position.Right} className="!h-2 !w-2 !border-2 !border-border !bg-background pointer-coarse:!h-5 pointer-coarse:!w-5" />
       {data.onDelete && (
         <button

@@ -36,16 +36,9 @@ export const PRACTICE_CHALLENGES: PracticeChallenge[] = [
     hint: "The output should be 1 only when both A and B are 1.",
     guide: [
       {
-        id: "component-AND",
-        target: "component:AND",
-        message: "Choose this element: AND gate.",
-        detail: "Select the AND gate from the component section first.",
-        highlight: "AND",
-      },
-      {
         id: "component-INPUT",
         target: "component:INPUT",
-        message: "Now choose this element: Input switch.",
+        message: "First, choose an input switch.",
         detail: "Add the first signal source that represents input A.",
         highlight: "Input switch",
       },
@@ -55,6 +48,13 @@ export const PRACTICE_CHALLENGES: PracticeChallenge[] = [
         message: "Add another input switch for B.",
         detail: "You need two input switches for A and B.",
         highlight: "Input switch",
+      },
+      {
+        id: "component-AND",
+        target: "component:AND",
+        message: "Choose this element: AND gate.",
+        detail: "Select the AND gate after placing both input switches.",
+        highlight: "AND",
       },
       {
         id: "component-OUTPUT",

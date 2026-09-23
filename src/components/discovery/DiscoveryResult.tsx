@@ -111,9 +111,9 @@ export function DiscoveryResult({
       <div className="ll-destinations">
         {(
           [
-            ["concepts", "Concepts Jhalai", BookOpenCheck],
-            ["simulator", "Expression Simulator", CircuitBoard],
-            ["builder", "Build Own Circuit", CircuitBoard],
+            ["concepts", bn ? "ধারণা ঝালাই" : "Concepts Jhalai", BookOpenCheck],
+            ["simulator", bn ? "লজিক রাশি সিমুলেটর" : "Expression Simulator", CircuitBoard],
+            ["builder", bn ? "নিজের সার্কিট তৈরি করো" : "Build Own Circuit", CircuitBoard],
           ] as const
         ).map(([destination, label, Icon]) => (
           <button

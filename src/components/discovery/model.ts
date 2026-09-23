@@ -75,7 +75,16 @@ export const gateCopy = {
   },
 } as const;
 export const shapes = {
-  AND: ["পেছনটা flat, সামনের অংশ গোল।", "Flat input side, rounded output side."],
-  OR: ["input side curved, সামনের অংশ সূচালো।", "Curved input side, pointed output side."],
-  NOT: ["ত্রিভুজের শেষে ছোট circle।", "A triangle with a small output circle."],
+  AND: [
+    "ইনপুট প্রান্ত সরলরেখাবিশিষ্ট এবং আউটপুট প্রান্ত অর্ধবৃত্তাকার।",
+    "Flat input side, rounded output side.",
+  ],
+  OR: [
+    "ইনপুট প্রান্ত অবতল এবং আউটপুট প্রান্ত সূচালো।",
+    "Curved input side, pointed output side.",
+  ],
+  NOT: [
+    "ত্রিভুজের আউটপুটে ক্ষুদ্র বৃত্তটি যৌক্তিক পূরক নির্দেশ করে।",
+    "A triangle with a small output circle.",
+  ],
 } as const;

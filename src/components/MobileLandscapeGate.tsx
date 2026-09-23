@@ -13,7 +13,6 @@ export function MobileLandscapeGate() {
   const [canAutoLock, setCanAutoLock] = useState<boolean | null>(null);
   const [isEmbeddedBrowser, setIsEmbeddedBrowser] = useState(false);
   const [switching, setSwitching] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
   const ownsLock = useRef(false);
 
   const updateViewport = useCallback(() => {
@@ -21,9 +20,13 @@ export function MobileLandscapeGate() {
     // the browser updates either its media query or viewport dimensions.
     const width = document.documentElement.clientWidth || window.innerWidth;
     const height = window.innerHeight;
-    const landscape = isLandscape({ width, height, type: screen.orientation?.type,
+    const landscape = isLandscape({
+      width,
+      height,
+      type: screen.orientation?.type,
       legacyAngle: typeof window.orientation === "number" ? window.orientation : undefined,
-      mediaLandscape: window.matchMedia("(orientation: landscape)").matches });
+      mediaLandscape: window.matchMedia("(orientation: landscape)").matches,
+    });
     setNeedsLandscape(width <= 900 && !landscape);
     if (landscape) setMessage("");
   }, []);
@@ -32,7 +35,9 @@ export function MobileLandscapeGate() {
     const mobile = window.matchMedia("(max-width: 900px)");
     const portrait = window.matchMedia("(orientation: portrait)");
     const userAgent = navigator.userAgent;
-    setCanAutoLock(typeof (screen.orientation as LockableOrientation | undefined)?.lock === "function");
+    setCanAutoLock(
+      typeof (screen.orientation as LockableOrientation | undefined)?.lock === "function",
+    );
     setIsEmbeddedBrowser(/FBAN|FBAV|Instagram|Messenger/i.test(userAgent));
     let frame = 0;
     let settled = 0;
@@ -77,11 +82,11 @@ export function MobileLandscapeGate() {
   }, [updateViewport]);
 
   useEffect(() => {
-    if (!needsLandscape || dismissed) return;
+    if (!needsLandscape) return;
     // Embedded browsers sometimes omit rotation/resize events entirely.
     const timer = window.setInterval(updateViewport, 500);
     return () => window.clearInterval(timer);
-  }, [needsLandscape, dismissed, updateViewport]);
+  }, [needsLandscape, updateViewport]);
 
   const enterLandscape = async () => {
     if (switching) return;
@@ -107,20 +112,24 @@ export function MobileLandscapeGate() {
       if (enteredFullscreen && document.fullscreenElement) {
         await document.exitFullscreen().catch(() => {});
       }
-      setMessage("এই browser থেকে সরাসরি ঘোরানো যাচ্ছে না। ফোনের Auto Rotation চালু করে Rotation Lock বন্ধ করো, তারপর ফোনটি পাশে ঘোরাও।\nTurn on Auto Rotation, turn off Rotation Lock, then rotate your phone sideways.");
+      setMessage(
+        "এই browser থেকে সরাসরি ঘোরানো যাচ্ছে না। ফোনের Auto Rotation চালু করে Rotation Lock বন্ধ করো, তারপর ফোনটি পাশে ঘোরাও।\nTurn on Auto Rotation, turn off Rotation Lock, then rotate your phone sideways.",
+      );
     } finally {
       setSwitching(false);
     }
   };
 
-  if (!needsLandscape || dismissed) return null;
+  if (!needsLandscape) return null;
 
   return (
-    <div className="fixed inset-0 z-[1000000001] flex h-dvh items-center justify-center overflow-y-auto bg-background/95 p-3 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="landscape-title">
+    <div
+      className="fixed inset-0 z-[1000000001] flex h-dvh items-center justify-center overflow-y-auto bg-background/95 p-3 backdrop-blur-md"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="landscape-title"
+    >
       <div className="max-h-full w-full max-w-sm overflow-y-auto overscroll-contain rounded-2xl border border-primary/30 bg-card p-6 text-center shadow-2xl">
-        <Button variant="outline" className="mb-4 h-auto min-h-11 w-full whitespace-normal py-3" onClick={() => setDismissed(true)}>
-          অ্যাপে প্রবেশ করি · Continue to app
-        </Button>
         <div className="relative mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Smartphone className="h-10 w-10" />
           <RotateCw className="absolute -right-1 top-0 h-7 w-7 animate-pulse" />
@@ -133,22 +142,51 @@ export function MobileLandscapeGate() {
         </p>
         <div className="mx-auto mt-4 h-px w-16 bg-border" />
         <div className="mt-4 space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-          <p>{canAutoLock ? "নিচের button চাপলে supported browser স্বয়ংক্রিয়ভাবে Landscape Mode চালু করার চেষ্টা করবে।" : "Auto Rotation চালু করে মোবাইলটি ঘুরিয়ে নিলেই simulator খুলবে।"}</p>
-          <p className="text-xs">{canAutoLock ? "Tap the button below to let supported browsers switch automatically." : "Turn on Auto Rotation, then rotate your phone to open the simulator."}</p>
+          <p>
+            {canAutoLock
+              ? "নিচের button চাপলে supported browser স্বয়ংক্রিয়ভাবে Landscape Mode চালু করার চেষ্টা করবে।"
+              : "Auto Rotation চালু করে মোবাইলটি ঘুরিয়ে নিলেই simulator খুলবে।"}
+          </p>
+          <p className="text-xs">
+            {canAutoLock
+              ? "Tap the button below to let supported browsers switch automatically."
+              : "Turn on Auto Rotation, then rotate your phone to open the simulator."}
+          </p>
         </div>
         {canAutoLock ? (
-          <Button disabled={switching} className="mt-5 h-auto min-h-11 w-full whitespace-normal py-3" onClick={enterLandscape}>
+          <Button
+            disabled={switching}
+            className="mt-5 h-auto min-h-11 w-full whitespace-normal py-3"
+            onClick={enterLandscape}
+          >
             <RotateCw className="mr-2 h-4 w-4" /> Landscape Mode এ নিন · Enter Landscape Mode
           </Button>
         ) : (
           <div className="mt-5 rounded-xl border border-amber-300 bg-amber-50 p-3 text-left text-xs leading-relaxed text-amber-900">
             <strong className="block">যেভাবে খুলবেন · How to continue</strong>
-            <span className="mt-1 block">Control Center থেকে Rotation Lock বন্ধ করে মোবাইলটি পাশে ঘুরিয়ে নিন।</span>
-            <span className="mt-1 block">Turn off Rotation Lock in Control Center, then rotate your phone sideways.</span>
-            {isEmbeddedBrowser && <span className="mt-2 flex items-start gap-1.5"><ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0" /><span>Messenger menu থেকে Open in Browser নির্বাচন করলে layout আরও ভালো কাজ করবে।<br />For a better layout, select Open in Browser from the Messenger menu.</span></span>}
+            <span className="mt-1 block">
+              Control Center থেকে Rotation Lock বন্ধ করে মোবাইলটি পাশে ঘুরিয়ে নিন।
+            </span>
+            <span className="mt-1 block">
+              Turn off Rotation Lock in Control Center, then rotate your phone sideways.
+            </span>
+            {isEmbeddedBrowser && (
+              <span className="mt-2 flex items-start gap-1.5">
+                <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                <span>
+                  Messenger menu থেকে Open in Browser নির্বাচন করলে layout আরও ভালো কাজ করবে।
+                  <br />
+                  For a better layout, select Open in Browser from the Messenger menu.
+                </span>
+              </span>
+            )}
           </div>
         )}
-        {message && <p className="mt-3 whitespace-pre-line rounded-lg bg-muted p-2 text-xs text-muted-foreground">{message}</p>}
+        {message && (
+          <p className="mt-3 whitespace-pre-line rounded-lg bg-muted p-2 text-xs text-muted-foreground">
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );

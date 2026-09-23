@@ -103,8 +103,9 @@ describe("challenge helpers", () => {
   });
 
   it("provides guided practice steps instead of showing a completed circuit immediately", () => {
-    expect(PRACTICE_CHALLENGES[0].guide[0].target).toBe("component:AND");
-    expect(PRACTICE_CHALLENGES[0].guide[0].message).toContain("AND");
+    expect(PRACTICE_CHALLENGES[0]!.guide.slice(0, 3).map((step) => step.target)).toEqual([
+      "component:INPUT", "component:INPUT", "component:AND",
+    ]);
   });
 
   it("detects a correct circuit target", () => {

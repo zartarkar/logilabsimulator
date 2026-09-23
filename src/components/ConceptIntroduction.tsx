@@ -19,7 +19,7 @@ export function ConceptIntroduction({ bn }: { bn: boolean }) {
         </h2>
         <p className="mt-2 text-sm leading-8 text-muted-foreground">
           {bn
-            ? "1. A ও B বোতামে চাপ দিয়ে ইনপুট চালু বা বন্ধ করো। 2. AND অথবা OR বোতাম বেছে নাও। 3. একই ইনপুটে বাতি ও আউটপুট F কীভাবে বদলায় দেখো।"
+            ? "১. A ও B বোতামে চাপ দিয়ে ইনপুট চালু বা বন্ধ করো। ২. AND অথবা OR বোতাম বেছে নাও। ৩. একই ইনপুটে বাতি ও আউটপুট F কীভাবে বদলায় দেখো।"
             : "1. Tap A and B to turn the inputs on or off. 2. Choose AND or OR. 3. Compare the light and output F for the same inputs."}
         </p>
       </div>

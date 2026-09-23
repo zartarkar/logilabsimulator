@@ -4,6 +4,7 @@ import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router"
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
@@ -15,6 +16,8 @@ import {
   Play,
   Zap,
   Languages,
+  Menu,
+  GraduationCap,
 } from "lucide-react";
 import { z } from "zod";
 import { useCircuitStore } from "@/store/useCircuitStore";
@@ -104,18 +107,18 @@ function App() {
   const [showExamples, setShowExamples] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
   const [autoTourRequested, setAutoTourRequested] = useState(false);
-  const [autoTourEndTab, setAutoTourEndTab] = useState<"concepts">("concepts");
+  const [autoTourEndTab, setAutoTourEndTab] = useState<Destination>("concepts");
 
   useEffect(() => {
     // The bare site URL is the public landing page. URLs that explicitly name
     // an app tab remain shareable deep links and open the workspace directly.
-    setShowOnboarding(qTab === undefined);
+    setShowOnboarding(qTab === undefined && browserStorage.getItem("logiclab-onboarding-complete") !== "true");
   }, [qTab]);
 
   const enterApp = (destination: Destination, familiarity: Familiarity, startGuide = false) => {
     browserStorage.setItem("logiclab-onboarding-complete", "true");
     browserStorage.setItem("logiclab-familiarity", familiarity);
-    setAutoTourEndTab("concepts");
+    setAutoTourEndTab(destination);
     // Starting a journey explicitly requests guidance, even after an earlier tour.
     setAutoTourRequested(startGuide);
     s.setTab(destination);
@@ -372,26 +375,25 @@ function App() {
             </div>
 
             <div className="app-header-actions flex shrink-0 items-center gap-0.5 sm:col-start-3 sm:row-start-1 sm:static sm:justify-self-end sm:gap-3">
-              <TutorialDialog
-                ref={tutorialRef}
-                onSelectTab={selectTourTab}
-                className="h-6 w-6 gap-0 px-0 text-[0px] sm:h-8 sm:w-auto sm:gap-1 sm:px-3 sm:text-xs"
-              />
-              <div className="flex items-center overflow-hidden rounded-full border border-border bg-background/50">
-                <Languages className="ml-1 h-2.5 w-2.5 text-muted-foreground sm:mx-1.5 sm:h-3.5 sm:w-3.5" />
-                {(["en", "bn"] as const).map((l) => (
-                  <button
-                    key={l}
-                    onClick={() => setLang(l)}
-                    aria-pressed={lang === l}
-                    className={`px-1 py-0.5 text-[8px] font-bold transition-colors sm:px-3 sm:py-1 sm:text-xs ${
-                      lang === l ? "button-lang-active" : "text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {l === "en" ? "EN" : "বাং"}
-                  </button>
-                ))}
-              </div>
+              <TutorialDialog ref={tutorialRef} onSelectTab={selectTourTab} hideTrigger />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-10 w-10" aria-label={lang === "bn" ? "মেনু খুলুন" : "Open menu"}>
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52">
+                  <DropdownMenuItem onSelect={() => window.setTimeout(() => tutorialRef.current?.start(), 100)}>
+                    <GraduationCap className="h-4 w-4" />{t("tutorial")}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel className="flex items-center gap-2"><Languages className="h-4 w-4" />{lang === "bn" ? "ভাষা" : "Language"}</DropdownMenuLabel>
+                  <DropdownMenuRadioGroup value={lang} onValueChange={(value) => setLang(value as "en" | "bn")}>
+                    <DropdownMenuRadioItem value="bn">বাংলা</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="en">English</DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 

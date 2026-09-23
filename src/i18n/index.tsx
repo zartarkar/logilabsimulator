@@ -119,10 +119,10 @@ export const DICT: Dict = {
   },
   practiceAnd1Guide0Msg: { en: "Choose this element: AND gate.", bn: "এই উপাদান বেছে নাও: AND গেট।" },
   practiceAnd1Guide0Detail: {
-    en: "Select the AND gate from the component section first.",
-    bn: "প্রথমে কম্পোনেন্ট সেকশন থেকে AND গেট নির্বাচন করো।",
+    en: "After placing both inputs, select the AND gate from the component panel.",
+    bn: "দুটি ইনপুট বসানোর পর কম্পোনেন্ট প্যানেল থেকে AND গেট নির্বাচন করো।",
   },
-  practiceAnd1Guide1Msg: { en: "Now choose this element: Input switch.", bn: "এখন এই উপাদান বেছে নাও: ইনপুট সুইচ।" },
+  practiceAnd1Guide1Msg: { en: "First, choose an input switch.", bn: "প্রথমে একটি ইনপুট সুইচ নির্বাচন করো।" },
   practiceAnd1Guide1Detail: {
     en: "Add the first signal source that represents input A.",
     bn: "প্রথম সিগন্যাল সোর্স যোগ করো যা ইনপুট A প্রতিনিধিত্ব করে।",

@@ -1,3 +1,4 @@
+import { WiringGesture } from "./WiringGesture";
 import { PracticeTourPreview, type PracticeTourStage } from "./PracticeTourPreview";
 import {
   useCallback,
@@ -13,6 +14,7 @@ import {
   ReactFlow,
   ReactFlowProvider,
   Background,
+  BackgroundVariant,
   Controls,
   addEdge,
   useReactFlow,
@@ -763,16 +765,22 @@ export function locatePracticeNodeErrors(
   return nodeErrors;
 }
 
-function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolean }) {
+interface SandboxBuilderProps {
+  isPracticeMode?: boolean;
+  onOnboardingComplete?: () => void;
+}
+
+function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComplete }: SandboxBuilderProps) {
   const [isPracticeMode, setIsPracticeMode] = useState(initialPracticeMode);
   const [nodes, setNodes] = useState<SBNode[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
+  const [hasMadeConnection, setHasMadeConnection] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [activeChallengeId, setActiveChallengeId] = useState<string>(
     PRACTICE_CHALLENGES[0]?.id ?? "",
   );
   const [difficulty, setDifficulty] = useState<"beginner" | "intermediate" | "hard">("beginner");
-  const [hasSelectedDifficulty, setHasSelectedDifficulty] = useState(false);
+  const [hasSelectedDifficulty, setHasSelectedDifficulty] = useState(Boolean(onOnboardingComplete));
   const [guideIndex, setGuideIndex] = useState<number>(0);
   const [guideSkipped, setGuideSkipped] = useState(false);
   const [tutorialPreview, setTutorialPreview] = useState<PracticeTourStage | null>(null);
@@ -786,11 +794,19 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
   }, []);
   const [showTruthTable, setShowTruthTable] = useState(false);
   const [showChallengeSuccess, setShowChallengeSuccess] = useState(false);
-  const [hasSelectedExpression, setHasSelectedExpression] = useState(false);
+  const [onboardingSolved, setOnboardingSolved] = useState(false);
+  const [hasSelectedExpression, setHasSelectedExpression] = useState(Boolean(onOnboardingComplete));
   const [challengeErrors, setChallengeErrors] = useState<string[]>([]);
   const [challengeNodeErrors, setChallengeNodeErrors] = useState<Record<string, string>>({});
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const { screenToFlowPosition, fitView } = useReactFlow();
+  useEffect(() => {
+    if (!onOnboardingComplete || !nodes.length) return;
+    const timer = window.setTimeout(() => {
+      fitView({ padding: 0.25, maxZoom: 1.15, duration: 0 });
+    }, 150);
+    return () => window.clearTimeout(timer);
+  }, [onOnboardingComplete, nodes.length, fitView]);
   const paneRef = useRef<HTMLDivElement>(null);
   const workspaceRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -895,6 +911,11 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         const step = challenge.guide[Number(guideMatch[1])];
         return guideMatch[2] === "Msg" ? (step?.message ?? "") : (step?.detail ?? "");
       }
+    }
+    // The AND guide now places A and B before the gate; translations retain their original keys.
+    if (challengeId === "and-gate" && guideEntry) {
+      const originalIndex = [1, 2, 0, 3, 4, 5][Number(guideEntry[1])];
+      return t(`${prefix}Guide${originalIndex}${guideEntry[2]}` as keyof typeof DICT);
     }
     const suffix = index !== undefined ? `${property}${index}` : property;
     const key = `${prefix}${suffix}` as keyof typeof DICT;
@@ -1107,8 +1128,9 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         if (guideIndex < activeChallenge.guide.length - 1) {
           setGuideIndex((idx) => idx + 1);
         } else if (activeChallenge.difficulty === "beginner") {
-          setGuideSkipped(true);
+          if (!onOnboardingComplete) setGuideSkipped(true);
           setShowChallengeSuccess(true);
+          setOnboardingSolved(true);
         }
       }, 800);
     }
@@ -1144,6 +1166,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     setSelectedIds([]);
     setNodes([]);
     setEdges([]);
+    setHasMadeConnection(false);
   }, []);
 
   const changeDifficulty = useCallback(
@@ -1217,6 +1240,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
 
   const closeChallengeSuccess = () => {
     setShowChallengeSuccess(false);
+    if (onOnboardingComplete) return;
     setGuideSkipped(true);
     setHasSelectedDifficulty(false);
     setHasSelectedExpression(false);
@@ -1252,6 +1276,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
   );
 
   const onConnect = useCallback((c: Connection) => {
+    setHasMadeConnection(true);
     setEdges((es) => {
       const filtered = es.filter(
         (e) => !(e.target === c.target && e.targetHandle === c.targetHandle),
@@ -1294,6 +1319,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
     <div
       className={`flex h-full min-h-0 flex-col lg:flex-row bg-transparent sandbox-container overflow-hidden touch-none lg:touch-auto ${isPracticeMode ? "practice-builder" : ""} ${activeGuide && isPracticeMode ? "mobile-guided-builder" : ""} ${!isMobile ? "desktop-builder" : ""}`}
     >
+      {onOnboardingComplete && onboardingSolved && <Button className="absolute right-4 top-4 z-30" onClick={onOnboardingComplete}>{lang === "bn" ? "সিমুলেশনে যাই" : "Go to simulation"}</Button>}
       <AlertDialog open={showChallengeSuccess} onOpenChange={(open) => open ? setShowChallengeSuccess(true) : closeChallengeSuccess()}>
         <AlertDialogContent className="challenge-success max-w-lg overflow-y-auto border-2 border-primary/35 bg-card p-0 text-center shadow-2xl sm:text-center">
           <button onClick={closeChallengeSuccess} aria-label="Close and return to circuit" className="absolute right-2 top-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border bg-card"><X className="h-5 w-5" /></button>
@@ -1339,8 +1365,8 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             </ul>
           </div>
           <AlertDialogFooter className="border-t border-border bg-muted/30 px-6 py-4 sm:justify-center">
-            <AlertDialogAction className="min-w-36 font-bold" onClick={closeChallengeSuccess}>
-              {lang === "bn" ? "সার্কিটে ফিরে যাও" : "Back to circuit"}
+            <AlertDialogAction className="min-w-36 font-bold" onClick={onOnboardingComplete ?? closeChallengeSuccess}>
+              {onOnboardingComplete ? (lang === "bn" ? "সিমুলেশনে যাই" : "Go to simulation") : lang === "bn" ? "সার্কিটে ফিরে যাও" : "Back to circuit"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -1390,7 +1416,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
               <Sparkles className="h-3.5 w-3.5" />
               {lang === "bn" ? "প্র্যাকটিস চ্যালেঞ্জ" : "Practice challenges"}
             </div>
-            {isPracticeMode && !tutorialPreview && (
+            {isPracticeMode && !tutorialPreview && !onOnboardingComplete && (
               <button
                 className="text-[10px] font-medium text-muted-foreground underline-offset-2 hover:underline"
                 onClick={() => {
@@ -1406,11 +1432,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
           {tutorialPreview ? <PracticeTourPreview stage={tutorialPreview} bn={lang === "bn"} /> : !isPracticeMode ? (
             <div>
               <p className="mb-2 text-[11px] leading-relaxed text-muted-foreground">
-                {isMobile
-                  ? lang === "bn" ? "রাশি দেখে বানাও। সহজ স্তরে গাইড আছে।" : "Build from an expression. Easy includes a guide."
-                  : lang === "bn"
-                    ? "তৈরি expression দেখে circuit বানাও। Beginner level এ ধাপে ধাপে guide পাওয়া যাবে।"
-                    : "Build circuits from ready-made expressions. Beginner level includes an interactive step-by-step guide."}
+                {lang === "bn" ? "চ্যালেঞ্জ মোডে সহজ, মধ্যম বা কঠিন স্তর বেছে নিয়ে সার্কিট তৈরি করো।" : "Choose Easy, Intermediate or Hard in challenge mode to build a circuit."}
               </p>
               <Button
                 size="sm"
@@ -1433,6 +1455,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                     Difficulty
                   </label>
                   <select
+                    disabled={Boolean(onOnboardingComplete)}
                     aria-label="Select practice difficulty"
                     value={hasSelectedDifficulty ? difficulty : ""}
                     onChange={(event) =>
@@ -1466,6 +1489,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                         ))}
                       </div>
                     ) : <select
+                      disabled={Boolean(onOnboardingComplete)}
                       aria-label="Select practice expression"
                       value={hasSelectedExpression ? activeChallenge.id : ""}
                       onChange={(event) => loadChallenge(event.target.value)}
@@ -1522,6 +1546,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                       }
                       setChallengeNodeErrors({});
                       setShowChallengeSuccess(true);
+          setOnboardingSolved(true);
                     }}
                   >
                     <Check className="mr-1 h-3.5 w-3.5" />{" "}
@@ -1623,6 +1648,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
                   <RotateCcw className="mr-1 h-3.5 w-3.5" aria-hidden="true" /> {lang === "bn" ? "রিসেট" : "Reset"}
                 </Button>
                 <Button
+                  disabled={Boolean(onOnboardingComplete)}
                   variant="ghost"
                   size="sm"
                   className="h-8 text-xs text-muted-foreground"
@@ -1814,6 +1840,9 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
               </Button>
             </div>
           )}
+          {isPracticeMode && highlightGuide === "canvas:wire" && !hasMadeConnection && edges.length === 0 && nodes.some(n => n.kind === "INPUT") && nodes.some(n => n.kind !== "INPUT" && n.kind !== "OUTPUT") && (
+            <WiringGesture sourceId={nodes.find(n => n.kind === "INPUT")!.id} targetId={nodes.find(n => n.kind !== "INPUT" && n.kind !== "OUTPUT")!.id} bn={lang === "bn"} />
+          )}
           <ReactFlow
             nodes={rfNodes}
             edges={styledEdges}
@@ -1847,7 +1876,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
             zoomOnDoubleClick={false}
             nodeOrigin={[0.5, 0.5]}
           >
-            <Background gap={18} size={1} color="var(--grid-dot)" />
+            <Background variant={onOnboardingComplete ? BackgroundVariant.Lines : BackgroundVariant.Dots} gap={onOnboardingComplete ? 24 : 18} size={1} color={onOnboardingComplete ? "#cbd5e1" : "var(--grid-dot)"} />
             {(!isMobile || !isPracticeMode) && (
               <Controls
                 position="bottom-right"
@@ -1860,7 +1889,7 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
         </div>
 
         {/* Overlaid Truth Table - reduced prominence as requested */}
-        <section
+        {!onOnboardingComplete && <section
           aria-label="Circuit truth table"
           className="builder-truth shrink-0 border-t bg-card px-3 py-2"
         >
@@ -1943,16 +1972,16 @@ function Inner({ isPracticeMode: initialPracticeMode }: { isPracticeMode: boolea
               </div>
             </>
           )}
-        </section>
+        </section>}
       </div>
     </div>
   );
 }
 
-export function SandboxBuilder({ isPracticeMode = false }: { isPracticeMode?: boolean }) {
+export function SandboxBuilder({ isPracticeMode = false, onOnboardingComplete }: SandboxBuilderProps) {
   return (
     <ReactFlowProvider>
-      <Inner isPracticeMode={isPracticeMode} />
+      <Inner isPracticeMode={isPracticeMode} onOnboardingComplete={onOnboardingComplete} />
     </ReactFlowProvider>
   );
 }

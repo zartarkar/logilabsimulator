@@ -1,11 +1,13 @@
 import { useEffect, useState, type CSSProperties } from "react";
 
 const restingPlaces = [
+  [3, 0],
   [50, 0],
-  [24, 1],
-  [75, 0],
-  [40, 2],
-  [65, 1],
+  [97, 0],
+  [97, 100],
+  [50, 100],
+  [3, 100],
+  [3, 40],
 ] as const;
 
 export function TenTen({
@@ -26,10 +28,7 @@ export function TenTen({
     const update = () => {
       clearInterval(timer);
       if (!paused && !preference.matches)
-        timer = setInterval(
-          () => setPosition((value) => (value + 1) % restingPlaces.length),
-          12000,
-        );
+        timer = setInterval(() => setPosition((value) => (value + 1) % restingPlaces.length), 6500);
     };
     update();
     preference.addEventListener("change", update);

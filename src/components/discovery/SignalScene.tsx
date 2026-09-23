@@ -19,7 +19,7 @@ export function SignalScene({
       </div>
       <svg
         className="ll-circuit-diagram"
-        viewBox="0 0 580 310"
+        viewBox="20 88 520 166"
         role="img"
         aria-label={`${gate}: ${info.inputs.join(", ")} → ${revealed ? info.output : "?"}`}
       >
