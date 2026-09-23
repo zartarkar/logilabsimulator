@@ -21,7 +21,7 @@ export function ConceptFeedback({
   const text =
     step === 0
       ? bn
-        ? "Digital logic এ ON = 1 এবং OFF = 0।"
+        ? "Digital logic এ ON = 1 এবং OFF = 0"
         : "In digital logic, ON = 1 and OFF = 0."
       : step === 1
         ? correct

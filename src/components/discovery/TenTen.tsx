@@ -1,13 +1,12 @@
 import { useEffect, useState, type CSSProperties } from "react";
 
 const restingPlaces = [
-  [3, 0],
-  [50, 0],
-  [97, 0],
-  [97, 100],
-  [50, 100],
-  [3, 100],
-  [3, 40],
+  [8, 0],
+  [45, 6],
+  [92, 0],
+  [70, 8],
+  [35, 0],
+  [8, 6],
 ] as const;
 
 export function TenTen({

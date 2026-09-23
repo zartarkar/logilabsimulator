@@ -1,3 +1,5 @@
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import { decodeBuilderCircuit, encodeBuilderCircuit, nextBuilderId } from "@/logic/builderUrl";
 import { WiringGesture } from "./WiringGesture";
 import { PracticeTourPreview, type PracticeTourStage } from "./PracticeTourPreview";
 import {
@@ -772,9 +774,41 @@ interface SandboxBuilderProps {
 
 function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComplete }: SandboxBuilderProps) {
   const [isPracticeMode, setIsPracticeMode] = useState(initialPracticeMode);
-  const [nodes, setNodes] = useState<SBNode[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
+  const search = useSearch({ from: "/" });
+  const navigate = useNavigate({ from: "/" });
+  const urlEnabled = !onOnboardingComplete;
+  const [initialCircuit] = useState(() => decodeBuilderCircuit(urlEnabled ? search.circuit : undefined));
+  const [nodes, setNodes] = useState<SBNode[]>(initialCircuit.nodes);
+  const [edges, setEdges] = useState<Edge[]>(initialCircuit.edges);
+  const serializedCircuit = encodeBuilderCircuit(nodes, edges);
+  const observedUrl = useRef(search.circuit);
+  const observedCircuit = useRef(serializedCircuit);
+  const pendingUrl = useRef<{ value: string | undefined } | null>(null);
+  useEffect(() => {
+    if (!urlEnabled || (search.tab !== "builder" && search.tab !== "practice")) return;
+    if (search.circuit !== observedUrl.current) {
+      observedUrl.current = search.circuit;
+      if (pendingUrl.current?.value === search.circuit && pendingUrl.current) {
+        pendingUrl.current = null;
+      } else {
+        const restored = decodeBuilderCircuit(search.circuit);
+        observedCircuit.current = encodeBuilderCircuit(restored.nodes, restored.edges);
+        setNodes(restored.nodes);
+        setEdges(restored.edges);
+        nextIdRef.current = nextBuilderId(restored.nodes);
+        return;
+      }
+    }
+    if (serializedCircuit === observedCircuit.current) return;
+    const timer = window.setTimeout(() => {
+      observedCircuit.current = serializedCircuit;
+      pendingUrl.current = { value: serializedCircuit };
+      void navigate({ search: previous => ({ ...previous, circuit: serializedCircuit }), replace: true, resetScroll: false });
+    }, 120);
+    return () => window.clearTimeout(timer);
+  }, [serializedCircuit, search.circuit, search.tab, urlEnabled, navigate]);
   const [hasMadeConnection, setHasMadeConnection] = useState(false);
+  const [toggledInputs, setToggledInputs] = useState<Set<string>>(() => new Set());
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [activeChallengeId, setActiveChallengeId] = useState<string>(
     PRACTICE_CHALLENGES[0]?.id ?? "",
@@ -812,7 +846,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
   useEffect(() => {
     if (!showTruthTable) workspaceRef.current?.scrollTo({ top: 0 });
   }, [showTruthTable]);
-  const nextIdRef = useRef(0);
+  const nextIdRef = useRef(nextBuilderId(initialCircuit.nodes));
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
   const isMobile = useIsMobile();
   const { t, lang } = useLang();
@@ -841,7 +875,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
   }, [canvasSize]);
 
   useEffect(() => {
-    if (!isPracticeMode || nodes.length === 0) return;
+    if ((!isPracticeMode && canvasSize.height >= 500) || nodes.length === 0) return;
     let secondFrame = 0;
     const firstFrame = window.requestAnimationFrame(() => {
       secondFrame = window.requestAnimationFrame(() => {
@@ -852,7 +886,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
       window.cancelAnimationFrame(firstFrame);
       if (secondFrame) window.cancelAnimationFrame(secondFrame);
     };
-  }, [fitView, isMobile, isPracticeMode, nodes.length]);
+  }, [fitView, isMobile, isPracticeMode, nodes.length, canvasSize.width, canvasSize.height]);
 
   // Helper to get i18n key prefix for challenge ID
   const getChallengeKeyPrefix = (challengeId: string): string => {
@@ -981,6 +1015,14 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
 
       setNodes((ns) => {
         const sameKindCount = ns.filter((node) => node.kind === kind).length;
+        // Enforce the current step against queued updates, including rapid taps.
+        if (isPracticeMode && !guideSkipped && hasSelectedDifficulty && hasSelectedExpression) {
+          const challenge = PRACTICE_CHALLENGES.find((item) => item.id === activeChallengeId);
+          const target = `component:${kind}`;
+          const allowedCount = challenge?.guide.slice(0, guideIndex + 1)
+            .filter((step) => step.target === target).length ?? 0;
+          if (challenge?.guide[guideIndex]?.target !== target || sameKindCount >= allowedCount) return ns;
+        }
         const usedInputLabels = new Set(
           ns.filter((node) => node.kind === "INPUT").map((node) => node.label),
         );
@@ -1009,6 +1051,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
           "BUFFER",
         ];
         const isLogic = logicKinds.includes(kind);
+        const narrowOnboarding = Boolean(onOnboardingComplete) && canvasSize.width < 400;
         const isLateStage = kind === "OR" || kind === "NOR";
         const bandCount = ns.filter((node) =>
           isLateStage
@@ -1016,7 +1059,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
             : logicKinds.includes(node.kind) && node.kind !== "OR" && node.kind !== "NOR",
         ).length;
         const x =
-          kind === "INPUT"
+          narrowOnboarding ? (kind === "INPUT" ? 20 : 260) : kind === "INPUT"
             ? 70
             : kind === "OUTPUT"
               ? Math.max(85, canvasSize.width - 105)
@@ -1024,7 +1067,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
                 ? canvasSize.width * (isLateStage ? 0.68 : 0.4)
                 : canvasSize.width * 0.25;
         const y =
-          kind === "INPUT"
+          narrowOnboarding ? (kind === "INPUT" ? 50 + sameKindCount * 120 : kind === "OUTPUT" ? 270 : 110 + bandCount * 90) : kind === "INPUT"
             ? 90 + sameKindCount * 95
             : kind === "OUTPUT"
               ? canvasSize.height / 2
@@ -1033,7 +1076,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
       });
       setSelectedIds([id]);
     },
-    [canvasSize, fitView, isMobile, isPracticeMode, screenToFlowPosition],
+    [canvasSize, fitView, isMobile, isPracticeMode, screenToFlowPosition, guideSkipped, hasSelectedDifficulty, hasSelectedExpression, activeChallengeId, guideIndex, onOnboardingComplete],
   );
 
   const removeNode = useCallback((id: string) => {
@@ -1167,6 +1210,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
     setNodes([]);
     setEdges([]);
     setHasMadeConnection(false);
+    setToggledInputs(new Set());
   }, []);
 
   const changeDifficulty = useCallback(
@@ -1199,6 +1243,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
           onToggle:
             n.kind === "INPUT"
               ? () => {
+                  setToggledInputs((previous) => new Set([...previous, n.id]));
                   setNodes((ns) =>
                     ns.map((x) => (x.id === n.id ? { ...x, inputValue: x.inputValue ? 0 : 1 } : x)),
                   );
@@ -1581,7 +1626,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
                   <p className="text-xs font-semibold text-foreground">
                     {getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Msg`)}
                   </p>
-                  {!isMobile && <p className="text-[10px] text-muted-foreground">
+                  {!isMobile && !onOnboardingComplete && <p className="text-[10px] text-muted-foreground">
                     {getTranslatedChallengeText(activeChallenge.id, `Guide${guideIndex}Detail`)}
                   </p>}
                   {highlightGuide === "canvas:wire" && (
@@ -1840,9 +1885,13 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
               </Button>
             </div>
           )}
-          {isPracticeMode && highlightGuide === "canvas:wire" && !hasMadeConnection && edges.length === 0 && nodes.some(n => n.kind === "INPUT") && nodes.some(n => n.kind !== "INPUT" && n.kind !== "OUTPUT") && (
+          {(!isPracticeMode || highlightGuide === "canvas:wire") && !hasMadeConnection && edges.length === 0 && nodes.some(n => n.kind === "INPUT") && nodes.some(n => n.kind !== "INPUT" && n.kind !== "OUTPUT") && (
             <WiringGesture sourceId={nodes.find(n => n.kind === "INPUT")!.id} targetId={nodes.find(n => n.kind !== "INPUT" && n.kind !== "OUTPUT")!.id} bn={lang === "bn"} />
           )}
+          {(!isPracticeMode || highlightGuide === "canvas:toggle") && edges.length > 0 && (() => {
+            const input = nodes.find(n => n.kind === "INPUT" && !toggledInputs.has(n.id) && edges.some(edge => edge.source === n.id));
+            return input ? <WiringGesture mode="toggle" sourceId={input.id} targetId={input.id} bn={lang === "bn"} /> : null;
+          })()}
           <ReactFlow
             nodes={rfNodes}
             edges={styledEdges}

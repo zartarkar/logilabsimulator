@@ -20,7 +20,7 @@ export const TutorialDialog = forwardRef<
 
   const startTour = useCallback(
     (finishTab?: TourTab) => {
-      onSelectTab(finishTab === "simulator" ? "simulator" : "concepts");
+      onSelectTab("concepts");
 
       window.setTimeout(() => {
         const goTo =
@@ -66,6 +66,29 @@ export const TutorialDialog = forwardRef<
               align: "center",
             },
           },
+          ...([
+            ["signals", "বুলিয়ান অপারেশন ও লজিক গেট", "Boolean operations and gates"],
+            ["tables", "সত্যক সারণি", "Truth tables"],
+            ["laws", "বুলিয়ান বীজগণিতের সূত্র", "Boolean algebra laws"],
+            ["morgan", "ডি মর্গ্যানের উপপাদ্য", "De Morgan’s theorem"],
+            ["reduce", "বুলিয়ান রাশির সরলীকরণ", "Simplifying expressions"],
+            ["universal", "সার্বজনীন গেট", "Universal gates"],
+          ] as const).map(([id, titleBn, titleEn]): DriveStep => ({
+            element: `[data-tour="concept-${id}"]`,
+            onHighlightStarted: () => {
+              window.dispatchEvent(new CustomEvent("logiclab:tutorial-concept", { detail: id }));
+              window.setTimeout(() => {
+                document.getElementById(id)?.scrollIntoView({ block: "start", behavior: "instant" });
+                tutorial.refresh();
+              }, 80);
+            },
+            popover: {
+              title: bn ? titleBn : titleEn,
+              description: bn ? "এই অংশের ব্যাখ্যা ও উদাহরণ দেখো; একই শিরোনামে আবার চাপলে অংশটি বন্ধ হবে।" : "Explore this section’s explanation and examples; tap its heading again to collapse it.",
+              side: "bottom",
+              align: "start",
+            },
+          })),
           {
             element: '[data-tour="navigation"]',
             popover: {
@@ -233,7 +256,7 @@ export const TutorialDialog = forwardRef<
             if (previous < 0) return;
             const target = String(steps[previous]?.element ?? "");
             const tab: TourTab =
-              previous < 4
+              previous < 10
                 ? "concepts"
                 : target.includes("practice-panel") ||
                     (target.includes("builder-") && target !== ".nav-tab-builder") ||
@@ -259,7 +282,7 @@ export const TutorialDialog = forwardRef<
           doneBtnText: bn ? "শুরু করি" : "Start exploring",
           progressText: bn ? "{{current}} / {{total}}" : "{{current}} of {{total}}",
         });
-        tutorial.drive(finishTab === "simulator" ? 4 : 0);
+        tutorial.drive(0);
       }, 300);
     },
     [bn, onSelectTab],

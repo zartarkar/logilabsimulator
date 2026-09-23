@@ -6,10 +6,12 @@ export function WiringGesture({
   sourceId,
   targetId,
   bn,
+  mode = "wire",
 }: {
   sourceId: string;
   targetId: string;
   bn: boolean;
+  mode?: "wire" | "toggle";
 }) {
   const overlay = useRef<HTMLDivElement>(null);
   const [points, setPoints] = useState<number[] | null>(null);
@@ -18,9 +20,9 @@ export function WiringGesture({
     const measure = () => {
       const container = overlay.current?.parentElement;
       const source = container?.querySelector(
-        `[data-id="${CSS.escape(sourceId)}"] .react-flow__handle.source`,
+        `[data-id="${CSS.escape(sourceId)}"] ${mode === "toggle" ? "button[aria-pressed]" : ".react-flow__handle.source"}`,
       );
-      const target = container?.querySelector(
+      const target = mode === "toggle" ? source : container?.querySelector(
         `[data-id="${CSS.escape(targetId)}"] .react-flow__handle[data-handleid="in-0"]`,
       );
       if (container && source && target) {
@@ -41,14 +43,14 @@ export function WiringGesture({
     };
     frame = requestAnimationFrame(measure);
     return () => cancelAnimationFrame(frame);
-  }, [sourceId, targetId]);
+  }, [sourceId, targetId, mode]);
   return (
     <div
       ref={overlay}
-      className="wiring-gesture"
+      className={`wiring-gesture ${mode === "toggle" ? "toggle-gesture" : ""}`}
       role="img"
       aria-label={
-        bn
+        mode === "toggle" ? (bn ? "ইনপুট সুইচে চাপ দিয়ে ০ ও ১ পরিবর্তন করো" : "Tap the input switch to toggle between 0 and 1") : bn
           ? "ইনপুটের OUT বিন্দু থেকে গেটের IN বিন্দু পর্যন্ত টেনে তার যুক্ত করো।"
           : "Drag from the input OUT port to the gate IN port to connect a wire."
       }
@@ -82,7 +84,7 @@ export function WiringGesture({
             />
           </svg>
           <span
-            className="wiring-gesture-hand"
+            className={mode === "toggle" ? "toggle-gesture-hand" : "wiring-gesture-hand"}
             style={
               {
                 left: points[0],

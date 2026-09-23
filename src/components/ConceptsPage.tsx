@@ -225,6 +225,11 @@ export function ConceptsPage() {
   const bn = lang === "bn";
   const say = (en: string, text: string) => (bn ? text : en);
   const [openId, setOpenId] = useState<string | null>(null);
+  useEffect(() => {
+    const openForTour = (event: Event) => setOpenId((event as CustomEvent<string | null>).detail);
+    window.addEventListener("logiclab:tutorial-concept", openForTour);
+    return () => window.removeEventListener("logiclab:tutorial-concept", openForTour);
+  }, []);
   const toggleSection = (id: string) => setOpenId((current) => (current === id ? null : id));
   const [bits, setBits] = useState([0, 1, 1]);
   const [twoInputs, setTwoInputs] = useState([0, 1]);

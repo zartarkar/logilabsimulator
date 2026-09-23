@@ -48,6 +48,7 @@ const searchSchema = z.object({
   q: z.string().catch("").optional(),
   tab: z.enum(["concepts", "simulator", "builder", "learn", "practice", "circuit"]).catch("simulator").optional(),
   v: z.string().catch("").optional(),
+  circuit: z.string().optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/")({
@@ -193,7 +194,7 @@ function App() {
   useEffect(() => {
     // Keep the public root URL untouched while the landing page is visible.
     // Otherwise this effect adds ?tab=simulator and immediately dismisses it.
-    if (showOnboarding !== false) return;
+    if (showOnboarding !== false || s.tab === "builder" || s.tab === "practice") return;
 
     const relevantVars = s.parsed?.variables || [];
     const valuesStr = Object.entries(s.values)
@@ -211,7 +212,7 @@ function App() {
     // This implies /?tab=simulator&q=... or /?tab=builder...
     
     if (currentQ !== q || currentTab !== qTab || currentV !== qValues) {
-      const search: any = { tab: currentTab === 'simulator' ? 'simulator' : currentTab };
+      const search: any = { tab: currentTab === 'simulator' ? 'simulator' : currentTab, ...(qSearch.circuit ? { circuit: qSearch.circuit } : {}) };
       
       // Only include q if we are in the simulator tab or if it's already present
       if (currentTab === 'simulator' && currentQ) {

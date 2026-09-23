@@ -30,6 +30,7 @@ export function DiscoveryLanding({
   const { lang } = useLang();
   const bn = lang === "bn";
   const [step, setStep] = useState(-1);
+  const [building, setBuilding] = useState(false);
   const [knowledge, setKnowledge] = useState<Knowledge>({ ...initialKnowledge });
   const [feedback, setFeedback] = useState<boolean | null>(null);
   const [expanded, setExpanded] = useState(false);
@@ -94,7 +95,7 @@ export function DiscoveryLanding({
             <CircuitBoard size={21} />
           </span>
           LogicLab
-          <small>{bn ? "পর্যবেক্ষণ ও অনুশীলন" : "Observe and practise"}</small>
+          <small className={building ? "ll-building-title" : undefined}>{building ? (bn ? "এবার নিজে সার্কিট তৈরি করো" : "Build your own circuit") : (bn ? "পর্যবেক্ষণ ও অনুশীলন" : "Observe and practise")}</small>
         </a>
         {step !== 6 && (
           <button
@@ -109,6 +110,7 @@ export function DiscoveryLanding({
       </header>
       {step < 0 ? (
         <section className="ll-workbench ll-workbench-welcome">
+          <div className="ll-card-mascot ll-card-mascot-right"><TenTen scene={-1} reaction="idle" paused bn={bn} /></div>
           <div className="ll-panel" ref={panel}>
             <div className="ll-prompt ll-welcome">
               <span className="ll-welcome-icon">
@@ -135,6 +137,7 @@ export function DiscoveryLanding({
       ) : step === 5 ? (
         <CircuitBuildingJourney
           bn={bn}
+          onStart={() => setBuilding(true)}
           onComplete={() => onEnter("simulator", assess(knowledge).familiarity, true)}
         />
       ) : step === 6 ? (
@@ -207,17 +210,7 @@ export function DiscoveryLanding({
             )}
           </div>
           <div className="ll-experiment-answer">
-            {feedback !== null ? (
-              <ConceptFeedback
-                step={step}
-                gate={gate}
-                correct={feedback}
-                bn={bn}
-                expanded={expanded}
-                onExpand={inspect}
-                onNext={next}
-              />
-            ) : step === 0 ? (
+            {step === 0 ? (
               <BinaryChoices
                 answer={feedback}
                 bn={bn}
@@ -233,6 +226,15 @@ export function DiscoveryLanding({
                     key={value}
                     type="button"
                     aria-label={`Output ${value}`}
+                    disabled={feedback !== null}
+                    data-result={
+                      feedback !== null &&
+                      value === (feedback ? gateCopy[gate].output : 1 - gateCopy[gate].output)
+                        ? feedback
+                          ? "correct"
+                          : "incorrect"
+                        : undefined
+                    }
                     onClick={() =>
                       answer(
                         { [`behavior${gate}`]: value === gateCopy[gate].output },
@@ -247,6 +249,17 @@ export function DiscoveryLanding({
                 ))}
               </div>
             ) : null}
+            {feedback !== null && (
+              <ConceptFeedback
+                step={step}
+                gate={gate}
+                correct={feedback}
+                bn={bn}
+                expanded={expanded}
+                onExpand={inspect}
+                onNext={next}
+              />
+            )}
           </div>
         </section>
       )}

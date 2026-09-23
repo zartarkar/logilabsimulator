@@ -2766,3 +2766,70 @@
 }
 .ll-experiment .ll-symbol-slot .ll-drop-label svg { width: 16px; height: 16px; flex-shrink: 0; }
 .ll-experiment .ll-symbol-slot button > span { flex-shrink: 0; }
+/* Preserve the selected option alongside the explanation. */
+.ll-experiment-answered .ll-experiment-answer { display: grid; gap: 8px; max-height: 52dvh; }
+.ll-experiment-answered .ll-feedback { max-height: calc(52dvh - 62px); }
+.ll-experiment-answered .ll-binary-choices button { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 46px; }
+.ll-experiment-answered .ll-choice-label { margin: 0; }
+.ll-experiment-answered .ll-choice-label > span, .ll-experiment-answered .ll-mini-switch { display: none; }
+.ll-experiment-answered .ll-choice-state, .ll-experiment-answered .ll-choice-state + .ll-choice-state { margin: 0; gap: 6px; }
+.ll-experiment-answered .ll-choice-state b { font-size: 18px; }
+.ll-experiment .ll-binary-choices button[data-result="incorrect"],
+.ll-experiment .ll-output-choices button[data-result="incorrect"],
+.ll-experiment .ll-symbol-slot button.is-recap { background: #611e2c; border: 2px solid #fb7185; color: #ffe4e6; }
+.ll-experiment .ll-binary-choices button[data-result="correct"],
+.ll-experiment .ll-output-choices button[data-result="correct"] { background: #123b2d; border: 2px solid #34d399; color: #d1fae5; }
+.ll-experiment .ll-binary-choices button[data-result] .ll-choice-label,
+.ll-experiment .ll-binary-choices button[data-result] .ll-choice-state,
+.ll-experiment .ll-binary-choices button[data-result] .ll-choice-state b { color: inherit; }
+.ll-experiment .ll-output-choices button:disabled { transform: none; cursor: default; }
+.ll-workbench-welcome,
+.ll-build-invitation { position: relative; }
+.ll-discovery .ll-workbench-welcome,
+.ll-discovery .ll-build-invitation { overflow: visible; }
+.ll-discovery .ll-card-mascot { position: absolute; top: -30px; width: 76px; height: 76px; z-index: 3; pointer-events: none; }
+.ll-card-mascot-right { right: -12px; }
+.ll-card-mascot-left { left: -12px; }
+.ll-discovery .ll-card-mascot .ll-guide { width: 76px; height: 76px; inset: 0; transform: none; }
+/* A reserved empty lane keeps the entire moving sprite clear of lesson content. */
+.ll-discovery .ll-experiment .ll-canvas { padding-top: 64px; }
+.ll-discovery .ll-experiment .ll-guide {
+  width: 48px; height: 48px;
+  left: clamp(28px, var(--guide-x), calc(100% - 28px));
+  top: calc(6px + var(--guide-y) * 1px);
+}
+.ll-discovery .ll-experiment .ll-binary-scene,
+.ll-discovery .ll-experiment .ll-signal-scene,
+.ll-discovery .ll-experiment .ll-recognition { padding-top: 4px; padding-bottom: 4px; }
+.ll-experiment .ll-feedback[data-result] .ll-selected-output { background: transparent; border: 0; }
+.ll-experiment .ll-feedback[data-result] .ll-formula { background: transparent; color: #e2edf8; }
+.ll-experiment .ll-feedback[data-result] .ll-formula small { color: #bacde0; }
+.ll-discovery .ll-builder-workspace .input-drag-grip { display: none; }
+.ll-discovery .ll-builder-journey { grid-template-rows: minmax(0, 1fr); }
+.ll-discovery .ll-builder-workspace .mobile-guided-builder { grid-template-columns: 140px minmax(0, 1fr); }
+.ll-discovery .ll-builder-workspace .practice-guide { width: calc(100% - 12px); max-width: 680px; justify-self: start; padding: 6px 8px; }
+.ll-discovery .ll-builder-workspace .guide-navigation button { min-height: 30px; height: 30px; padding: 3px 7px; font-size: 11px; }
+.ll-discovery .ll-builder-workspace .guide-navigation button:last-child:disabled { display: none; }
+.ll-discovery .ll-builder-workspace .component-palette { padding: 5px; gap: 5px; }
+.ll-discovery .ll-builder-workspace .component-palette > button { min-height: 42px; padding: 5px; font-size: 11px; }
+@media (max-width: 767px) {
+  .ll-discovery .ll-builder-workspace .mobile-guided-builder { grid-template-columns: 72px minmax(0, 1fr); }
+  .ll-discovery .ll-builder-workspace .practice-guide { grid-column: 1 / -1; grid-row: 1; margin: 3px; width: calc(100% - 6px); max-width: none; }
+  .ll-discovery .ll-builder-workspace .component-palette { grid-row: 2; }
+  .ll-discovery .ll-builder-workspace .component-palette > div { font-size: 8px; }
+  .ll-discovery .ll-builder-workspace .practice-guide > div { gap: 4px; }
+  .ll-discovery .ll-builder-workspace .guide-navigation { justify-content: flex-end; }
+  .ll-discovery .ll-header small.ll-building-title { display: block; font-size: 11px; max-width: 110px; white-space: normal; }
+  .ll-discovery .ll-card-mascot, .ll-discovery .ll-card-mascot .ll-guide { width: 64px; height: 64px; }
+  .ll-discovery .ll-card-mascot { top: -26px; }
+  .ll-card-mascot-right { right: -8px; }
+  .ll-card-mascot-left { left: -8px; }
+  .ll-discovery .ll-experiment .ll-guide { width: 40px; height: 40px; }
+  .ll-discovery .ll-experiment .ll-canvas { padding-top: 56px; }
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  .ll-discovery .ll-builder-workspace .mobile-guided-builder { grid-template-columns: 76px minmax(0, 1fr); }
+  .ll-discovery .ll-builder-workspace .practice-guide { grid-column: 2; grid-row: 1; max-width: none; margin: 3px; width: calc(100% - 6px); padding: 4px 6px; }
+  .ll-discovery .ll-builder-workspace .component-palette { grid-row: 1 / 3; }
+  .ll-discovery .ll-builder-workspace .practice-guide > div { flex-direction: row; align-items: center; gap: 5px; }
+}
