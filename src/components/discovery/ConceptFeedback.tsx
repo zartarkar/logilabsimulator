@@ -51,13 +51,6 @@ export function ConceptFeedback({
                 : "Incorrect answer. See the explanation."}
           </strong>
         </div>
-        {step >= 2 && (
-          <div className="ll-selected-output">
-            <span>{bn ? "তোমার উত্তর" : "Your answer"}</span>
-            <strong>{correct ? gateCopy[gate].output : 1 - gateCopy[gate].output}</strong>
-            {correct ? <CheckCircle2 size={20} /> : <XCircle size={20} />}
-          </div>
-        )}
         <h2>{text}</h2>
         {step === 0 ? (
           <>

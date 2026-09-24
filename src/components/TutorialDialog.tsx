@@ -56,23 +56,18 @@ export const TutorialDialog = forwardRef<
             },
           },
           {
-            element: '[data-tour="concepts"]',
+            element: '[data-tour="concept-map"]',
             popover: {
               title: bn ? "কনসেপ্ট ঝালাই" : "Concept refresher",
               description: bn
-                ? "এই পুরো পাতায় গেট, সত্যক সারণি, সূত্র ও সরলীকরণ আছে। স্ক্রল করে দেখো; সুইচ বদলে ফল মেলাও।"
-                : "This page covers gates, truth tables, laws and simplification. Scroll to explore and toggle inputs to compare results.",
+                ? "এই মেনু থেকে পছন্দের বিষয় খোলো। পরের ধাপে একটি পাঠ খুলে দেখানো হবে।"
+                : "Open any topic from this menu. Next, we’ll expand one lesson as an example.",
               side: "bottom",
               align: "center",
             },
           },
           ...([
             ["signals", "বুলিয়ান অপারেশন ও লজিক গেট", "Boolean operations and gates"],
-            ["tables", "সত্যক সারণি", "Truth tables"],
-            ["laws", "বুলিয়ান বীজগণিতের সূত্র", "Boolean algebra laws"],
-            ["morgan", "ডি মর্গ্যানের উপপাদ্য", "De Morgan’s theorem"],
-            ["reduce", "বুলিয়ান রাশির সরলীকরণ", "Simplifying expressions"],
-            ["universal", "সার্বজনীন গেট", "Universal gates"],
           ] as const).map(([id, titleBn, titleEn]): DriveStep => ({
             element: `[data-tour="concept-${id}"]`,
             onHighlightStarted: () => {
@@ -256,7 +251,7 @@ export const TutorialDialog = forwardRef<
             if (previous < 0) return;
             const target = String(steps[previous]?.element ?? "");
             const tab: TourTab =
-              previous < 10
+              previous < 5
                 ? "concepts"
                 : target.includes("practice-panel") ||
                     (target.includes("builder-") && target !== ".nav-tab-builder") ||

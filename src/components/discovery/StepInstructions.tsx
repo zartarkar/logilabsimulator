@@ -4,7 +4,7 @@ export function StepInstructions({ step, bn }: { step: number; bn: boolean }) {
       ? bn
         ? [
             "সুইচে চাপ দিয়ে ON ও OFF অবস্থা দেখো।",
-            "নিচের দুটি জোড়া থেকে ON/OFF এর সঠিক মান নির্বাচন করো।",
+            "নিচের দুটি অপশন থেকে ON/OFF এর সঠিক মান নির্বাচন করো।",
           ]
         : [
             "Tap the switch to observe ON and OFF.",

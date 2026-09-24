@@ -747,7 +747,7 @@ svg.react-flow__connectionline {
   height: min(55%, 220px);
   transform: translate(-50%, -50%);
   background: url('/brand-mark.svg') center / contain no-repeat;
-  opacity: .2;
+  opacity: .1;
   pointer-events: none;
   z-index: 0;
 }

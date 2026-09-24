@@ -870,10 +870,10 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
     const workspaceWidth = Math.max(canvasSize.width, 280);
     const workspaceHeight = Math.max(canvasSize.height, 280);
     return [
-      [-workspaceWidth * 0.35, -workspaceHeight * 0.35],
-      [workspaceWidth * 1.35, workspaceHeight * 1.35],
+      [Math.min(-workspaceWidth * 0.35, ...nodes.map(node => node.x - 80)), Math.min(-workspaceHeight * 0.35, ...nodes.map(node => node.y - 80))],
+      [Math.max(workspaceWidth * 1.35, ...nodes.map(node => node.x + 240)), Math.max(workspaceHeight * 1.35, ...nodes.map(node => node.y + 140))],
     ];
-  }, [canvasSize]);
+  }, [canvasSize, nodes]);
 
   useEffect(() => {
     if ((!isPracticeMode && canvasSize.height >= 500) || nodes.length === 0) return;
@@ -1022,7 +1022,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
           const target = `component:${kind}`;
           const allowedCount = challenge?.guide.slice(0, guideIndex + 1)
             .filter((step) => step.target === target).length ?? 0;
-          if (challenge?.guide[guideIndex]?.target !== target || sameKindCount >= allowedCount) return ns;
+          if (challenge?.guide.length && (challenge.guide[guideIndex]?.target !== target || sameKindCount >= allowedCount)) return ns;
         }
         const usedInputLabels = new Set(
           ns.filter((node) => node.kind === "INPUT").map((node) => node.label),
@@ -1032,12 +1032,12 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
             (candidate) => !usedInputLabels.has(candidate),
           ) ?? `IN${sameKindCount + 1}`;
         const practiceLabel = kind === "INPUT" ? firstAvailableInputLabel : label;
-        if (!isPracticeMode) {
+        if (!isPracticeMode || !PRACTICE_CHALLENGES.find(item => item.id === activeChallengeId)?.guide.length) {
           let x = center.x,
             y = center.y;
-          while (ns.some((n) => Math.abs(n.x - x) < 100 && Math.abs(n.y - y) < 65)) {
-            x += 45;
-            y += 65;
+          while (ns.some((n) => Math.abs(n.x - x) < 220 && Math.abs(n.y - y) < 100)) {
+            x += 60;
+            y += 110;
           }
           return [...ns, { id, kind, label: practiceLabel, x, y, inputValue: 0 }];
         }

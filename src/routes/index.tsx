@@ -111,9 +111,8 @@ function App() {
   const [autoTourEndTab, setAutoTourEndTab] = useState<Destination>("concepts");
 
   useEffect(() => {
-    // The bare site URL is the public landing page. URLs that explicitly name
-    // an app tab remain shareable deep links and open the workspace directly.
-    setShowOnboarding(qTab === undefined && browserStorage.getItem("logiclab-onboarding-complete") !== "true");
+    // A shared workspace link must not bypass a new visitor's introduction.
+    setShowOnboarding(browserStorage.getItem("logiclab-onboarding-complete") !== "true");
   }, [qTab]);
 
   const enterApp = (destination: Destination, familiarity: Familiarity, startGuide = false) => {
@@ -123,13 +122,13 @@ function App() {
     // Starting a journey explicitly requests guidance, even after an earlier tour.
     setAutoTourRequested(startGuide);
     s.setTab(destination);
-    navigate({ search: { tab: destination }, replace: true });
+    navigate({ search: { ...qSearch, tab: destination }, replace: true });
     setShowOnboarding(false);
   };
 
   const selectTourTab = useCallback((tab: "concepts" | "simulator" | "builder") => {
     useCircuitStore.getState().setTab(tab);
-    navigate({ search: { tab }, replace: true });
+    navigate({ search: previous => ({ ...previous, tab }), replace: true });
   }, [navigate]);
 
   useEffect(() => {

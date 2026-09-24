@@ -60,7 +60,7 @@ export function BinaryChoices({
   return (
     <div
       className="ll-binary-choices"
-      aria-label={bn ? "সঠিক মানের জোড়া নির্বাচন করো" : "Choose the value pair"}
+      aria-label={bn ? "সঠিক অপশন নির্বাচন করো" : "Choose the correct option"}
     >
       {[true, false].map((correct) => (
         <button
