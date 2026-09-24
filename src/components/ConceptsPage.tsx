@@ -230,7 +230,22 @@ export function ConceptsPage() {
     window.addEventListener("logiclab:tutorial-concept", openForTour);
     return () => window.removeEventListener("logiclab:tutorial-concept", openForTour);
   }, []);
-  const toggleSection = (id: string) => setOpenId((current) => (current === id ? null : id));
+  const toggleSection = (id: string) => {
+    const closing = openId === id;
+    setOpenId(closing ? null : id);
+    // Sections sit after the menu; on phones they can otherwise open offscreen.
+    requestAnimationFrame(() => {
+      const container = scrollRef.current;
+      const target = closing
+        ? container?.querySelector(`[data-tour="concept-map"] button[aria-controls="${id}-content"]`)
+        : document.getElementById(id);
+      if (!container || !target) return;
+      container.scrollTo({
+        top: container.scrollTop + target.getBoundingClientRect().top - container.getBoundingClientRect().top - 16,
+        behavior: "instant",
+      });
+    });
+  };
   const [bits, setBits] = useState([0, 1, 1]);
   const [twoInputs, setTwoInputs] = useState([0, 1]);
   const [threeInputs, setThreeInputs] = useState([0, 1, 1]);
