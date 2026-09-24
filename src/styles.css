@@ -737,3 +737,17 @@ svg.react-flow__connectionline {
   .sandbox-container .practice-panel button { white-space: normal; height: auto; }
   .sandbox-container:not(.mobile-guided-builder) .component-palette { overflow-x: hidden; }
 }
+/* The supplied brand mark stays centered beneath circuit content and ignores touches. */
+.react-flow::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(30%, 220px);
+  height: min(55%, 220px);
+  transform: translate(-50%, -50%);
+  background: url('/brand-mark.svg') center / contain no-repeat;
+  opacity: .2;
+  pointer-events: none;
+  z-index: 0;
+}

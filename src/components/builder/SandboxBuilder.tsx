@@ -1,6 +1,8 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { decodeBuilderCircuit, encodeBuilderCircuit, nextBuilderId } from "@/logic/builderUrl";
 import { WiringGesture } from "./WiringGesture";
+import { ShareCircuit } from "./ShareCircuit";
+import { nextWiringHint } from "@/logic/wiringHint";
 import { PracticeTourPreview, type PracticeTourStage } from "./PracticeTourPreview";
 import {
   useCallback,
@@ -807,7 +809,6 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
     }, 120);
     return () => window.clearTimeout(timer);
   }, [serializedCircuit, search.circuit, search.tab, urlEnabled, navigate]);
-  const [hasMadeConnection, setHasMadeConnection] = useState(false);
   const [toggledInputs, setToggledInputs] = useState<Set<string>>(() => new Set());
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [activeChallengeId, setActiveChallengeId] = useState<string>(
@@ -1209,7 +1210,6 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
     setSelectedIds([]);
     setNodes([]);
     setEdges([]);
-    setHasMadeConnection(false);
     setToggledInputs(new Set());
   }, []);
 
@@ -1321,7 +1321,6 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
   );
 
   const onConnect = useCallback((c: Connection) => {
-    setHasMadeConnection(true);
     setEdges((es) => {
       const filtered = es.filter(
         (e) => !(e.target === c.target && e.targetHandle === c.targetHandle),
@@ -1830,11 +1829,12 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
                 : "Drag a gate · or tap empty space to place it"}
             </div>
           )}
+          <div className="absolute right-2 top-2 z-30 flex items-center gap-2">
           <Button
             type="button"
             variant="outline"
             size="sm"
-            className="absolute right-2 top-2 z-30 h-8 bg-card/95 px-2.5 shadow-md"
+            className="h-8 bg-card/95 px-2.5 shadow-md"
             data-tour="builder-fit"
             onClick={() => fitView({ padding: isMobile ? 0.3 : 0.2, maxZoom: 1.15, duration: 250 })}
             title="Fit circuit to screen"
@@ -1842,6 +1842,8 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
             <Maximize2 className="h-3.5 w-3.5" />
             <span className="ml-1 hidden sm:inline">Fit</span>
           </Button>
+          {!onOnboardingComplete && <ShareCircuit circuit={serializedCircuit} bn={lang === "bn"} />}
+          </div>
           {isMobile && selectedIds.length === 1 && highlightGuide !== "canvas:wire" && (
             <div
               className="absolute bottom-2 right-2 z-30 flex items-center gap-0.5 rounded-lg border border-border bg-card/90 p-1 shadow-md backdrop-blur-sm"
@@ -1885,12 +1887,14 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
               </Button>
             </div>
           )}
-          {(!isPracticeMode || highlightGuide === "canvas:wire") && !hasMadeConnection && edges.length === 0 && nodes.some(n => n.kind === "INPUT") && nodes.some(n => n.kind !== "INPUT" && n.kind !== "OUTPUT") && (
-            <WiringGesture sourceId={nodes.find(n => n.kind === "INPUT")!.id} targetId={nodes.find(n => n.kind !== "INPUT" && n.kind !== "OUTPUT")!.id} bn={lang === "bn"} />
-          )}
-          {(!isPracticeMode || highlightGuide === "canvas:toggle") && edges.length > 0 && (() => {
+          {(() => {
+            if (!isPracticeMode || guideSkipped || tutorialPreview) return null;
+            const wire = nextWiringHint(nodes, edges);
+            if (wire && (!isPracticeMode || highlightGuide === "canvas:wire"))
+              return <WiringGesture key={`${wire.sourceId}-${wire.targetId}-${wire.targetHandle}`} {...wire} bn={lang === "bn"} />;
+            if (wire || (isPracticeMode && highlightGuide !== "canvas:toggle")) return null;
             const input = nodes.find(n => n.kind === "INPUT" && !toggledInputs.has(n.id) && edges.some(edge => edge.source === n.id));
-            return input ? <WiringGesture mode="toggle" sourceId={input.id} targetId={input.id} bn={lang === "bn"} /> : null;
+            return input ? <WiringGesture key={input.id} mode="toggle" sourceId={input.id} targetId={input.id} bn={lang === "bn"} /> : null;
           })()}
           <ReactFlow
             nodes={rfNodes}

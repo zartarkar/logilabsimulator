@@ -9,6 +9,7 @@ import { TenTen } from "./TenTen";
 import { ConceptFeedback } from "./ConceptFeedback";
 import { StepInstructions } from "./StepInstructions";
 import { CircuitBuildingJourney } from "./CircuitBuildingJourney";
+import { CardMascot } from "./CardMascot";
 import { DiscoveryResult } from "./DiscoveryResult";
 import {
   assess,
@@ -110,12 +111,9 @@ export function DiscoveryLanding({
       </header>
       {step < 0 ? (
         <section className="ll-workbench ll-workbench-welcome">
-          <div className="ll-card-mascot ll-card-mascot-right"><TenTen scene={-1} reaction="idle" paused bn={bn} /></div>
           <div className="ll-panel" ref={panel}>
             <div className="ll-prompt ll-welcome">
-              <span className="ll-welcome-icon">
-                <CircuitBoard size={32} />
-              </span>
+              <CardMascot bn={bn} />
               <div className="ll-step-label ll-welcome-label">
                 {bn ? "দেখো · বোঝো · তৈরি করো" : "OBSERVE · UNDERSTAND · BUILD"}
               </div>

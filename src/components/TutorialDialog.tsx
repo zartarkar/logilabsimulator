@@ -233,7 +233,7 @@ export const TutorialDialog = forwardRef<
                       _step: DriveStep,
                       options: { driver: { destroy: () => void } },
                     ) => {
-                      onSelectTab(finishTab);
+                      onSelectTab("concepts");
                       options.driver.destroy();
                       window.setTimeout(
                         () =>
