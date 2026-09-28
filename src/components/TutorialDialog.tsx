@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useImperativeHandle } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
 import { driver, type DriveStep } from "driver.js";
 import { useLang } from "@/i18n";
 import { Button } from "@/components/ui/button";
@@ -13,27 +13,26 @@ export interface TutorialHandle {
 
 export const TutorialDialog = forwardRef<
   TutorialHandle,
-  { className?: string; hideTrigger?: boolean; onSelectTab: (tab: TourTab) => void }
->(function TutorialDialog({ className = "", hideTrigger = false, onSelectTab }, ref) {
+  { className?: string; hideTrigger?: boolean; onSelectTab: (tab: TourTab) => void; autoStart: TourTab | null; onAutoStarted: () => void }
+>(function TutorialDialog({ className = "", hideTrigger = false, onSelectTab, autoStart, onAutoStarted }, ref) {
   const { t, lang } = useLang();
   const bn = lang === "bn";
+  const startupTimer = useRef<number | undefined>(undefined);
+  const navigationTimer = useRef<number | undefined>(undefined);
+  const activeDriver = useRef<ReturnType<typeof driver> | null>(null);
+  useEffect(() => () => {
+    window.clearTimeout(startupTimer.current);
+    window.clearTimeout(navigationTimer.current);
+    activeDriver.current?.destroy();
+    activeDriver.current = null;
+  }, []);
 
   const startTour = useCallback(
-    (finishTab?: TourTab) => {
+    (finishTab?: TourTab, onStarted?: () => void) => {
       onSelectTab("concepts");
 
-      window.setTimeout(() => {
-        const goTo =
-          (tab: TourTab) =>
-          (
-            _element: Element | undefined,
-            _step: DriveStep,
-            options: { driver: { moveNext: () => void } },
-          ) => {
-            onSelectTab(tab);
-            window.setTimeout(() => options.driver.moveNext(), 350);
-          };
-
+      window.clearTimeout(startupTimer.current);
+      startupTimer.current = window.setTimeout(() => {
         const steps: DriveStep[] = [
           {
             popover: {
@@ -52,7 +51,6 @@ export const TutorialDialog = forwardRef<
                 : "Use this button to review concepts and laws. Next, we’ll explore the full page.",
               side: "bottom",
               align: "center",
-              onNextClick: goTo("concepts"),
             },
           },
           {
@@ -93,7 +91,6 @@ export const TutorialDialog = forwardRef<
                 : "The next step opens the Expression Simulator.",
               side: "bottom",
               align: "center",
-              onNextClick: goTo("simulator"),
             },
           },
 
@@ -161,7 +158,6 @@ export const TutorialDialog = forwardRef<
                 : "The next step opens the circuit builder and practice workspace.",
               side: "bottom",
               align: "center",
-              onNextClick: goTo("builder"),
             },
           },
 
@@ -244,26 +240,44 @@ export const TutorialDialog = forwardRef<
           },
         ];
 
+        const moveToStep = (index: number) => {
+          if (index < 0 || index >= steps.length) return;
+          window.clearTimeout(navigationTimer.current);
+          const tab: TourTab = index < 5 ? "concepts" : index < 11 ? "simulator" : "builder";
+          onSelectTab(tab);
+          window.dispatchEvent(new CustomEvent("logiclab:tutorial-practice", { detail: null }));
+          // This lesson starts collapsed, so open it before waiting for visibility.
+          if (index === 3) {
+            window.dispatchEvent(new CustomEvent("logiclab:tutorial-concept", { detail: "signals" }));
+          }
+          // Wait for the actual control, including after phone rotation.
+          const waitForTarget = () => {
+            const selector = steps[index]?.element;
+            const target = typeof selector === "string" ? document.querySelector(selector) : null;
+            const blocked = document.querySelector('[aria-labelledby="landscape-title"]');
+            if (blocked || (selector && (!target || target.getClientRects().length === 0))) {
+              navigationTimer.current = window.setTimeout(waitForTarget, 100);
+              return;
+            }
+            tutorial.drive(index);
+          };
+          navigationTimer.current = window.setTimeout(waitForTarget, 0);
+        };
+        activeDriver.current?.destroy();
         const tutorial = driver({
           steps,
-          onPrevClick: (_element, _step, { driver: activeTour }) => {
-            const previous = (activeTour.getActiveIndex() ?? 0) - 1;
-            if (previous < 0) return;
-            const target = String(steps[previous]?.element ?? "");
-            const tab: TourTab =
-              previous < 5
-                ? "concepts"
-                : target.includes("practice-panel") ||
-                    (target.includes("builder-") && target !== ".nav-tab-builder") ||
-                    previous === steps.length - 1
-                  ? "builder"
-                  : "simulator";
-            window.dispatchEvent(new CustomEvent("logiclab:tutorial-practice", { detail: null }));
-            onSelectTab(tab);
-            window.setTimeout(() => activeTour.movePrevious(), 350);
+          onNextClick: (_element, _step, { driver: activeTour }) => {
+            const next = (activeTour.getActiveIndex() ?? 0) + 1;
+            if (next >= steps.length) activeTour.destroy();
+            else moveToStep(next);
           },
-          onDestroyed: () =>
-            window.dispatchEvent(new CustomEvent("logiclab:tutorial-practice", { detail: null })),
+          onPrevClick: (_element, _step, { driver: activeTour }) => {
+            moveToStep((activeTour.getActiveIndex() ?? 0) - 1);
+          },
+          onDestroyed: () => {
+            window.clearTimeout(navigationTimer.current);
+            window.dispatchEvent(new CustomEvent("logiclab:tutorial-practice", { detail: null }));
+          },
           showProgress: true,
           animate: false,
           smoothScroll: false,
@@ -277,27 +291,37 @@ export const TutorialDialog = forwardRef<
           doneBtnText: bn ? "শুরু করি" : "Start exploring",
           progressText: bn ? "{{current}} / {{total}}" : "{{current}} of {{total}}",
         });
+        activeDriver.current = tutorial;
         tutorial.drive(0);
-      }, 300);
+        onStarted?.();
+      }, 0);
     },
     [bn, onSelectTab],
   );
 
   const startAutomatically = useCallback(
-    (finishTab: TourTab) => {
-      let timer: number;
+    (finishTab: TourTab, onStarted?: () => void) => {
+      window.clearTimeout(startupTimer.current);
       const startWhenVisible = () => {
         const landscapePrompt = document.querySelector('[aria-labelledby="landscape-title"]');
         if (landscapePrompt) {
-          timer = window.setTimeout(startWhenVisible, 350);
+          startupTimer.current = window.setTimeout(startWhenVisible, 350);
           return;
         }
-        timer = window.setTimeout(() => startTour(finishTab), 250);
+        startTour(finishTab, onStarted);
       };
       startWhenVisible();
     },
     [startTour],
   );
+
+  // Own startup in the mounted guide. If React replays effects or remounts
+  // during navigation, the pending request survives until drive() succeeds.
+  useEffect(() => {
+    if (!autoStart) return;
+    startAutomatically(autoStart, onAutoStarted);
+    return () => window.clearTimeout(startupTimer.current);
+  }, [autoStart, onAutoStarted, startAutomatically]);
 
   useImperativeHandle(ref, () => ({ startAutomatically, start: () => startTour() }), [
     startAutomatically,

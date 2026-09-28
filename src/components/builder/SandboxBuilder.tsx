@@ -1,7 +1,6 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { decodeBuilderCircuit, encodeBuilderCircuit, nextBuilderId } from "@/logic/builderUrl";
 import { WiringGesture } from "./WiringGesture";
-import { ShareCircuit } from "./ShareCircuit";
 import { nextWiringHint } from "@/logic/wiringHint";
 import { PracticeTourPreview, type PracticeTourStage } from "./PracticeTourPreview";
 import {
@@ -53,11 +52,12 @@ import {
   ChevronLeft,
   ChevronRight,
   CircleAlert,
+  Hand,
   Lightbulb,
   MapPin,
   ToggleLeft,
   Trash2,
-  Sparkles,
+  Target,
   Maximize2,
   PartyPopper,
   RotateCcw,
@@ -1281,7 +1281,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
     if (!palette || !target) return;
     // Scroll only the palette: the instruction and canvas stay in place.
     palette.scrollTop += target.getBoundingClientRect().top - palette.getBoundingClientRect().top - 8;
-  }, [isMobile, highlightGuide, guideIndex]);
+  }, [isMobile, highlightGuide, guideIndex, canvasSize.width, canvasSize.height]);
 
   const closeChallengeSuccess = () => {
     setShowChallengeSuccess(false);
@@ -1457,7 +1457,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
           {/* Header */}
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-primary">
-              <Sparkles className="h-3.5 w-3.5" />
+              <Target className="h-3.5 w-3.5" aria-hidden="true" />
               {lang === "bn" ? "প্র্যাকটিস চ্যালেঞ্জ" : "Practice challenges"}
             </div>
             {isPracticeMode && !tutorialPreview && !onOnboardingComplete && (
@@ -1487,7 +1487,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
                   setGuideSkipped(true);
                 }}
               >
-                <Sparkles className="mr-1 h-3.5 w-3.5" />{" "}
+                <Target className="mr-1 h-3.5 w-3.5" aria-hidden="true" />{" "}
                 {lang === "bn" ? "চ্যালেঞ্জ শুরু করো" : "Start a challenge"}
               </Button>
             </div>
@@ -1737,6 +1737,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
               )}
               <ToggleLeft className="h-4 w-4 text-primary" aria-hidden="true" />
               <span className="min-w-0 whitespace-normal text-center leading-tight">Input switch</span>
+              {isGuideTarget("component:INPUT") && <Hand key={guideIndex} className="component-gesture-hand" size={28} fill="white" stroke="#e11d48" strokeWidth={2} aria-hidden="true" />}
             </span>
           </button>
           <button
@@ -1757,6 +1758,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
               )}
               <Lightbulb className="h-4 w-4 text-[var(--signal-on)]" aria-hidden="true" />
               <span className="min-w-0 whitespace-normal text-center leading-tight">Output LED</span>
+              {isGuideTarget("component:OUTPUT") && <Hand key={guideIndex} className="component-gesture-hand" size={28} fill="white" stroke="#e11d48" strokeWidth={2} aria-hidden="true" />}
             </span>
           </button>
           {PALETTE.map((g) => (
@@ -1782,6 +1784,7 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
                   <GateShape type={g} active={false} />
                 </span>
                 <span className="font-mono text-xs">{g}</span>
+                {isGuideTarget(`component:${g}`) && <Hand key={guideIndex} className="component-gesture-hand" size={28} fill="white" stroke="#e11d48" strokeWidth={2} aria-hidden="true" />}
               </span>
             </button>
           ))}
@@ -1842,7 +1845,6 @@ function Inner({ isPracticeMode: initialPracticeMode = false, onOnboardingComple
             <Maximize2 className="h-3.5 w-3.5" />
             <span className="ml-1 hidden sm:inline">Fit</span>
           </Button>
-          {!onOnboardingComplete && <ShareCircuit circuit={serializedCircuit} bn={lang === "bn"} />}
           </div>
           {isMobile && selectedIds.length === 1 && highlightGuide !== "canvas:wire" && (
             <div

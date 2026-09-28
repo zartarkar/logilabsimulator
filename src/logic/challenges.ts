@@ -93,13 +93,6 @@ export const PRACTICE_CHALLENGES: PracticeChallenge[] = [
     hint: "The output should be 0 only when both inputs are 0.",
     guide: [
       {
-        id: "component-OR",
-        target: "component:OR",
-        message: "Choose this element: OR gate.",
-        detail: "Select the OR gate from the component section.",
-        highlight: "OR",
-      },
-      {
         id: "component-INPUT-OR",
         target: "component:INPUT",
         message: "Add input switch A.",
@@ -112,6 +105,13 @@ export const PRACTICE_CHALLENGES: PracticeChallenge[] = [
         message: "Add input switch B.",
         detail: "The OR gate needs both inputs connected.",
         highlight: "Input switch",
+      },
+      {
+        id: "component-OR",
+        target: "component:OR",
+        message: "Choose this element: OR gate.",
+        detail: "Select the OR gate from the component section.",
+        highlight: "OR",
       },
       {
         id: "component-OUTPUT-OR",
@@ -144,13 +144,6 @@ export const PRACTICE_CHALLENGES: PracticeChallenge[] = [
     hint: "XOR is true when the two inputs differ.",
     guide: [
       {
-        id: "component-XOR",
-        target: "component:XOR",
-        message: "Choose this element: XOR gate.",
-        detail: "This gate outputs 1 only when the two inputs differ.",
-        highlight: "XOR",
-      },
-      {
         id: "component-INPUT-XOR",
         target: "component:INPUT",
         message: "Add input switch A.",
@@ -163,6 +156,13 @@ export const PRACTICE_CHALLENGES: PracticeChallenge[] = [
         message: "Add input switch B.",
         detail: "You need one signal for A and one for B.",
         highlight: "Input switch",
+      },
+      {
+        id: "component-XOR",
+        target: "component:XOR",
+        message: "Choose this element: XOR gate.",
+        detail: "This gate outputs 1 only when the two inputs differ.",
+        highlight: "XOR",
       },
       {
         id: "component-OUTPUT-XOR",

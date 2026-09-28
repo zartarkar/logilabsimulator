@@ -113,7 +113,7 @@ function App() {
   useEffect(() => {
     // A shared workspace link must not bypass a new visitor's introduction.
     setShowOnboarding(browserStorage.getItem("logiclab-onboarding-complete") !== "true");
-  }, [qTab]);
+  }, []);
 
   const enterApp = (destination: Destination, familiarity: Familiarity, startGuide = false) => {
     browserStorage.setItem("logiclab-onboarding-complete", "true");
@@ -121,8 +121,10 @@ function App() {
     setAutoTourEndTab(destination);
     // Starting a journey explicitly requests guidance, even after an earlier tour.
     setAutoTourRequested(startGuide);
-    s.setTab(destination);
-    navigate({ search: { ...qSearch, tab: destination }, replace: true });
+    // Mount the guide's first workspace directly, without flashing the destination.
+    const entryTab = startGuide ? "concepts" : destination;
+    s.setTab(entryTab);
+    navigate({ search: { ...qSearch, tab: entryTab }, replace: true });
     setShowOnboarding(false);
   };
 
@@ -131,16 +133,9 @@ function App() {
     navigate({ search: previous => ({ ...previous, tab }), replace: true });
   }, [navigate]);
 
-  useEffect(() => {
-    if (showOnboarding !== false || !autoTourRequested) return;
-    const timer = window.setInterval(() => {
-      if (!tutorialRef.current) return;
-      tutorialRef.current.startAutomatically(autoTourEndTab);
-      window.clearInterval(timer);
-      setAutoTourRequested(false);
-    }, 150);
-    return () => window.clearInterval(timer);
-  }, [showOnboarding, autoTourRequested, autoTourEndTab]);
+  const onAutoTourStarted = useCallback(() => {
+    setAutoTourRequested(false);
+  }, []);
 
   useEffect(() => {
     if (showSimplification && s.parsed && !s.simplified) {
@@ -375,7 +370,7 @@ function App() {
             </div>
 
             <div className="app-header-actions flex shrink-0 items-center gap-0.5 sm:col-start-3 sm:row-start-1 sm:static sm:justify-self-end sm:gap-3">
-              <TutorialDialog ref={tutorialRef} onSelectTab={selectTourTab} hideTrigger />
+              <TutorialDialog ref={tutorialRef} onSelectTab={selectTourTab} autoStart={autoTourRequested ? autoTourEndTab : null} onAutoStarted={onAutoTourStarted} hideTrigger />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon" className="h-10 w-10" aria-label={lang === "bn" ? "মেনু খুলুন" : "Open menu"}>

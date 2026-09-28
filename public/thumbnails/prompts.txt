@@ -1,0 +1,10 @@
+Generated using the built-in image_gen tool.
+
+Shared prompt:
+Use case: ads-marketing. Create a polished promotional thumbnail for LogicLab, a browser app for turning Boolean expressions into interactive logic-gate circuits, building circuits, toggling binary inputs, and seeing truth tables. Clean modern educational software aesthetic, white/light blue graph-paper canvas, deep navy typography, blue and teal circuit wires with vivid green active signals. Large legible exact text "LogicLab" and "Logic Circuit Simulator". Main visual: a beautifully composed clear logic circuit with two input toggles labeled A and B both showing 1, connected into an AND gate, its output connected to a glowing green output indicator labeled 1. Add a small tasteful Boolean expression card "Y = A · B" and a compact accurate AND truth table with columns A B Y and rows 0 0 0, 0 1 0, 1 0 0, 1 1 1. Make circuit primary, text readable at thumbnail scale, ample breathing room, crisp professional app marketing design, subtle dimensional cards, no photographs, no watermark, no fake browser chrome. 
+
+Square variant:
+Output a square 1:1 image, 1024x1024. Arrange headline above the circuit with supporting cards below.
+
+Widescreen variant:
+Output a landscape image with exact 16:9 aspect ratio, 1536x864 or 2048x1152. Compose headline on left and large circuit on right, supporting cards along bottom. Fill the wide composition intentionally.

@@ -103,9 +103,12 @@ describe("challenge helpers", () => {
   });
 
   it("provides guided practice steps instead of showing a completed circuit immediately", () => {
-    expect(PRACTICE_CHALLENGES[0]!.guide.slice(0, 3).map((step) => step.target)).toEqual([
-      "component:INPUT", "component:INPUT", "component:AND",
-    ]);
+    for (const challenge of PRACTICE_CHALLENGES.filter(item => item.difficulty === "beginner")) {
+      const gate = getChallengeRootGate(challenge.target);
+      expect(challenge.guide.slice(0, 4).map(step => step.target), challenge.title).toEqual([
+        "component:INPUT", "component:INPUT", `component:${gate}`, "component:OUTPUT",
+      ]);
+    }
   });
 
   it("detects a correct circuit target", () => {

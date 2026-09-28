@@ -169,18 +169,18 @@ export const DICT: Dict = {
     en: "Connect the OR output to the output LED.",
     bn: "OR গেটের আউটপুট আউটপুট LED তে সংযুক্ত করো।",
   },
-  practiceOr2Guide0Msg: { en: "Choose this element: OR gate.", bn: "এই উপাদান বেছে নাও: OR গেট।" },
-  practiceOr2Guide0Detail: {
+  practiceOr2Guide2Msg: { en: "Choose this element: OR gate.", bn: "এই উপাদান বেছে নাও: OR গেট।" },
+  practiceOr2Guide2Detail: {
     en: "Select the OR gate from the component section.",
     bn: "কম্পোনেন্ট সেকশন থেকে OR গেট নির্বাচন করো।",
   },
-  practiceOr2Guide1Msg: { en: "Add input switch A.", bn: "ইনপুট সুইচ A যোগ করো।" },
-  practiceOr2Guide1Detail: {
+  practiceOr2Guide0Msg: { en: "Add input switch A.", bn: "ইনপুট সুইচ A যোগ করো।" },
+  practiceOr2Guide0Detail: {
     en: "The OR gate needs both inputs connected.",
     bn: "OR গেটের উভয় ইনপুট সংযুক্ত দরকার।",
   },
-  practiceOr2Guide2Msg: { en: "Add input switch B.", bn: "ইনপুট সুইচ B যোগ করো।" },
-  practiceOr2Guide2Detail: {
+  practiceOr2Guide1Msg: { en: "Add input switch B.", bn: "ইনপুট সুইচ B যোগ করো।" },
+  practiceOr2Guide1Detail: {
     en: "The OR gate needs both inputs connected.",
     bn: "OR গেটের উভয় ইনপুট সংযুক্ত দরকার।",
   },
@@ -216,18 +216,18 @@ export const DICT: Dict = {
     en: "Route the XOR result to the output LED.",
     bn: "XOR ফলাফল আউটপুট LED তে পাঠাও।",
   },
-  practiceXor3Guide0Msg: { en: "Choose this element: XOR gate.", bn: "এই উপাদান বেছে নাও: XOR গেট।" },
-  practiceXor3Guide0Detail: {
+  practiceXor3Guide2Msg: { en: "Choose this element: XOR gate.", bn: "এই উপাদান বেছে নাও: XOR গেট।" },
+  practiceXor3Guide2Detail: {
     en: "This gate outputs 1 only when the two inputs differ.",
     bn: "এই গেট শুধুমাত্র তখনই 1 দেয় যখন দুটি ইনপুট আলাদা হয়।",
   },
-  practiceXor3Guide1Msg: { en: "Add input switch A.", bn: "ইনপুট সুইচ A যোগ করো।" },
-  practiceXor3Guide1Detail: {
+  practiceXor3Guide0Msg: { en: "Add input switch A.", bn: "ইনপুট সুইচ A যোগ করো।" },
+  practiceXor3Guide0Detail: {
     en: "You need one signal for A and one for B.",
     bn: "তোমার A এর জন্য একটি এবং B এর জন্য একটি সিগন্যাল দরকার।",
   },
-  practiceXor3Guide2Msg: { en: "Add input switch B.", bn: "ইনপুট সুইচ B যোগ করো।" },
-  practiceXor3Guide2Detail: {
+  practiceXor3Guide1Msg: { en: "Add input switch B.", bn: "ইনপুট সুইচ B যোগ করো।" },
+  practiceXor3Guide1Detail: {
     en: "You need one signal for A and one for B.",
     bn: "তোমার A এর জন্য একটি এবং B এর জন্য একটি সিগন্যাল দরকার।",
   },
